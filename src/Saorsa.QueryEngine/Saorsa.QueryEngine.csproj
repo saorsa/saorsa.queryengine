@@ -10,4 +10,8 @@
       <ProjectReference Include="..\..\..\saorsa.extensions\src\Saorsa.Extensions\Saorsa.Extensions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="NJsonSchema" Version="10.7.2" />
+    </ItemGroup>
+
 </Project>

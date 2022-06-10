@@ -6,7 +6,7 @@ namespace Saorsa.QueryEngine;
 
 public static class QueryEngine
 {
-    public static readonly Dictionary<Type, string> SimpleTypeStringMap = new Dictionary<Type, string>
+    public static readonly Dictionary<Type, string> SimpleTypeStringMap = new()
     {
         { typeof(char), "char" },
         { typeof(string), "string" },
@@ -29,6 +29,68 @@ public static class QueryEngine
         { typeof(TimeOnly), "time" },
     };
 
+    public static readonly PropertyFilterDefinition[] FilterTypesNumerals =
+    {
+        new ("IS_NULL"),
+        new ("IS_NOT_NULL"),
+        new ("EQ", "<equal-to>"),
+        new ("NOT_EQ", "<not-equal-to>"),
+        new ("LT", "<less-than>"),
+        new ("LT_EQ", "<less-than-or-equal>"),
+        new ("GT", "<greater-than>"),
+        new ("GE_EQ", "<greater-than-or-equal>"),
+        new ("RANGE", "<greater-than-or-equal>", "<less-than-or-equal>"),
+        new ("SEQ", "<comma-separated-allowed-values>"),
+    };
+    
+    public static readonly PropertyFilterDefinition[] FilterTypesText =
+    {
+        new ("IS_NULL"),
+        new ("IS_NOT_NULL"),
+        new ("EQ", "<equal-to>"),
+        new ("NOT_EQ", "<not-equal-to>"),
+        new ("CONTAINS", "<contained-text-value>"),
+    };
+
+    public static readonly PropertyFilterDefinition[] FilterTypesEnum =
+    {
+        new ("IS_NULL"),
+        new ("IS_NOT_NULL"),
+        new ("EQ", "<equal-to>"),
+        new ("NOT_EQ", "<not-equal-to>"),
+        new ("SEQ", "<comma-separated-allowed-values>"),
+    };
+    
+    public static readonly PropertyFilterDefinition[] FilterTypesArray =
+    {
+        new ("IS_EMPTY"),
+        new ("IS_NOT_EMPTY"),
+        new ("NAX_COUNT", "<less-than-or-equal>"),
+        new ("MIN_COUNT", "<greater-than-or-equal>"),
+    };
+
+    public static readonly Dictionary<Type, object> SimpleTypeFilterTypeMap = new()
+    {
+        { typeof(char), FilterTypesNumerals },
+        { typeof(string), FilterTypesText },
+        { typeof(bool), FilterTypesNumerals },
+        { typeof(byte), FilterTypesNumerals },
+        { typeof(sbyte), FilterTypesNumerals },
+        { typeof(short), FilterTypesNumerals },
+        { typeof(int), FilterTypesNumerals },
+        { typeof(long), FilterTypesNumerals }, 
+        { typeof(ushort), FilterTypesNumerals },
+        { typeof(uint), FilterTypesNumerals },
+        { typeof(ulong), FilterTypesNumerals },
+        
+        { typeof(decimal), FilterTypesNumerals },
+        { typeof(Guid), FilterTypesNumerals },
+        { typeof(DateOnly), FilterTypesNumerals },
+        { typeof(DateTime), FilterTypesNumerals },
+        { typeof(DateTimeOffset), FilterTypesNumerals },
+        { typeof(TimeSpan), FilterTypesNumerals },
+        { typeof(TimeOnly), FilterTypesNumerals },
+    };
     public static readonly IEnumerable<Type> SimpleTypes = SimpleTypeStringMap.Keys;
 
     public static PropertyDefinition[] BuildTypePropertyDefinitions<TEntity>()
@@ -61,15 +123,34 @@ public static class QueryEngine
         var properties = type
             .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
             .Where(p => !IsIgnoredByQueryEngine(p))
-            .Select(p => new PropertyDefinition
-            {
-                Name = p.Name.ToCamelCase(),
-                Type = SimpleTypes.Contains(p.PropertyType) 
-                    ? SimpleTypeStringMap[p.PropertyType]
-                    : p.PropertyType.IsEnum ? $"[{string.Join("|", Enum.GetNames(p.PropertyType))}]" : "composite"
-            });
+            .Select(BuildTypePropertyDefinition);
 
         return properties.ToArray();
+    }
+
+    public static PropertyDefinition BuildTypePropertyDefinition(PropertyInfo propertyInfo)
+    {
+        var underlyingType = propertyInfo.PropertyType.GetUnderlyingTypeIfNullable();
+        var result = new PropertyDefinition
+        {
+            Name = propertyInfo.Name.ToCamelCase(),
+            Nullable = propertyInfo.PropertyType.IsNullable(),
+            Type = SimpleTypes.Contains(underlyingType) 
+                ? SimpleTypeStringMap[underlyingType]
+                : null
+        };
+
+        if (result.Type != null) return result;
+        
+        if (underlyingType.IsEnum)
+        {
+            result.Type = $"[{string.Join("|", Enum.GetNames(underlyingType))}]";
+        }
+        else
+        {
+            result.Type = underlyingType.IsSingleElementTypeEnumeration() ? "array" : "reference";    
+        }
+        return result;
     }
 
     public static bool IsIgnoredByQueryEngine(PropertyInfo propertyInfo)

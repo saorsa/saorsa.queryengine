@@ -1,3 +1,4 @@
+// ReSharper disable ClassNeverInstantiated.Local
 using Saorsa.QueryEngine.Annotations;
 
 namespace Saorsa.QueryEngine.Tests;
@@ -22,11 +23,23 @@ public class QueryEngineTests
     private class TestDummyClass
     {
         [QueryEngineIgnore]
-        public object IgnoreValue { get; set; }
+        public object? IgnoreValue { get; set; }
         
         public int IntValue { get; set; }
         
+        public long? LongValue { get; set; }
+        
+        public DateTime? DateTimeValue { get; set; }
+
+        public string StringValue { get; set; } = default!;
+        
+        public string? OptionalStringValue { get; set; }
+        
         public TestDummyEnum EnumValue { get; set; }
+
+        public int[] ArrayOfInts { get; set; } = Array.Empty<int>();
+
+        public IEnumerable<int>? EnumerableOfInts { get; set; }
     }
 
     [Test]
@@ -65,7 +78,7 @@ public class QueryEngineTests
         }.ToList().ForEach(t =>
         {
             var results = QueryEngine.BuildTypePropertyDefinitions(t);
-            Assert.IsEmpty(results,
+            Assert.That(results, Is.Empty,
                 $"Expected no property defs for arrays and generic enumerations {t.Name}");
         });
     }

@@ -9,14 +9,14 @@ public class QueryEngineTests
   //  [Test]
     public void TestBuildPropertyDefinitionsOnIgnoredType()
     {
-        var results = QueryEngine.BuildTypeDefinition<TestDummyIgnoredClass>();
+        //var results = QueryEngine.BuildTypeDefinition<TestIgnoredClass>();
        // Assert.IsEmpty(results!.Properties);
     }
     
   //  [Test]
     public void TestBuildPropertyDefinitionsOnEnums()
     {
-        var results = QueryEngine.BuildTypeDefinition<TestDummyEnum>();
+        var results = QueryEngine.BuildTypeDefinition<TestEnum>();
       //  Assert.IsEmpty(results!.Properties);
     }
 

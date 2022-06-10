@@ -9,6 +9,11 @@ public static class TypeExtensions
         return QueryEngine.IsSimpleType(type);
     }
     
+    public static bool IsQueryEngineIgnored(this Type type)
+    {
+        return QueryEngine.IsIgnoredByQueryEngine(type);
+    }
+    
     public static string GetQueryEngineStringRepresentation(this Type type)
     {
         return QueryEngine.GetStringRepresentation(type);

@@ -6,19 +6,24 @@ namespace Saorsa.QueryEngine;
 
 public static partial class QueryEngine
 {
-    public static TypeDefinition? BuildTypeDefinition<TEntity>(int maxReferenceDepth = 2)
+    public static TypeDefinition? BuildTypeDefinition<TEntity>(
+        int maxReferenceDepth = 2,
+        bool overrideIgnores = false)
     {
-        return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth);
+        return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth, overrideIgnores);
     }
 
-    public static TypeDefinition? BuildTypeDefinition(Type type, int maxReferenceDepth = 2)
+    public static TypeDefinition? BuildTypeDefinition(
+        Type type,
+        int maxReferenceDepth = 2,
+        bool overrideIgnores = false)
     {
         if (maxReferenceDepth <= 0)
         {
             return null;
         }
 
-        if (IsIgnoredByQueryEngine(type))
+        if (!overrideIgnores && IsIgnoredByQueryEngine(type))
         {
             return null;
         }
@@ -41,7 +46,10 @@ public static partial class QueryEngine
         }
         else if (underlyingType.IsSingleElementTypeEnumeration())
         {
-            result.ArrayElement = BuildTypeDefinition(underlyingType.GetSingleElementEnumerationType()!, maxReferenceDepth);
+            result.ArrayElement = BuildTypeDefinition(
+                underlyingType.GetSingleElementEnumerationType()!,
+                maxReferenceDepth,
+                overrideIgnores);
         }
         else if (!isSimpleType)
         {
@@ -52,8 +60,11 @@ public static partial class QueryEngine
         {
             var properties = type
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
-                .Where(p => !IsIgnoredByQueryEngine(p))
-                .Select(p => BuildTypeDefinition(p.PropertyType, maxReferenceDepth - 1))
+                .Where(p => overrideIgnores || !IsIgnoredByQueryEngine(p))
+                .Select(p => BuildTypeDefinition(
+                    p.PropertyType, 
+                    maxReferenceDepth - 1,
+                    overrideIgnores))
                 .Where(t => t != null)
                 .ToArray();
 

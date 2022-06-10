@@ -1,5 +1,3 @@
-using System.Reflection;
-
 namespace Saorsa.QueryEngine.Tests;
 
 public class QueryEngineTypeSystemTests
@@ -48,6 +46,7 @@ public class QueryEngineTypeSystemTests
     [TestCase(1.0121)]
     [TestCase(0x1)]
     [TestCase(0x00000012)]
+    [TestCase((sbyte)0x00000012)]
     public void TestQueryEngineSimpleTypeObjectCase(object candidate)
     {
         var type = candidate.GetType();
@@ -78,9 +77,9 @@ public class QueryEngineTypeSystemTests
     [Test]
     public void TestStringRepresentationOnEnums()
     {
-        Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(t => t.IsEnum && t.IsPublic)
+        AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t.IsEnum)
             .ToList()
             .ForEach(enumType =>
             {

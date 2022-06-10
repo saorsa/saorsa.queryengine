@@ -6,153 +6,97 @@ namespace Saorsa.QueryEngine;
 
 public static class QueryEngine
 {
-    public static readonly Dictionary<Type, string> SimpleTypeStringMap = new()
+    
+    public static readonly Dictionary<Type, FilterDefinition[]> SimpleTypeFilterTypeMap = new()
     {
-        { typeof(char), "char" },
-        { typeof(string), "string" },
-        { typeof(bool), "boolean" },
-        { typeof(byte), "byte" },
-        { typeof(sbyte), "sbyte" },
-        { typeof(short), "int16" },
-        { typeof(int), "integer" },
-        { typeof(long), "int64" }, 
-        { typeof(ushort), "uint16" },
-        { typeof(uint), "uint32" },
-        { typeof(ulong), "uint64" },
+        { typeof(char), FilterDefinition.NumericFilters },
+        { typeof(string), FilterDefinition.TextFilters  },
+        { typeof(bool), FilterDefinition.NumericFilters  },
+        { typeof(byte), FilterDefinition.NumericFilters  },
+        { typeof(sbyte), FilterDefinition.NumericFilters  },
+        { typeof(short), FilterDefinition.NumericFilters  },
+        { typeof(int), FilterDefinition.NumericFilters  },
+        { typeof(long), FilterDefinition.NumericFilters  }, 
+        { typeof(ushort), FilterDefinition.NumericFilters  },
+        { typeof(uint), FilterDefinition.NumericFilters  },
+        { typeof(ulong), FilterDefinition.NumericFilters  },
         
-        { typeof(decimal), "decimal" },
-        { typeof(Guid), "uuid" },
-        { typeof(DateOnly), "date" },
-        { typeof(DateTime), "dateTime" },
-        { typeof(DateTimeOffset), "dateTimeOffset" },
-        { typeof(TimeSpan), "timeSpan" },
-        { typeof(TimeOnly), "time" },
-    };
-
-    public static readonly PropertyFilterDefinition[] FilterTypesNumerals =
-    {
-        new ("IS_NULL"),
-        new ("IS_NOT_NULL"),
-        new ("EQ", "<equal-to>"),
-        new ("NOT_EQ", "<not-equal-to>"),
-        new ("LT", "<less-than>"),
-        new ("LT_EQ", "<less-than-or-equal>"),
-        new ("GT", "<greater-than>"),
-        new ("GE_EQ", "<greater-than-or-equal>"),
-        new ("RANGE", "<greater-than-or-equal>", "<less-than-or-equal>"),
-        new ("SEQ", "<comma-separated-allowed-values>"),
+        { typeof(decimal), FilterDefinition.NumericFilters  },
+        { typeof(Guid), FilterDefinition.NumericFilters  },
+        { typeof(DateOnly), FilterDefinition.NumericFilters  },
+        { typeof(DateTime), FilterDefinition.NumericFilters  },
+        { typeof(DateTimeOffset), FilterDefinition.NumericFilters  },
+        { typeof(TimeSpan), FilterDefinition.NumericFilters  },
+        { typeof(TimeOnly), FilterDefinition.NumericFilters  },
     };
     
-    public static readonly PropertyFilterDefinition[] FilterTypesText =
-    {
-        new ("IS_NULL"),
-        new ("IS_NOT_NULL"),
-        new ("EQ", "<equal-to>"),
-        new ("NOT_EQ", "<not-equal-to>"),
-        new ("CONTAINS", "<contained-text-value>"),
-    };
-
-    public static readonly PropertyFilterDefinition[] FilterTypesEnum =
-    {
-        new ("IS_NULL"),
-        new ("IS_NOT_NULL"),
-        new ("EQ", "<equal-to>"),
-        new ("NOT_EQ", "<not-equal-to>"),
-        new ("SEQ", "<comma-separated-allowed-values>"),
-    };
-    
-    public static readonly PropertyFilterDefinition[] FilterTypesArray =
-    {
-        new ("IS_EMPTY"),
-        new ("IS_NOT_EMPTY"),
-        new ("NAX_COUNT", "<less-than-or-equal>"),
-        new ("MIN_COUNT", "<greater-than-or-equal>"),
-    };
-
-    public static readonly Dictionary<Type, object> SimpleTypeFilterTypeMap = new()
-    {
-        { typeof(char), FilterTypesNumerals },
-        { typeof(string), FilterTypesText },
-        { typeof(bool), FilterTypesNumerals },
-        { typeof(byte), FilterTypesNumerals },
-        { typeof(sbyte), FilterTypesNumerals },
-        { typeof(short), FilterTypesNumerals },
-        { typeof(int), FilterTypesNumerals },
-        { typeof(long), FilterTypesNumerals }, 
-        { typeof(ushort), FilterTypesNumerals },
-        { typeof(uint), FilterTypesNumerals },
-        { typeof(ulong), FilterTypesNumerals },
-        
-        { typeof(decimal), FilterTypesNumerals },
-        { typeof(Guid), FilterTypesNumerals },
-        { typeof(DateOnly), FilterTypesNumerals },
-        { typeof(DateTime), FilterTypesNumerals },
-        { typeof(DateTimeOffset), FilterTypesNumerals },
-        { typeof(TimeSpan), FilterTypesNumerals },
-        { typeof(TimeOnly), FilterTypesNumerals },
-    };
     public static readonly IEnumerable<Type> SimpleTypes = SimpleTypeStringMap.Keys;
 
-    public static PropertyDefinition[] BuildTypePropertyDefinitions<TEntity>()
+    public static TypeDefinition? BuildTypeDefinition<TEntity>(int maxReferenceDepth = 2)
     {
-        return BuildTypePropertyDefinitions(typeof(TEntity));
+        return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth);
     }
 
-    public static PropertyDefinition[] BuildTypePropertyDefinitions(Type type)
+    public static TypeDefinition? BuildTypeDefinition(Type type, int maxReferenceDepth = 2)
     {
-        if (!type.IsClass)
+        if (maxReferenceDepth <= 0)
         {
-            return Array.Empty<PropertyDefinition>();
+            return null;
         }
 
-        if (SimpleTypes.Contains(type))
-        {
-            return Array.Empty<PropertyDefinition>();
-        }
-
-        if (type.IsArray || type.IsGenericEnumeration())
-        {
-            return Array.Empty<PropertyDefinition>();
-        }
-        
         if (IsIgnoredByQueryEngine(type))
         {
-            return Array.Empty<PropertyDefinition>();
+            return null;
         }
-
-        var properties = type
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
-            .Where(p => !IsIgnoredByQueryEngine(p))
-            .Select(BuildTypePropertyDefinition);
-
-        return properties.ToArray();
-    }
-
-    public static PropertyDefinition BuildTypePropertyDefinition(PropertyInfo propertyInfo)
-    {
-        var underlyingType = propertyInfo.PropertyType.GetUnderlyingTypeIfNullable();
-        var result = new PropertyDefinition
+        
+        var underlyingType = type.GetUnderlyingTypeIfNullable();
+        var isSimpleType = SimpleTypes.Contains(underlyingType);
+        var isCompositeType = false;
+        
+        var result = new TypeDefinition
         {
-            Name = propertyInfo.Name.ToCamelCase(),
-            Nullable = propertyInfo.PropertyType.IsNullable(),
-            Type = SimpleTypes.Contains(underlyingType) 
-                ? SimpleTypeStringMap[underlyingType]
-                : null
+            TypeName = underlyingType.Name.ToPascalCase(),
+            Nullable = underlyingType.IsNullable(),
+            Type = isSimpleType ? SimpleTypeStringMap[underlyingType] : null,
+            AllowedFilters = isSimpleType ? SimpleTypeFilterTypeMap[underlyingType] : Array.Empty<FilterDefinition>()
         };
 
-        if (result.Type != null) return result;
-        
         if (underlyingType.IsEnum)
         {
-            result.Type = $"[{string.Join("|", Enum.GetNames(underlyingType))}]";
+            result.Type = "enum";
+            result.EnumValues = Enum.GetNames(underlyingType);
+            result.AllowedFilters = FilterDefinition.EnumFilters;
         }
-        else
+        else if (underlyingType.IsSingleElementTypeEnumeration())
         {
-            result.Type = underlyingType.IsSingleElementTypeEnumeration() ? "array" : "reference";    
+            result.Type = "array";
+            result.AllowedFilters = FilterDefinition.ArrayFilters;
+            result.ReferenceType = BuildTypeDefinition(underlyingType, maxReferenceDepth - 1);
         }
+        else if (result.Type != null)
+        {
+            isCompositeType = true;
+            result.Type = "reference";
+            result.AllowedFilters = FilterDefinition.ReferenceFilters;
+            result.ReferenceType = BuildTypeDefinition(underlyingType, maxReferenceDepth - 1);
+        }
+
+        if (isCompositeType && maxReferenceDepth > 1)
+        {
+            var properties = type
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
+                .Where(p => !IsIgnoredByQueryEngine(p))
+                .Select(p => BuildTypeDefinition(p.PropertyType, maxReferenceDepth - 1))
+                .Where(t => t != null);
+
+            result.Properties = properties.Any() 
+                ? properties.Select(t => t!).ToArray()
+                : null;
+        }
+        
         return result;
     }
-
+    
     public static bool IsIgnoredByQueryEngine(PropertyInfo propertyInfo)
     {
         return propertyInfo

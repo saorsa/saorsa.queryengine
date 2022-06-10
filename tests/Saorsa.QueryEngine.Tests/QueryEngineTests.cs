@@ -45,15 +45,15 @@ public class QueryEngineTests
     [Test]
     public void TestBuildPropertyDefinitionsOnIgnoredType()
     {
-        var results = QueryEngine.BuildTypePropertyDefinitions<TestDummyIgnoredClass>();
-        Assert.IsEmpty(results);
+        var results = QueryEngine.BuildTypeDefinition<TestDummyIgnoredClass>();
+        Assert.IsEmpty(results!.Properties);
     }
     
     [Test]
     public void TestBuildPropertyDefinitionsOnEnums()
     {
-        var results = QueryEngine.BuildTypePropertyDefinitions<TestDummyEnum>();
-        Assert.IsEmpty(results);
+        var results = QueryEngine.BuildTypeDefinition<TestDummyEnum>();
+        Assert.IsEmpty(results!.Properties);
     }
 
     [Test]
@@ -61,8 +61,9 @@ public class QueryEngineTests
     {
         QueryEngine.SimpleTypes.ToList().ForEach(t =>
         {
-            var results = QueryEngine.BuildTypePropertyDefinitions(t);
-            Assert.IsEmpty(results,
+            var results = QueryEngine.BuildTypeDefinition(t);
+            Assert.IsNotNull(results);
+            Assert.IsEmpty(results!.Properties,
                 $"Expected no property defs for simple type {t.Name}");
         });
     }
@@ -77,7 +78,7 @@ public class QueryEngineTests
             typeof(Dictionary<string, object>)
         }.ToList().ForEach(t =>
         {
-            var results = QueryEngine.BuildTypePropertyDefinitions(t);
+            var results = QueryEngine.BuildTypeDefinition(t);
             Assert.That(results, Is.Empty,
                 $"Expected no property defs for arrays and generic enumerations {t.Name}");
         });
@@ -86,7 +87,8 @@ public class QueryEngineTests
     [Test]
     public void TestBuildPropertyDefinitionsOnClass()
     {
-        var results = QueryEngine.BuildTypePropertyDefinitions<TestDummyClass>();
-        Assert.IsNotEmpty(results);
+        var results = QueryEngine.BuildTypeDefinition<TestDummyClass>();
+        Assert.IsNotNull(results);
+        Assert.IsNotEmpty(results!.Properties);
     }
 }

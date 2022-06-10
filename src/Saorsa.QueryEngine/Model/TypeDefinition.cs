@@ -14,7 +14,7 @@ public class TypeDefinition
 
     public FilterDefinition[] AllowedFilters { get; set; } = Array.Empty<FilterDefinition>();
     
-    public TypeDefinition? ReferenceType { get; set; }
+    public TypeDefinition? ArrayElement { get; set; }
 
     public override string ToString()
     {

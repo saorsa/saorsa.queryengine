@@ -1,3 +1,4 @@
+// ReSharper disable InconsistentNaming
 namespace Saorsa.QueryEngine.Model;
 
 public enum FilterType

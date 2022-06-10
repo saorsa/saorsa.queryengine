@@ -2,38 +2,6 @@ namespace Saorsa.QueryEngine.Model;
 
 public class FilterDefinition
 {
-    public FilterType FilterType { get; }
-    
-    public string? Arg1 { get; }
-    
-    public bool? Arg1Required { get; }
-    
-    public string? Arg2 { get; }
-    
-    public bool? Arg2Required { get; }
-
-    public FilterDefinition(
-        FilterType type,
-        string? arg1 = default,
-        bool? arg1Required = default,
-        string? arg2 = default,
-        bool? arg2Required = default)
-    {
-        FilterType = type;
-        Arg1 = arg1;
-        Arg1Required = arg1Required;
-        Arg2 = arg2;
-        Arg2Required = arg2Required;
-    }
-
-    public override string ToString()
-    {
-        var arg1RequiredString = Arg1Required.HasValue ? (Arg1Required.Value ? " (Required)" : " (Optional)") : string.Empty;
-        var arg2RequiredString = Arg2Required.HasValue ? (Arg2Required.Value ? " (Required)" : "(optional)") : string.Empty;
-
-        return $"[Filter {FilterType}, Argument1={Arg1}{arg1RequiredString}, Argument2={Arg2}{arg2RequiredString}]";
-    }
-
     public static readonly FilterDefinition IS_EMPTY = new(FilterType.IS_EMPTY);
     public static readonly FilterDefinition IS_NOT_EMPTY = new(FilterType.IS_NOT_EMPTY);
     public static readonly FilterDefinition IS_NULL = new(FilterType.IS_NULL);
@@ -102,5 +70,40 @@ public class FilterDefinition
         IS_EMPTY,
         IS_NOT_EMPTY,
     };
+    
+    public FilterType FilterType { get; }
+    
+    public string? Arg1 { get; }
+    
+    public bool? Arg1Required { get; }
+    
+    public string? Arg2 { get; }
+    
+    public bool? Arg2Required { get; }
+
+    public FilterDefinition(
+        FilterType type,
+        string? arg1 = default,
+        bool? arg1Required = default,
+        string? arg2 = default,
+        bool? arg2Required = default)
+    {
+        FilterType = type;
+        Arg1 = arg1;
+        Arg1Required = arg1Required;
+        Arg2 = arg2;
+        Arg2Required = arg2Required;
+    }
+
+    public override string ToString()
+    {
+        var arg1RequiredString = Arg1Required.HasValue 
+            ? Arg1Required.Value ? " (Required)" : " (Optional)"
+            : string.Empty;
+        var arg2RequiredString = Arg2Required.HasValue
+            ? Arg2Required.Value ? " (Required)" : "(optional)"
+            : string.Empty;
+        return $"[Filter {FilterType}, Argument1={Arg1}{arg1RequiredString}, Argument2={Arg2}{arg2RequiredString}]";
+    }
 }
 

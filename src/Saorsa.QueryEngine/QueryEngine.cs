@@ -4,34 +4,8 @@ using Saorsa.QueryEngine.Model;
 
 namespace Saorsa.QueryEngine;
 
-public static class QueryEngine
+public static partial class QueryEngine
 {
-    
-    public static readonly Dictionary<Type, FilterDefinition[]> SimpleTypeFilterTypeMap = new()
-    {
-        { typeof(char), FilterDefinition.NumericFilters },
-        { typeof(string), FilterDefinition.TextFilters  },
-        { typeof(bool), FilterDefinition.NumericFilters  },
-        { typeof(byte), FilterDefinition.NumericFilters  },
-        { typeof(sbyte), FilterDefinition.NumericFilters  },
-        { typeof(short), FilterDefinition.NumericFilters  },
-        { typeof(int), FilterDefinition.NumericFilters  },
-        { typeof(long), FilterDefinition.NumericFilters  }, 
-        { typeof(ushort), FilterDefinition.NumericFilters  },
-        { typeof(uint), FilterDefinition.NumericFilters  },
-        { typeof(ulong), FilterDefinition.NumericFilters  },
-        
-        { typeof(decimal), FilterDefinition.NumericFilters  },
-        { typeof(Guid), FilterDefinition.NumericFilters  },
-        { typeof(DateOnly), FilterDefinition.NumericFilters  },
-        { typeof(DateTime), FilterDefinition.NumericFilters  },
-        { typeof(DateTimeOffset), FilterDefinition.NumericFilters  },
-        { typeof(TimeSpan), FilterDefinition.NumericFilters  },
-        { typeof(TimeOnly), FilterDefinition.NumericFilters  },
-    };
-    
-    public static readonly IEnumerable<Type> SimpleTypes = SimpleTypeStringMap.Keys;
-
     public static TypeDefinition? BuildTypeDefinition<TEntity>(int maxReferenceDepth = 2)
     {
         return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth);
@@ -50,35 +24,28 @@ public static class QueryEngine
         }
         
         var underlyingType = type.GetUnderlyingTypeIfNullable();
-        var isSimpleType = SimpleTypes.Contains(underlyingType);
-        var isCompositeType = false;
+        var isSimpleType = underlyingType.IsQueryEngineSimpleType();
+        var isCompositeType = !isSimpleType;
         
         var result = new TypeDefinition
         {
-            TypeName = underlyingType.Name.ToPascalCase(),
+            TypeName = underlyingType.Name,
             Nullable = underlyingType.IsNullable(),
-            Type = isSimpleType ? SimpleTypeStringMap[underlyingType] : null,
-            AllowedFilters = isSimpleType ? SimpleTypeFilterTypeMap[underlyingType] : Array.Empty<FilterDefinition>()
+            Type = underlyingType.GetQueryEngineStringRepresentation(),
+            AllowedFilters = underlyingType.GetQueryEngineFilterDefinitions(),
         };
 
         if (underlyingType.IsEnum)
         {
-            result.Type = "enum";
             result.EnumValues = Enum.GetNames(underlyingType);
-            result.AllowedFilters = FilterDefinition.EnumFilters;
         }
         else if (underlyingType.IsSingleElementTypeEnumeration())
         {
-            result.Type = "array";
-            result.AllowedFilters = FilterDefinition.ArrayFilters;
-            result.ReferenceType = BuildTypeDefinition(underlyingType, maxReferenceDepth - 1);
+            result.ArrayElement = BuildTypeDefinition(underlyingType.GetSingleElementEnumerationType()!, maxReferenceDepth);
         }
-        else if (result.Type != null)
+        else if (!isSimpleType)
         {
             isCompositeType = true;
-            result.Type = "reference";
-            result.AllowedFilters = FilterDefinition.ReferenceFilters;
-            result.ReferenceType = BuildTypeDefinition(underlyingType, maxReferenceDepth - 1);
         }
 
         if (isCompositeType && maxReferenceDepth > 1)
@@ -87,7 +54,8 @@ public static class QueryEngine
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
                 .Where(p => !IsIgnoredByQueryEngine(p))
                 .Select(p => BuildTypeDefinition(p.PropertyType, maxReferenceDepth - 1))
-                .Where(t => t != null);
+                .Where(t => t != null)
+                .ToArray();
 
             result.Properties = properties.Any() 
                 ? properties.Select(t => t!).ToArray()
@@ -111,4 +79,3 @@ public static class QueryEngine
             .Any();
     }
 }
-

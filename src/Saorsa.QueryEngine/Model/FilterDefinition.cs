@@ -1,6 +1,6 @@
 namespace Saorsa.QueryEngine.Model;
 
-public class FilterDefinition
+public class FilterDefinition : IEquatable<FilterDefinition>
 {
     public static readonly FilterDefinition IS_EMPTY = new(FilterType.IS_EMPTY);
     public static readonly FilterDefinition IS_NOT_EMPTY = new(FilterType.IS_NOT_EMPTY);
@@ -105,5 +105,33 @@ public class FilterDefinition
             : string.Empty;
         return $"[Filter {FilterType}, Argument1={Arg1}{arg1RequiredString}, Argument2={Arg2}{arg2RequiredString}]";
     }
-}
 
+    public bool Equals(FilterDefinition? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return FilterType == other.FilterType
+               && Arg1 == other.Arg1
+               && Arg1Required == other.Arg1Required
+               && Arg2 == other.Arg2
+               && Arg2Required == other.Arg2Required;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj.GetType() == GetType()
+               && Equals((FilterDefinition) obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(
+            (int) FilterType,
+            Arg1,
+            Arg1Required,
+            Arg2,
+            Arg2Required);
+    }
+}

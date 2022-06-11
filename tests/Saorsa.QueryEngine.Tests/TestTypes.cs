@@ -49,6 +49,11 @@ public enum TestIgnoreEnum
 {
 }
 
+[QueryEngineCompile]
+public class TestCompileClass
+{
+}
+
 public class TestDummyClass
 {
     [QueryEngineIgnore]

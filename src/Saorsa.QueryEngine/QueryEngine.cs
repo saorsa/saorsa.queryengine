@@ -6,8 +6,10 @@ namespace Saorsa.QueryEngine;
 
 public static partial class QueryEngine
 {
+    public const int DefaultTypeDefinitionDepth = 2;
+    
     public static TypeDefinition? BuildTypeDefinition<TEntity>(
-        int maxReferenceDepth = 2,
+        int maxReferenceDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
         return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth, overrideIgnores);
@@ -15,7 +17,7 @@ public static partial class QueryEngine
 
     public static TypeDefinition? BuildTypeDefinition(
         Type type,
-        int maxReferenceDepth = 2,
+        int maxReferenceDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
         if (maxReferenceDepth <= 0)
@@ -87,6 +89,13 @@ public static partial class QueryEngine
     {
         return type
             .GetCustomAttributes(typeof(QueryEngineIgnoreAttribute), true)
+            .Any();
+    }
+    
+    public static bool IsCompiledByQueryEngine(Type type)
+    {
+        return type
+            .GetCustomAttributes(typeof(QueryEngineCompileAttribute), true)
             .Any();
     }
 }

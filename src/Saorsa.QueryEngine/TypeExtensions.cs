@@ -14,6 +14,11 @@ public static class TypeExtensions
         return QueryEngine.IsIgnoredByQueryEngine(type);
     }
     
+    public static bool IsQueryEngineCompiled(this Type type)
+    {
+        return QueryEngine.IsCompiledByQueryEngine(type);
+    }
+    
     public static string GetQueryEngineStringRepresentation(this Type type)
     {
         return QueryEngine.GetStringRepresentation(type);

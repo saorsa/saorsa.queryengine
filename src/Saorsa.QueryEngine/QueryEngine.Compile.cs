@@ -25,23 +25,75 @@ public static partial class QueryEngine
         var compiled = new List<TypeDefinition>();
         ScanQueryEngineTypes(assembly)
             .ToList()
-            .ForEach(t =>
+            .ForEach(type =>
             {
-                var typeDef = BuildTypeDefinition(t, maxDepth, overrideIgnores);
-                if (typeDef == null) return;
-                lock (CompileLock)
+                var typeDef = CompileType(type, maxDepth, overrideIgnores);
+                if (typeDef != null)
                 {
-                    if (!CompileMap.ContainsKey(maxDepth))
-                    {
-                        CompileMap.Add(maxDepth, new Dictionary<Type, TypeDefinition>());
-                    }
-
-                    if (CompileMap[maxDepth].ContainsKey(t)) return;
-                    
-                    CompileMap[maxDepth][t] = typeDef;
                     compiled.Add(typeDef);
                 }
             });
         return compiled.ToArray();
+    }
+
+    public static TypeDefinition? CompileType<TEntity>(
+        int maxDepth = DefaultTypeDefinitionDepth,
+        bool overrideIgnores = false)
+    {
+        return CompileType(typeof(TEntity), maxDepth, overrideIgnores);
+    }
+    
+    public static TypeDefinition? CompileType(
+        Type type,
+        int maxDepth = DefaultTypeDefinitionDepth,
+        bool overrideIgnores = false)
+    {
+        var typeDef = BuildTypeDefinition(type, maxDepth, overrideIgnores);
+        if (typeDef == null) return null;
+        lock (CompileLock)
+        {
+            if (!CompileMap.ContainsKey(maxDepth))
+            {
+                CompileMap.Add(maxDepth, new Dictionary<Type, TypeDefinition>());
+            }
+            CompileMap[maxDepth][type] = typeDef;
+            return typeDef;
+        }
+    }
+
+    public static TypeDefinition? GetCompiled<TEntity>(
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        return GetCompiled(typeof(TEntity), maxDepth);
+    }
+    
+    public static TypeDefinition? GetCompiled(
+        Type type,
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        lock (CompileLock)
+        {
+            if (!CompileMap.ContainsKey(maxDepth))
+            {
+                return null;
+            }
+            
+            return !CompileMap[maxDepth].ContainsKey(type)
+                ? null
+                : CompileMap[maxDepth][type];
+        }
+    }
+    
+    public static bool IsCompiled<TEntity>(
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        return IsCompiled(typeof(TEntity), maxDepth);
+    }
+    
+    public static bool IsCompiled(
+        Type type,
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        return GetCompiled(type, maxDepth) != null;
     }
 }

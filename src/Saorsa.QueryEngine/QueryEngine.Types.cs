@@ -33,7 +33,7 @@ public static partial class QueryEngine
     {
         public const string Enumeration = "enum";
         public const string ArrayOrList = "array";
-        public const string Reference = "reference";
+        public const string Object = "object";
     }
 
     public static readonly Dictionary<Type, string> SimpleTypesStringMap = new()
@@ -107,7 +107,7 @@ public static partial class QueryEngine
 
         return type.IsSingleElementTypeEnumeration()
             ? SpecialTypeStringKeys.ArrayOrList
-            : SpecialTypeStringKeys.Reference;
+            : SpecialTypeStringKeys.Object;
     }
 
     public static FilterDefinition[] GetFilterDefinitions(Type type)

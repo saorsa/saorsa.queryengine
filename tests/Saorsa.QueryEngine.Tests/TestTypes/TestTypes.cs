@@ -1,5 +1,5 @@
 // ReSharper disable ClassNeverInstantiated.Global
-namespace Saorsa.QueryEngine.Tests;
+namespace Saorsa.QueryEngine.Tests.TestTypes;
 
 public enum TestEnum
 {
@@ -49,10 +49,6 @@ public enum TestIgnoreEnum
 {
 }
 
-[QueryEngineCompile]
-public class TestCompileClass
-{
-}
 
 public class TestDummyClass
 {

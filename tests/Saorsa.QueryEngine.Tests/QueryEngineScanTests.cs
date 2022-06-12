@@ -10,7 +10,7 @@ public class QueryEngineScanTests
         var resultTypes = QueryEngine.ScanQueryEngineTypes();
         
         Assert.That(resultTypes, Is.Not.Null);
-        Assert.That(resultTypes, Contains.Item(typeof(TestCompileClass)));
+        Assert.That(resultTypes, Contains.Item(typeof(TestCompileClass3001)));
     }
     
     [Test]
@@ -20,6 +20,6 @@ public class QueryEngineScanTests
             Assembly.GetExecutingAssembly());
         
         Assert.That(resultTypes, Is.Not.Null);
-        Assert.That(resultTypes, Contains.Item(typeof(TestCompileClass)));
+        Assert.That(resultTypes, Contains.Item(typeof(TestCompileClass3001)));
     }
 }

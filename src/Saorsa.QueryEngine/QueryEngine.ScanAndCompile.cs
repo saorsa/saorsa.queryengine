@@ -5,6 +5,21 @@ namespace Saorsa.QueryEngine;
 
 public static partial class QueryEngine
 {
+    public static Type[] ScanQueryEngineTypes()
+    {
+        return AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(ScanQueryEngineTypes)
+            .ToArray();
+    }
+    
+    public static Type[] ScanQueryEngineTypes(Assembly assembly)
+    {
+        return assembly
+            .GetTypes()
+            .Where(t => t.IsQueryEngineCompiled())
+            .ToArray();
+    }
+    
     private static readonly object CompileLock = new();
     private static readonly Dictionary<int, Dictionary<Type, TypeDefinition>> CompileMap = new();
 

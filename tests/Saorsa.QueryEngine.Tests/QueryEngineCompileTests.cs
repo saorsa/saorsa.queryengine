@@ -29,7 +29,10 @@ public class QueryEngineCompileTests
     [Test]
     public void TestCompileTestCase3001()
     {
-        var isCompiled = QueryEngine.IsCompiled<TestCompileClass>(TestCase3001);
+        var compiledMatch = QueryEngine.GetCompiled<TestCompileClass3001>(TestCase3001);
+        Assert.That(compiledMatch, Is.Null);
+        
+        var isCompiled = QueryEngine.IsCompiled<TestCompileClass3001>(TestCase3001);
         Assert.That(isCompiled, Is.False);
         
         var compiledTypDefs =
@@ -39,16 +42,23 @@ public class QueryEngineCompileTests
         Assert.That(compiledTypDefs, Is.Not.Empty);
 
         var match = compiledTypDefs.FirstOrDefault(
-            td => td.TypeName.Equals(nameof(TestCompileClass)));
+            td => td.TypeName.Equals(nameof(TestCompileClass3001)));
         
         Assert.That(match, Is.Not.Null);
         
-        isCompiled = QueryEngine.IsCompiled<TestCompileClass>(TestCase3001);
+        isCompiled = QueryEngine.IsCompiled<TestCompileClass3001>(TestCase3001);
         Assert.That(isCompiled, Is.True);
 
-        var match2 = QueryEngine.GetCompiled<TestCompileClass>(TestCase3001);
+        var match2 = QueryEngine.GetCompiled<TestCompileClass3001>(TestCase3001);
         
         Assert.That(match2, Is.Not.Null);
         Assert.That(match2, Is.SameAs(match));
+    }
+
+    [Test]
+    public void TestCompileIgnoredType()
+    {
+        var typeDef = QueryEngine.CompileType<TestIgnoreEnum>();
+        Assert.That(typeDef, Is.Null);
     }
 }

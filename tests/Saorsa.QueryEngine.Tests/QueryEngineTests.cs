@@ -26,8 +26,9 @@ public class QueryEngineTests
         QueryEngine.SimpleTypes.ToList().ForEach(t =>
         {
             var results = QueryEngine.BuildTypeDefinition(t);
-            Assert.IsNotNull(results);
-            Assert.IsEmpty(results!.Properties,
+            Assert.That(results, Is.Not.Null);
+            Assert.That(results!.Properties, Is.Not.Null);
+            Assert.That(results!.Properties, Is.Empty,
                 $"Expected no property defs for simple type {t.Name}");
         });
     }

@@ -98,4 +98,10 @@ public static partial class QueryEngine
             .GetCustomAttributes(typeof(QueryEngineCompileAttribute), true)
             .Any();
     }
+
+    public static IQueryable<TEntity> Query<TEntity>(
+        IQueryable<TEntity> source)
+    {
+        return source;
+    }
 }

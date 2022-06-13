@@ -67,6 +67,8 @@ public class FilterDefinition : IEquatable<FilterDefinition>
     
     public static readonly FilterDefinition[] ArrayFilters =
     {
+        IS_NULL,
+        IS_NOT_NULL,
         IS_EMPTY,
         IS_NOT_EMPTY,
     };

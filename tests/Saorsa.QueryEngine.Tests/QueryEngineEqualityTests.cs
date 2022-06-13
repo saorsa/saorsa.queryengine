@@ -10,6 +10,7 @@ public class QueryEngineEqualityTests
             new TestDummyClass
             {
                 IntValue = 42,
+                EnumerableOfInts = new [] { 1, 2, 3},
             },
             new TestDummyClass
             {
@@ -94,5 +95,53 @@ public class QueryEngineEqualityTests
         };
         var results8 = QueryEngine.ApplyPropertyFilter(x, propFilter8).ToList();
         Assert.IsNotEmpty(results8);
+        
+        
+        var propFilter9 = new PropertyFilter
+        {
+            Name = nameof(TestDummyClass.ArrayOfInts).ToCamelCase(),
+            FilterType = FilterType.IS_NOT_NULL,
+        };
+        var results9 = QueryEngine.ApplyPropertyFilter(x, propFilter9).ToList();
+        Assert.IsNotEmpty(results9);
+        
+        
+        var propFilter10 = new PropertyFilter
+        {
+            Name = nameof(TestDummyClass.EnumerableOfInts).ToCamelCase(),
+            FilterType = FilterType.IS_NULL,
+        };
+        var results10 = QueryEngine.ApplyPropertyFilter(x, propFilter10).ToList();
+        Assert.IsNotEmpty(results10);
+    }
+
+    [Test]
+    public void TestReferencePropertyQueries()
+    {
+        var x = new[]
+        {
+            new TestRecursiveClass
+            {
+                RecursiveProperty = new TestRecursiveClass()
+            },
+            new(),
+            new(),
+        }.AsQueryable();
+
+        var results = QueryEngine.ApplyPropertyFilter(x, new PropertyFilter
+        {
+            Name = nameof(TestRecursiveClass.RecursiveProperty).ToCamelCase(),
+            FilterType = FilterType.IS_NOT_NULL,
+        }).ToList();
+        
+        Assert.IsNotEmpty(results);
+
+        var results2 = QueryEngine.ApplyPropertyFilter(x, new PropertyFilter
+        {
+            Name = nameof(TestRecursiveClass.RecursiveProperty).ToCamelCase(),
+            FilterType = FilterType.IS_NULL,
+        }).ToList();
+        
+        Assert.IsNotEmpty(results2);
     }
 }

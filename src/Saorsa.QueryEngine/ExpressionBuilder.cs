@@ -70,4 +70,24 @@ public static class ExpressionBuilder
         var expression = Expression.GreaterThanOrEqual(parameterProperty, expectedEquals);
         return Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
     }
+    
+    public static Expression<Func<TEntity, bool>> PropertyIsNull<TEntity>(
+        string propertyName)
+    {     
+        var parameter = Expression.Parameter(typeof(TEntity));
+        var parameterProperty = Expression.Property(parameter, propertyName);
+        var expectedEquals = Expression.Constant(null);
+        var expression = Expression.Equal(parameterProperty, expectedEquals);
+        return Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
+    }
+    
+    public static Expression<Func<TEntity, bool>> PropertyIsNotNull<TEntity>(
+        string propertyName)
+    {     
+        var parameter = Expression.Parameter(typeof(TEntity));
+        var parameterProperty = Expression.Property(parameter, propertyName);
+        var expectedEquals = Expression.Constant(null);
+        var expression = Expression.NotEqual(parameterProperty, expectedEquals);
+        return Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
+    }
 }

@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using System.Reflection;
 using Saorsa.QueryEngine.Annotations;
 using Saorsa.QueryEngine.Model;
@@ -180,6 +179,20 @@ public static partial class QueryEngine
         
         switch (propertyFilter.FilterType)
         {
+            case FilterType.IS_NULL:
+            {
+                var expression = ExpressionBuilder.PropertyIsNull<TEntity>(
+                    propertyDef.Name);
+                return query.Where(expression);
+            }
+            
+            case FilterType.IS_NOT_NULL:
+            {
+                var expression = ExpressionBuilder.PropertyIsNotNull<TEntity>(
+                    propertyDef.Name);
+                return query.Where(expression);
+            }
+            
             case FilterType.EQ:
             {
                 var expression = ExpressionBuilder.PropertyEqualTo<TEntity>(
@@ -191,6 +204,38 @@ public static partial class QueryEngine
             case FilterType.NOT_EQ:
             {
                 var expression = ExpressionBuilder.PropertyNotEqualTo<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            case FilterType.LT:
+            {
+                var expression = ExpressionBuilder.PropertyLessThan<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            case FilterType.LT_EQ:
+            {
+                var expression = ExpressionBuilder.PropertyLessThanOrEqual<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            case FilterType.GT:
+            {
+                var expression = ExpressionBuilder.PropertyGreaterThan<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            case FilterType.GT_EQ:
+            {
+                var expression = ExpressionBuilder.PropertyGreaterThanOrEqual<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
                 return query.Where(expression);

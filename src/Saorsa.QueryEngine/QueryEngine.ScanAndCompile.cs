@@ -5,6 +5,10 @@ namespace Saorsa.QueryEngine;
 
 public static partial class QueryEngine
 {
+    private static readonly object CompileLock = new();
+    private static readonly object EnsureCompileLock = new();
+    private static readonly Dictionary<int, Dictionary<Type, TypeDefinition>> CompileMap = new();
+    
     public static Type[] ScanQueryEngineTypes()
     {
         return AppDomain.CurrentDomain.GetAssemblies()
@@ -19,9 +23,6 @@ public static partial class QueryEngine
             .Where(t => t.IsQueryEngineCompiled())
             .ToArray();
     }
-    
-    private static readonly object CompileLock = new();
-    private static readonly Dictionary<int, Dictionary<Type, TypeDefinition>> CompileMap = new();
 
     public static TypeDefinition[] CompileTypeDefinitions(
         int maxDepth = DefaultTypeDefinitionDepth,
@@ -63,7 +64,7 @@ public static partial class QueryEngine
         int maxDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
-        var typeDef = BuildTypeDefinition(type, maxDepth, overrideIgnores);
+        var typeDef = BuildTypeDefinition(type, maxDepth, null, overrideIgnores);
         if (typeDef == null) return null;
         lock (CompileLock)
         {
@@ -110,5 +111,22 @@ public static partial class QueryEngine
         int maxDepth = DefaultTypeDefinitionDepth)
     {
         return GetCompiled(type, maxDepth) != null;
+    }
+
+    public static TypeDefinition? EnsureCompiled<TEntity>(
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        return EnsureCompiled(typeof(TEntity), maxDepth);
+    }
+    
+    public static TypeDefinition? EnsureCompiled(
+        Type type,
+        int maxDepth = DefaultTypeDefinitionDepth)
+    {
+        lock (EnsureCompileLock)
+        {
+            var compiled = GetCompiled(type, maxDepth) ?? CompileType(type, maxDepth);
+            return compiled;
+        }
     }
 }

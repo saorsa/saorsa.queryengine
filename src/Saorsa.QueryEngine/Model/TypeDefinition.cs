@@ -2,6 +2,8 @@ namespace Saorsa.QueryEngine.Model;
 
 public class TypeDefinition
 {
+    public string Name { get; set; } = $"name_{Guid.NewGuid():N}";
+    
     public string TypeName { get; set; } = $"type_{Guid.NewGuid():N}";
 
     public bool Nullable { get; set; }

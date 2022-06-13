@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using Saorsa.QueryEngine.Annotations;
 using Saorsa.QueryEngine.Model;
@@ -10,14 +11,16 @@ public static partial class QueryEngine
     
     public static TypeDefinition? BuildTypeDefinition<TEntity>(
         int maxReferenceDepth = DefaultTypeDefinitionDepth,
+        string? name = null,
         bool overrideIgnores = false)
     {
-        return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth, overrideIgnores);
+        return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth, name, overrideIgnores);
     }
 
     public static TypeDefinition? BuildTypeDefinition(
         Type type,
         int maxReferenceDepth = DefaultTypeDefinitionDepth,
+        string? name = null,
         bool overrideIgnores = false)
     {
         if (maxReferenceDepth <= 0)
@@ -36,6 +39,7 @@ public static partial class QueryEngine
         
         var result = new TypeDefinition
         {
+            Name = name ?? underlyingType.Name,
             TypeName = underlyingType.Name,
             Nullable = underlyingType.IsNullable(),
             Type = underlyingType.GetQueryEngineStringRepresentation(),
@@ -51,6 +55,7 @@ public static partial class QueryEngine
             result.ArrayElement = BuildTypeDefinition(
                 underlyingType.GetSingleElementEnumerationType()!,
                 maxReferenceDepth,
+                name,
                 overrideIgnores);
         }
         else if (!isSimpleType)
@@ -64,8 +69,9 @@ public static partial class QueryEngine
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty)
                 .Where(p => overrideIgnores || !IsIgnoredByQueryEngine(p))
                 .Select(p => BuildTypeDefinition(
-                    p.PropertyType, 
+                    p.PropertyType,
                     maxReferenceDepth - 1,
+                    p.Name.ToCamelCase(),
                     overrideIgnores))
                 .Where(t => t != null)
                 .ToArray();
@@ -99,9 +105,101 @@ public static partial class QueryEngine
             .Any();
     }
 
-    public static IQueryable<TEntity> Query<TEntity>(
-        IQueryable<TEntity> source)
+    public static TypeDefinition GetPropertyDefinitionOrThrow<TEntity>(
+        TypeDefinition typeDef,
+        PropertyFilter propertyFilter)
     {
-        return source;
+
+        var matchingTypeDef = typeDef.Properties?.FirstOrDefault(p =>
+            p.Name.Equals(propertyFilter.Name));
+        if (matchingTypeDef == null)
+        {
+            throw new QueryEngineException(1200, 
+                $"Type {typeof(TEntity)} does not have a property named {propertyFilter.Name}.");
+        }
+
+        var filterDef = matchingTypeDef.AllowedFilters.FirstOrDefault(f => f.FilterType == propertyFilter.FilterType);
+        if (filterDef == null)
+        {
+            throw new QueryEngineException(1300, 
+                $"Type {typeof(TEntity)}, property {propertyFilter.Name} does not support filter {propertyFilter.FilterType}.");
+        }
+
+        if (filterDef.Arg1Required.GetValueOrDefault())
+        {
+            if (propertyFilter.Arguments.Length < 1)
+            { 
+                throw new QueryEngineException(
+                2501,
+                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
+                $"{propertyFilter.FilterType} expects a single argument which is not provided.");
+            }
+        }
+        else if (propertyFilter.Arguments.Length > 0)
+        {
+            throw new QueryEngineException(
+                2501,
+                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
+                $"{propertyFilter.FilterType} does not expect an argument, but it was provided.");
+        }
+        
+        if (filterDef.Arg2Required.GetValueOrDefault())
+        {
+            if (propertyFilter.Arguments.Length < 2)
+            { 
+                throw new QueryEngineException(
+                    2501,
+                    $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
+                    $"{propertyFilter.FilterType} expects a second argument which was not provided.");
+            }
+        }
+        else if (propertyFilter.Arguments.Length > 1)
+        {
+            throw new QueryEngineException(
+                2501,
+                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
+                $"{propertyFilter.FilterType} does not expect a second argument, but it was provided.");
+        }
+
+        return matchingTypeDef;
+    }
+    
+    public static IQueryable<TEntity> ApplyPropertyFilter<TEntity>(
+        IQueryable<TEntity> query,
+        PropertyFilter propertyFilter)
+    {
+        var typeDef = EnsureCompiled<TEntity>();
+        
+        if (typeDef == null)
+        {
+            throw new QueryEngineException(1100, 
+                $"Type {typeof(TEntity)} is not supported by query engine.");
+        }
+        
+        var propertyDef = GetPropertyDefinitionOrThrow<TEntity>(typeDef, propertyFilter);
+        
+        switch (propertyFilter.FilterType)
+        {
+            case FilterType.EQ:
+            {
+                var expression = ExpressionBuilder.PropertyEqualTo<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            case FilterType.NOT_EQ:
+            {
+                var expression = ExpressionBuilder.PropertyNotEqualTo<TEntity>(
+                    propertyDef.Name,
+                    propertyFilter.Arguments[0]);
+                return query.Where(expression);
+            }
+            
+            default:
+                throw new QueryEngineException(1400, 
+                    $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter {propertyFilter.FilterType}" +
+                    $"is not implemented yet.");
+        }
     }
 }

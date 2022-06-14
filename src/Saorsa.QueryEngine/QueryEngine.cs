@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Reflection;
 using Saorsa.QueryEngine.Annotations;
 using Saorsa.QueryEngine.Model;
@@ -166,6 +167,21 @@ public static partial class QueryEngine
         IQueryable<TEntity> query,
         PropertyFilter propertyFilter)
     {
+        var expression = ToExpression<TEntity>(propertyFilter);
+        return query.Where(expression);
+    }
+    
+    public static IQueryable<TEntity> AddPropertyFilterBlock<TEntity>(
+        IQueryable<TEntity> query,
+        PropertyFilterBlock block)
+    {
+        var expression = ToExpression<TEntity>(block);
+        return query.Where(expression);
+    }
+    
+    public static Expression<Func<TEntity, bool>> ToExpression<TEntity>(
+        PropertyFilter propertyFilter)
+    {
         var typeDef = EnsureCompiled<TEntity>();
         
         if (typeDef == null)
@@ -180,64 +196,56 @@ public static partial class QueryEngine
         {
             case FilterType.IS_NULL:
             {
-                var expression = ExpressionBuilder.PropertyIsNull<TEntity>(
+                return ExpressionBuilder.PropertyIsNull<TEntity>(
                     propertyDef.Name);
-                return query.Where(expression);
             }
             
             case FilterType.IS_NOT_NULL:
             {
-                var expression = ExpressionBuilder.PropertyIsNotNull<TEntity>(
+                return ExpressionBuilder.PropertyIsNotNull<TEntity>(
                     propertyDef.Name);
-                return query.Where(expression);
             }
-            
+            //https://blog.jeremylikness.com/blog/dynamically-build-linq-expressions/
             case FilterType.EQ:
             {
-                var expression = ExpressionBuilder.PropertyEqualTo<TEntity>(
+                return ExpressionBuilder.PropertyEqualTo<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             case FilterType.NOT_EQ:
             {
-                var expression = ExpressionBuilder.PropertyNotEqualTo<TEntity>(
+                return ExpressionBuilder.PropertyNotEqualTo<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             case FilterType.LT:
             {
-                var expression = ExpressionBuilder.PropertyLessThan<TEntity>(
+                return ExpressionBuilder.PropertyLessThan<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             case FilterType.LT_EQ:
             {
-                var expression = ExpressionBuilder.PropertyLessThanOrEqual<TEntity>(
+                return ExpressionBuilder.PropertyLessThanOrEqual<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             case FilterType.GT:
             {
-                var expression = ExpressionBuilder.PropertyGreaterThan<TEntity>(
+                return ExpressionBuilder.PropertyGreaterThan<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             case FilterType.GT_EQ:
             {
-                var expression = ExpressionBuilder.PropertyGreaterThanOrEqual<TEntity>(
+                return ExpressionBuilder.PropertyGreaterThanOrEqual<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
-                return query.Where(expression);
             }
             
             default:
@@ -245,5 +253,32 @@ public static partial class QueryEngine
                     $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter {propertyFilter.FilterType}" +
                     $"is not implemented yet.");
         }
+    }
+
+    public static Expression<Func<TEntity, bool>> ToExpression<TEntity>(
+        PropertyFilterBlock block)
+    {
+        if (block.Others != null && block.Others.Any())
+        {
+            var condition = block.Condition ?? BinaryOperator.And;
+            var expression = ToExpression<TEntity>(block.First);
+            BinaryExpression? binaryExpression = null;
+                
+            block.Others.ToList().ForEach(item =>
+            {
+                var other = ToExpression<TEntity>(item.First);
+                var combined = condition == BinaryOperator.And
+                    ? Expression.And(expression, other)
+                    : Expression.Or(expression, other);
+                binaryExpression = combined;
+            });
+
+            if (binaryExpression != null)
+            {
+                return Expression.Lambda<Func<TEntity, bool>>(binaryExpression);
+            }
+        }
+
+        return ToExpression<TEntity>(block.First);
     }
 }

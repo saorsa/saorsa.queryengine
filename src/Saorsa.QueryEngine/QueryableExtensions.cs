@@ -10,4 +10,11 @@ public static class QueryableExtensions
     {
         return QueryEngine.AddPropertyFilter(source, propertyFilter);
     }
+    
+    public static IQueryable<TEntity> AddPropertyFilterBlock<TEntity>(
+        this IQueryable<TEntity> source,
+        PropertyFilterBlock block)
+    {
+        return QueryEngine.AddPropertyFilterBlock(source, block);
+    }
 }

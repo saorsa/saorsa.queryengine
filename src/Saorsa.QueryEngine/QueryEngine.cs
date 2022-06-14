@@ -108,9 +108,8 @@ public static partial class QueryEngine
         TypeDefinition typeDef,
         PropertyFilter propertyFilter)
     {
-
         var matchingTypeDef = typeDef.Properties?.FirstOrDefault(p =>
-            p.Name.Equals(propertyFilter.Name));
+            p.Name.Equals(propertyFilter.Name.ToCamelCase()));
         if (matchingTypeDef == null)
         {
             throw new QueryEngineException(1200, 
@@ -163,7 +162,7 @@ public static partial class QueryEngine
         return matchingTypeDef;
     }
     
-    public static IQueryable<TEntity> ApplyPropertyFilter<TEntity>(
+    public static IQueryable<TEntity> AddPropertyFilter<TEntity>(
         IQueryable<TEntity> query,
         PropertyFilter propertyFilter)
     {

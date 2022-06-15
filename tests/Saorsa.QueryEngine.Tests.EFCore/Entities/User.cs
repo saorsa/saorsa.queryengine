@@ -1,6 +1,9 @@
-namespace Saorsa.QueryEngine.Tests.TestTypes;
+using Saorsa.QueryEngine.Annotations;
 
-public class User
+namespace Saorsa.QueryEngine.Tests.EFCore.Entities;
+
+[QueryEngineCompile]
+public class User : EntityBase
 {
     public Guid Id { get; set; }
     public string Username { get; set; } = $"user-{Guid.NewGuid():N}";

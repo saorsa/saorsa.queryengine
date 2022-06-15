@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saorsa.Extensions", "..\..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saorsa.QueryEngine.Tests.NpgSql", "..\tests\Saorsa.QueryEngine.Tests.NpgSql\Saorsa.QueryEngine.Tests.NpgSql.csproj", "{587DE698-F1CE-4338-A469-A997335E9350}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Saorsa.QueryEngine.Tests.EFCore", "..\tests\Saorsa.QueryEngine.Tests.EFCore\Saorsa.QueryEngine.Tests.EFCore.csproj", "{B0A86F04-176E-4231-B066-E6A577A00876}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,11 +42,16 @@ Global
 		{587DE698-F1CE-4338-A469-A997335E9350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{587DE698-F1CE-4338-A469-A997335E9350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{587DE698-F1CE-4338-A469-A997335E9350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A86F04-176E-4231-B066-E6A577A00876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A86F04-176E-4231-B066-E6A577A00876}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A86F04-176E-4231-B066-E6A577A00876}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A86F04-176E-4231-B066-E6A577A00876}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{65060C26-04BB-4BAA-81A6-E76C1DFDE0AC} = {AD4C61C0-54FB-4B73-8C90-5448C47DB8BF}
 		{A1D3A22A-4C32-42D1-BA68-A4A329ECDD3A} = {8DD511C8-3276-4DB4-80C3-0EB5C8868006}
 		{D28BCF21-3773-41C7-8B4D-97F1A705477A} = {8DD511C8-3276-4DB4-80C3-0EB5C8868006}
 		{587DE698-F1CE-4338-A469-A997335E9350} = {AD4C61C0-54FB-4B73-8C90-5448C47DB8BF}
+		{B0A86F04-176E-4231-B066-E6A577A00876} = {AD4C61C0-54FB-4B73-8C90-5448C47DB8BF}
 	EndGlobalSection
 EndGlobal

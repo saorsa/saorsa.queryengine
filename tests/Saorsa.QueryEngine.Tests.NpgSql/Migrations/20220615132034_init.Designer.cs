@@ -11,9 +11,9 @@ using Saorsa.QueryEngine.Tests.NpgSql.Data;
 
 namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 {
-    [DbContext(typeof(QueryDbContext))]
-    [Migration("20220614092245_Init")]
-    partial class Init
+    [DbContext(typeof(QueryNpgsqlDbContext))]
+    [Migration("20220615132034_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,7 +39,7 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.ToTable("GroupUser");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.Category", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,6 +60,12 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<Guid?>("TestCaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TestSubCaseId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ParentCategoryId");
@@ -67,7 +73,7 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.Group", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.Group", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -81,6 +87,12 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("TestCaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TestSubCaseId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -88,7 +100,7 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.ToTable("Groups");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.User", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -100,6 +112,12 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("integer");
 
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
                     b.Property<long?>("ExternalId")
                         .HasColumnType("bigint");
 
@@ -108,6 +126,12 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("text");
+
+                    b.Property<Guid?>("TestCaseId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TestSubCaseId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Username")
                         .IsRequired()
@@ -122,47 +146,47 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 
             modelBuilder.Entity("GroupUser", b =>
                 {
-                    b.HasOne("Saorsa.QueryEngine.Tests.TestTypes.Group", null)
+                    b.HasOne("Saorsa.QueryEngine.Tests.EFCore.Entities.Group", null)
                         .WithMany()
                         .HasForeignKey("GroupsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Saorsa.QueryEngine.Tests.TestTypes.User", null)
+                    b.HasOne("Saorsa.QueryEngine.Tests.EFCore.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.Category", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", b =>
                 {
-                    b.HasOne("Saorsa.QueryEngine.Tests.TestTypes.Category", "ParentCategory")
+                    b.HasOne("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", "ParentCategory")
                         .WithMany("ChildCategories")
                         .HasForeignKey("ParentCategoryId");
 
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.Group", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.Group", b =>
                 {
-                    b.HasOne("Saorsa.QueryEngine.Tests.TestTypes.Category", "Category")
+                    b.HasOne("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", "Category")
                         .WithMany("Groups")
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.User", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.User", b =>
                 {
-                    b.HasOne("Saorsa.QueryEngine.Tests.TestTypes.Category", "Category")
+                    b.HasOne("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", "Category")
                         .WithMany("Users")
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("Saorsa.QueryEngine.Tests.TestTypes.Category", b =>
+            modelBuilder.Entity("Saorsa.QueryEngine.Tests.EFCore.Entities.Category", b =>
                 {
                     b.Navigation("ChildCategories");
 

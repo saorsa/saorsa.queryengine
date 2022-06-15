@@ -13,7 +13,7 @@ public class CategoryQueryTests
             Name = $"Group-{key}"
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
@@ -33,7 +33,7 @@ public class CategoryQueryTests
             Name = $"Group-{key}"
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
@@ -66,7 +66,7 @@ public class CategoryQueryTests
             Name = $"Group-{key}"
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
@@ -105,7 +105,7 @@ public class CategoryQueryTests
             ParentCategory = new Category()
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
@@ -147,7 +147,7 @@ public class CategoryQueryTests
             }
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
@@ -191,7 +191,7 @@ public class CategoryQueryTests
             }
         };
         
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Categories.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));

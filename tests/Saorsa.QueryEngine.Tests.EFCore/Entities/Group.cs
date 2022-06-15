@@ -1,10 +1,11 @@
-namespace Saorsa.QueryEngine.Tests.TestTypes;
+using Saorsa.QueryEngine.Annotations;
 
-public class Group
+namespace Saorsa.QueryEngine.Tests.EFCore.Entities;
+
+[QueryEngineCompile]
+public class Group : EntityBase
 {
     public string Id { get; set; } = $"group-{Guid.NewGuid():N}";
-    public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
-    public string? CreatedBy { get; set; }
     
     // one to many
     public int? CategoryId { get; set; }

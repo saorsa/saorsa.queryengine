@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,9 +17,11 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
+                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true),
+                    TestCaseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TestSubCaseId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    ParentCategoryId = table.Column<int>(type: "integer", nullable: true)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -36,9 +38,11 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
+                    CategoryId = table.Column<int>(type: "integer", nullable: true),
+                    TestCaseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TestSubCaseId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    CreatedBy = table.Column<string>(type: "text", nullable: true),
-                    CategoryId = table.Column<int>(type: "integer", nullable: true)
+                    CreatedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -60,7 +64,11 @@ namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
                     Gender = table.Column<string>(type: "text", nullable: true),
                     Age = table.Column<int>(type: "integer", nullable: true),
                     ExternalId = table.Column<long>(type: "bigint", nullable: true),
-                    CategoryId = table.Column<int>(type: "integer", nullable: true)
+                    CategoryId = table.Column<int>(type: "integer", nullable: true),
+                    TestCaseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    TestSubCaseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedAtUtc = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    CreatedBy = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

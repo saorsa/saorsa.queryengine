@@ -1,11 +1,12 @@
-namespace Saorsa.QueryEngine.Tests.TestTypes;
+using Saorsa.QueryEngine.Annotations;
 
-public class Category
+namespace Saorsa.QueryEngine.Tests.EFCore.Entities;
+
+[QueryEngineCompile]
+public class Category : EntityBase
 {
     public int Id { get; set; }
     public string Name { get; set; } = $"category-{Guid.NewGuid():N}";
-    public DateTimeOffset CreatedAtUtc { get; set; } = DateTimeOffset.UtcNow;
-    public string? CreatedBy { get; set; }
     
 
     // many-to-one

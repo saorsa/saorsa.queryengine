@@ -40,7 +40,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -87,7 +87,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -155,7 +155,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -222,7 +222,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -289,7 +289,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -357,7 +357,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -393,6 +393,11 @@ public class UsersQueryTests
     [Test]
     public void TestSimpleInsertQueryBlockDelete()
     {
+        var x = new QueryNpgsqlDbContext();
+
+        var typeDef = QueryEngine.CompileType<User>();
+        var properties = typeDef?.Properties;
+
         var key = Guid.NewGuid().ToString("N");
         var category = new Category
         {
@@ -425,7 +430,7 @@ public class UsersQueryTests
             }
         };
 
-        var db = new QueryDbContext();
+        var db = new QueryNpgsqlDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));

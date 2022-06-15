@@ -1,13 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Saorsa.QueryEngine.Tests.EFCore;
 
 namespace Saorsa.QueryEngine.Tests.NpgSql.Data;
 
-public class QueryDbContext : DbContext
+public class QueryNpgsqlDbContext : QueryDbContextBase
 {
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Group> Groups => Set<Group>();
-    public DbSet<Category> Categories => Set<Category>();
-    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder
             .LogTo(Console.WriteLine)

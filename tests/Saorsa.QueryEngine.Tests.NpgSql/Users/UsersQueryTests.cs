@@ -433,13 +433,13 @@ public class UsersQueryTests
         var query = db.Users
             .AddPropertyFilterBlock(new PropertyFilterBlock
             {
-                First = new PropertyFilter
+                First = new PropertyFilter()
                 {
-                    Name = nameof(User.ExternalId),
+                    Name = nameof(User.CategoryId),
                     FilterType = FilterType.EQ,
-                    Arguments = new object[] { 123456 }
+                    Arguments = new object[] { category.Id }
                 },
-                Condition = BinaryOperator.Or,
+                Condition = BinaryOperator.And,
                 Others = new []
                 {
                     new PropertyFilterBlock
@@ -447,8 +447,21 @@ public class UsersQueryTests
                         First = new PropertyFilter
                         {
                             Name = nameof(User.ExternalId),
-                            FilterType = FilterType.IS_NULL,
-                            Arguments = new object[] { }
+                            FilterType = FilterType.EQ,
+                            Arguments = new object[] { 123456 }
+                        },
+                        Condition = BinaryOperator.Or,
+                        Others = new []
+                        {
+                            new PropertyFilterBlock
+                            {
+                                First = new PropertyFilter
+                                {
+                                    Name = nameof(User.Age),
+                                    FilterType = FilterType.GT_EQ,
+                                    Arguments = new object[] { 32 }
+                                }
+                            }
                         }
                     }
                 }
@@ -458,7 +471,7 @@ public class UsersQueryTests
         
         Assert.That(
             queryResults.Count,
-            Is.EqualTo(users.Count(u => u.ExternalId != null || u.ExternalId == null)));
+            Is.EqualTo(users.Count(u => u.ExternalId == 123456 || u.Age >= 32)));
 
         db.Users.RemoveRange(users);
         db.Categories.Remove(category);

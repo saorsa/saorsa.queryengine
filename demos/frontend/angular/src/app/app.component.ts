@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ApiService} from "./services/api.service";
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'query-engine-dashboard';
+
+  constructor(private api: ApiService) {
+  }
+
+  ngOnInit() {
+    this.api.get<any>('health').subscribe(r => {
+      console.warn(r);
+    });
+  }
 }

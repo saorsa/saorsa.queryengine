@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using System.Reflection;
-using Saorsa.QueryEngine.Model;
 
 namespace Saorsa.QueryEngine;
 
@@ -8,29 +7,66 @@ public static class ExpressionBuilder
 {
     public static readonly ConstantExpression NullConstant = Expression.Constant(null);
     
-    public static Expression<Func<TEntity, bool>> PropertyEqualTo<TEntity>(
+    public static Expression<Func<TParam, bool>> PropertyEqualTo<TParam>(
         string propertyName,
-        object? argument)
+        object? argument,
+        ParameterExpression? existingParameter = null)
     {
+        var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
+        var expression = PropertyEqualToExpression<TParam>(
+            propertyName,
+            argument,
+            parameter);
+        return Expression.Lambda<Func<TParam, bool>>(expression, parameter);
+    }
+
+    public static BinaryExpression PropertyEqualToExpression<TParam>(
+        string propertyName,
+        object? argument,
+        ParameterExpression? existingParameter = null)
+    {
+        var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
         if (argument == null)
         {
-            return PropertyIsNull<TEntity>(propertyName);
+            return PropertyIsNullExpression<TParam>(propertyName, parameter);
         }
-        return BuildComparison<TEntity>(
-            propertyName, argument, Expression.Equal);
+        return BuildComparisonExpression<TParam>(
+            propertyName,
+            argument,
+            Expression.Equal,
+            parameter);
     }
     
-    public static Expression<Func<TEntity, bool>> PropertyNotEqualTo<TEntity>(
+    public static Expression<Func<TParam, bool>> PropertyNotEqualTo<TParam>(
         string propertyName,
-        object? argument)
+        object? argument,
+        ParameterExpression? existingParameter = null)
     {
+        var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
+        var expression = PropertyNotEqualToExpression<TParam>(
+            propertyName,
+            argument,
+            parameter);
+        return Expression.Lambda<Func<TParam, bool>>(expression, parameter);
+    }
+    
+    public static BinaryExpression PropertyNotEqualToExpression<TParam>(
+        string propertyName,
+        object? argument,
+        ParameterExpression? existingParameter = null)
+    {
+        var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
         if (argument == null)
         {
-            return PropertyIsNotNull<TEntity>(propertyName);
+            return PropertyIsNotNullExpression<TParam>(propertyName, parameter);
         }
-        return BuildComparison<TEntity>(
-            propertyName, argument, Expression.NotEqual);
+        return BuildComparisonExpression<TParam>(
+            propertyName,
+            argument,
+            Expression.NotEqual,
+            parameter);
     }
+
     
     public static Expression<Func<TEntity, bool>> PropertyLessThan<TEntity>(
         string propertyName,
@@ -86,7 +122,6 @@ public static class ExpressionBuilder
             parameter);
         return expression;
     }
-
     
     public static Expression<Func<TParam, bool>> PropertyIsNotNull<TParam>(
         string propertyName,

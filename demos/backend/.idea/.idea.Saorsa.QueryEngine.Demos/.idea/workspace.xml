@@ -5,15 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/angular/src/app/model/api.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../frontend/angular/src/app/model/query-engine.model.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/angular.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/environments/environment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/polyfills.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/styles.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/styles.sass" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +75,8 @@
       <updated>1655300684164</updated>
       <workItem from="1655300694574" duration="14000" />
       <workItem from="1655301201500" duration="2650000" />
-      <workItem from="1655304140016" duration="2630000" />
+      <workItem from="1655304140016" duration="4177000" />
+      <workItem from="1655373109835" duration="5204000" />
     </task>
     <servers />
   </component>
@@ -93,24 +98,5 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs</url>
-          <line>13</line>
-          <properties documentPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" initialLine="13" containingFunctionPresentation="method 'GetScannedTypes'">
-            <startOffsets>
-              <option value="358" />
-            </startOffsets>
-            <endOffsets>
-              <option value="526" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

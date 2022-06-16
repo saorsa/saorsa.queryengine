@@ -1,0 +1,14 @@
+<div *ngIf="loading" class="my-3 mx-3 text-center mat-display-1">
+  Loading...
+</div>
+<div *ngIf="error">
+  <app-error-view [error]="error"></app-error-view>
+</div>
+<div *ngIf="apiResult && apiResult.result" class="container-fluid">
+  <div *ngFor="let p of apiResult.result.properties">
+    {{p.name}} (<span class="text-success">{{p.type}}</span>)
+    <span *ngFor="let f of p.allowedFilters">
+      {{f.filterType}}
+    </span>
+  </div>
+</div>

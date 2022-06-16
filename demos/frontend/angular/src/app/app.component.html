@@ -1,1 +1,9 @@
-nh
+<div *ngIf="loading" class="my-3 mx-3 text-center mat-display-1">
+  Loading...
+</div>
+<div *ngIf="error">
+  <app-error-view [error]="error"></app-error-view>
+</div>
+<div *ngIf="apiResult">
+  <router-outlet></router-outlet>
+</div>

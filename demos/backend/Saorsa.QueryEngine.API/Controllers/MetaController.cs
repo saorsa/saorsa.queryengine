@@ -73,4 +73,29 @@ public class MetaController : Controller
             Result = cached,
         });
     }
+    
+    [HttpGet("cached/{typeName}")]
+    public ActionResult<ResultRef<TypeDefinition>> GetCachedTypeDef(string typeName)
+    {
+        var types = QueryEngine.ScanQueryEngineTypes();
+        var cached = types
+            .Where(t => QueryEngine.IsCompiled(t))
+            .Select(t => QueryEngine.GetCompiled(t)!)
+            .FirstOrDefault(t => t.Name.Equals(typeName));
+
+        if (cached != null)
+        {
+            return Ok(new ResultRef<TypeDefinition>
+            {
+                Status = ResultStatus.Ok,
+                Result = cached,
+            });
+        }
+        
+        return NotFound(new ResultRef<TypeDefinition>
+        {
+            Status = ResultStatus.Fatal,
+            Message = $"Type '{typeName}' is not recognized by Query Engine."
+        });
+    }
 }

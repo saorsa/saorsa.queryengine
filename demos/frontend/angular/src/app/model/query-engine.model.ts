@@ -1,19 +1,24 @@
 
 export type BinaryOperator = 'And' | 'Or';
 export type FilterType =
-  'IS_NULL' |
-  'IS_NOT_NULL' |
-  'EQ' |
-  'NOT_EQ' |
-  'LT' |
-  'LT_EQ' |
-  'GT' |
-  'GT_EQ' |
-  'RANGE' |
-  'SEQUENCE' |
-  'CONTAINS' |
-  'IS_EMPTY' |
-  'IS_NOT_EMPTY';
+  'IS_NULL' | 'IS_NOT_NULL'
+  | 'EQ' | 'NOT_EQ'
+  | 'LT' | 'LT_EQ'
+  | 'GT' | 'GT_EQ'
+  | 'RANGE' | 'SEQUENCE' | 'CONTAINS'
+  | 'IS_EMPTY' | 'IS_NOT_EMPTY';
+
+export type PropertyType =
+  'char' | 'boolean' | 'byte' | 'sbyte'
+  | 'int16' | 'integer' | 'int64'
+  | 'uint16' | 'uint32' | 'uint64'
+  | 'float' | 'double' | 'decimal'
+  | 'string' | 'uuid'
+  | 'date' | 'dateTime' | 'dateTimeOffset'
+  | 'time' | 'timeSpan'
+  | 'enum'
+  | 'array'
+  | 'object';
 
 export interface FilterDefinition{
   filterType: FilterType;
@@ -27,7 +32,7 @@ export interface TypeDefinition {
   name: string;
   typeName: string;
   nullable: boolean;
-  type: string;
+  type: PropertyType;
   enumValues?: string[];
   properties?: TypeDefinition[];
   allowedFilters?: FilterDefinition[];
@@ -38,4 +43,10 @@ export interface PropertyFilter {
   name: string;
   filterType: FilterType;
   arguments: [];
+}
+
+export interface PropertyFilterBlock {
+  first: PropertyFilter;
+  condition?: BinaryOperator;
+  others?: PropertyFilterBlock[];
 }

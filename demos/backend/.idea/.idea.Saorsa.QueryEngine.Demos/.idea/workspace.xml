@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../frontend/angular/src/app/model/api.model.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/angular/src/app/model/query-engine.model.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.Demos.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.Demos.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/angular.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/environments/environment.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/environments/environment.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/model/query-engine.model.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/model/query-engine.model.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,9 +19,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/12a1c74d01c6dd7815a63c6d1bd1fa0516a33d51ff88a53298e6bd2f021a/TypeDefinition.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -77,6 +67,7 @@
       <workItem from="1655301201500" duration="2650000" />
       <workItem from="1655304140016" duration="4177000" />
       <workItem from="1655373109835" duration="5204000" />
+      <workItem from="1655397781755" duration="3022000" />
     </task>
     <servers />
   </component>

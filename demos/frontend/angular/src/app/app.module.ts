@@ -18,6 +18,9 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { DummyComponent } from './components/common/dummy/dummy.component';
 import { TypeDefinitionViewComponent } from './components/type-definition-view/type-definition-view.component';
+import { PropertyFilterBlockViewComponent } from './components/property-filter-block-view/property-filter-block-view.component';
+import { FilterArgArrayComponent } from './components/filter-arg-array/filter-arg-array.component';
+import { PropertyFilterViewComponent } from './components/property-filter-view/property-filter-view.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +29,9 @@ import { TypeDefinitionViewComponent } from './components/type-definition-view/t
     TypeDefinitionSelectComponent,
     DummyComponent,
     TypeDefinitionViewComponent,
+    PropertyFilterBlockViewComponent,
+    FilterArgArrayComponent,
+    PropertyFilterViewComponent,
   ],
   imports: [
     BrowserModule,

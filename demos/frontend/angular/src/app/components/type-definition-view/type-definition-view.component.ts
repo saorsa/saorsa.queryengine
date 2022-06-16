@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TypeDefinition } from "../../model/query-engine.model";
+import {PropertyFilterBlock, TypeDefinition} from "../../model/query-engine.model";
 import { ActivatedRoute } from "@angular/router";
 import { MetaService } from "../../services/meta.service";
-import { catchError, Observable, of } from "rxjs";
+import {catchError, Observable, of, Subject} from "rxjs";
 import { ApiTypeDefinitionSingleResult } from "../../model/api.model";
 
 @Component({
@@ -15,7 +15,11 @@ export class TypeDefinitionViewComponent implements OnInit {
   apiResult?: ApiTypeDefinitionSingleResult | null;
   error?: any;
   loading = false;
-  typeDefinition?: TypeDefinition;
+  readonly filterExpression$ = new Subject<PropertyFilterBlock>();
+
+  get typeDefinition(): TypeDefinition | null {
+    return this.apiResult?.result || null;
+  }
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -23,8 +27,11 @@ export class TypeDefinitionViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( p => {
-      console.warn('param type = ', p['type']);
       this.loadCachedTypeDef(p['type']);
+    });
+
+    this.filterExpression$.subscribe(filter => {
+      console.warn('filter now', filter);
     });
   }
 

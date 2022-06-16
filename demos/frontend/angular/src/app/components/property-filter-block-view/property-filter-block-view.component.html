@@ -1,0 +1,16 @@
+<div *ngIf="formGroup && typeDefinition">
+  <h2>Filters</h2>
+  <form [formGroup]="formGroup">
+    <app-property-filter-view-view
+      [typeDefinition]="typeDefinition"
+      [formControl]="firstControl">
+    </app-property-filter-view-view>
+    <mat-form-field *ngIf="true">
+      <mat-select>
+        <mat-option *ngFor="let p of binaryOpsChoices" [value]="p">
+          {{p}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>

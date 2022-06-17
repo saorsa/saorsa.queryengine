@@ -7,7 +7,7 @@ import {
   TypeDefinition
 } from "../../model/query-engine.model";
 import {Subject} from "rxjs";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 
 @Component({
@@ -31,6 +31,20 @@ export class PropertyFilterBlockViewComponent implements OnInit {
     return this.formGroup?.get('first') as FormControl;
   }
 
+  get conditionControl(): FormControl {
+    return this.formGroup?.get('condition') as FormControl;
+  }
+
+  get othersFormArray(): FormArray<FormGroup> {
+    return this.formGroup?.controls["others"] as FormArray;
+  }
+
+  addOthersBlockControl(): void {
+    const argumentControl = this.formBuilder.group({
+      argument: [null, Validators.required]
+    });
+    this.othersFormArray.push(argumentControl);
+  }
 
   readonly binaryOpsChoices: BinaryOperator[] = [ 'And', 'Or'];
 

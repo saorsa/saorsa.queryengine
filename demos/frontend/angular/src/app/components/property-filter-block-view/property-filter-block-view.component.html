@@ -6,11 +6,26 @@
       [formControl]="firstControl">
     </app-property-filter-control>
     <mat-form-field *ngIf="true">
-      <mat-select>
+      <mat-select [formControl]="conditionControl">
         <mat-option *ngFor="let p of binaryOpsChoices" [value]="p">
           {{p}}
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <span class="p-3 border-1">
+      <ng-container formArrayName="others">
+        <ng-container *ngFor="let c of othersFormArray!.controls; let index = index">
+          <app-property-filter-control-block-view
+            [typeDefinition]="typeDefinition">
+          </app-property-filter-control-block-view>
+        </ng-container>
+      </ng-container>
+      <button class="btn btn-danger" (click)="addOthersBlockControl()">
+        +
+      </button>
+    </span>
   </form>
+</div>
+<div class="text text-danger" *ngIf="formGroup">
+  {{formGroup.value | json}}
 </div>

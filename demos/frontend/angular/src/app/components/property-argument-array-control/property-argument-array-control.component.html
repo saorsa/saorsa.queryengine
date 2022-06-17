@@ -1,0 +1,31 @@
+
+<span *ngIf="formGroup && type && property && filterDefinition">
+  <span *ngIf="!filterDefinition.arg1Required" >No arguments required</span>
+  <span *ngIf="filterDefinition.arg1Required === true">
+    <mat-card [formGroup]="formGroup">
+      <ng-container formArrayName="arguments">
+        <ng-container *ngFor="let c of argumentsFormArray!.controls; let index = index">
+          <span class="" [formGroup]="c">
+              <mat-form-field appearance="fill">
+                <mat-label>Argument [{{index}}]</mat-label>
+                <input matInput
+                       [type]="argumentControlInputType"
+                       formControlName="argument"
+                       placeholder="Argument value ({{argumentControlInputType}})">
+              </mat-form-field>
+            <div *ngIf="c.get('argument')?.hasError('required')" class="text-danger">
+              This is a required field.
+            </div>
+
+              <button class="btn btn-danger" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
+                -
+              </button>
+          </span>
+        </ng-container>
+      </ng-container>
+      <button class="btn btn-danger" (click)="addArgumentControl()" *ngIf="requiresDynamicArray">
+        +
+      </button>
+    </mat-card>
+  </span>
+</span>

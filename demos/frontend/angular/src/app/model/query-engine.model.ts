@@ -8,6 +8,14 @@ export type FilterType =
   | 'RANGE' | 'SEQUENCE' | 'CONTAINS'
   | 'IS_EMPTY' | 'IS_NOT_EMPTY';
 
+export type FilterTypeBooleanSwitch = {
+  [key in FilterType]: boolean;
+};
+
+export type FilterTypeStringMap = {
+  [key in FilterType]: string | null;
+};
+
 export type PropertyType =
   'char' | 'boolean' | 'byte' | 'sbyte'
   | 'int16' | 'integer' | 'int64'
@@ -19,6 +27,10 @@ export type PropertyType =
   | 'enum'
   | 'array'
   | 'object';
+
+export type PropertyTypeStringMap = {
+  [key in PropertyType]: string | null;
+};
 
 export interface FilterDefinition{
   filterType: FilterType;

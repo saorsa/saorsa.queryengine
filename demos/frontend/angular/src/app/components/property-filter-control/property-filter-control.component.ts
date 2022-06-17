@@ -8,18 +8,18 @@ import {
 
 
 @Component({
-  selector: 'app-property-filter-view-view',
-  templateUrl: './property-filter-view.component.html',
-  styleUrls: ['./property-filter-view.component.sass'],
+  selector: 'app-property-filter-control',
+  templateUrl: './property-filter-control.component.html',
+  styleUrls: ['./property-filter-control.component.sass'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi:true,
-      useExisting: PropertyFilterViewComponent
+      useExisting: PropertyFilterControlComponent
     }
   ]
 })
-export class PropertyFilterViewComponent implements OnInit, ControlValueAccessor {
+export class PropertyFilterControlComponent implements OnInit, ControlValueAccessor {
 
   @Input() typeDefinition?: TypeDefinition;
   @Input() propertyFilter?: PropertyFilter;
@@ -68,15 +68,15 @@ export class PropertyFilterViewComponent implements OnInit, ControlValueAccessor
   }
 
   onPropertySelect(propertyName: string): void {
-    console.warn('1');
     this.selectedProperty = this.typeDefinition?.properties?.find(p => p.name == propertyName);
-    console.warn('selected', this.selectedProperty);
+    console.warn('selected property', this.selectedProperty);
   }
 
   onFilterTypeSelect(filterType: FilterType): void {
     this.selectedFilterType = filterType;
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
     this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
+    console.warn('selected filter', this.selectedFilterDefinition);
   }
 
   private markAsTouched() {
@@ -91,7 +91,7 @@ export class PropertyFilterViewComponent implements OnInit, ControlValueAccessor
     this.formGroup = this.formBuilder.group({
       name: [this.propertyFilter?.name, Validators.required],
       filterType: [this.propertyFilter?.filterType || IS_NOT_NULL, Validators.required],
-      arguments: this.formBuilder.group(this.propertyFilter?.arguments || [])
+      arguments: this.formBuilder.array(this.propertyFilter?.arguments || [])
     });
   }
 }

@@ -11,7 +11,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatSelect} from "@angular/material/select";
 
 @Component({
-  selector: 'app-property-filter-view-block-view',
+  selector: 'app-property-filter-control-block-view',
   templateUrl: './property-filter-block-view.component.html',
   styleUrls: ['./property-filter-block-view.component.sass']
 })

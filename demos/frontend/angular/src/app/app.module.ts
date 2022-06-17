@@ -19,8 +19,10 @@ import { MatSelectModule } from "@angular/material/select";
 import { DummyComponent } from './components/common/dummy/dummy.component';
 import { TypeDefinitionViewComponent } from './components/type-definition-view/type-definition-view.component';
 import { PropertyFilterBlockViewComponent } from './components/property-filter-block-view/property-filter-block-view.component';
-import { FilterArgArrayComponent } from './components/filter-arg-array/filter-arg-array.component';
-import { PropertyFilterViewComponent } from './components/property-filter-view/property-filter-view.component';
+import { PropertyArgumentArrayControlComponent } from './components/property-argument-array-control/property-argument-array-control.component';
+import { PropertyFilterControlComponent } from './components/property-filter-control/property-filter-control.component';
+import { MatCardModule } from "@angular/material/card";
+import {QueryEngineTypeSystemService} from "./services/query-engine-type-system.service";
 
 @NgModule({
   declarations: [
@@ -30,8 +32,8 @@ import { PropertyFilterViewComponent } from './components/property-filter-view/p
     DummyComponent,
     TypeDefinitionViewComponent,
     PropertyFilterBlockViewComponent,
-    FilterArgArrayComponent,
-    PropertyFilterViewComponent,
+    PropertyArgumentArrayControlComponent,
+    PropertyFilterControlComponent,
   ],
   imports: [
     BrowserModule,
@@ -45,11 +47,13 @@ import { PropertyFilterViewComponent } from './components/property-filter-view/p
     ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
+    MatCardModule,
   ],
   providers: [
     ApiService,
     HealthService,
     MetaService,
+    QueryEngineTypeSystemService,
   ],
   bootstrap: [AppComponent]
 })

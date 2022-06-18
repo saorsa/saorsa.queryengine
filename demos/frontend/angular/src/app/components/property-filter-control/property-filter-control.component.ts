@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {
   ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators
 } from "@angular/forms";
@@ -23,6 +23,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
 
   @Input() typeDefinition?: TypeDefinition;
   @Input() propertyFilter?: PropertyFilter;
+  @Output() changes = new EventEmitter<any>();
   formGroup?: FormGroup;
   selectedProperty?: TypeDefinition;
   selectedFilterDefinition?: FilterDefinition;
@@ -30,7 +31,8 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   isDisabled = false;
   touched = false;
   onChange = (arg?: any) => {
-    console.warn('onChange', arg);
+    console.warn('Prop filter onChange', arg);
+    this.changes.emit(arg);
   };
   onTouched = () => {};
 
@@ -90,6 +92,11 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
     this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
     console.warn('selected filter', this.selectedFilterDefinition);
+    this.onChange(this.formGroup?.value);
+  }
+
+  onArgumentsChange(args?: any) : void {
+    console.warn('changes from child', args);
     this.onChange(this.formGroup?.value);
   }
 

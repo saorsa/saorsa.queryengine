@@ -1,13 +1,10 @@
-import {Component, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FilterDefinition, FilterType, PropertyFilter, TypeDefinition} from "../../model/query-engine.model";
-import {last, Subject} from "rxjs";
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {FilterDefinition, TypeDefinition} from "../../model/query-engine.model";
 import {
   AbstractControl,
   ControlValueAccessor,
-  Form,
   FormArray,
-  FormBuilder,
-  FormControl, FormControlDirective, FormControlStatus,
+  FormBuilder, FormControl,
   FormGroup,
   NG_VALUE_ACCESSOR, Validators
 } from "@angular/forms";
@@ -31,9 +28,9 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   @Input() property?: TypeDefinition | null;
   @Input() filterDefinition?: FilterDefinition | null;
   @Input() formGroup?: FormGroup;
-  @Output() propertyFilter$ = new Subject<PropertyFilter>();
+  @Output() changes = new EventEmitter<any>();
 
-  get argumentsFormArray(): FormArray<FormGroup> {
+  get argumentsFormArray(): FormArray<FormControl> {
     return this.formGroup?.controls["arguments"] as FormArray;
   }
 
@@ -41,8 +38,9 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   touched = false;
   minArgumentsCount = -1;
   maxArgumentCount?: number | null;
-  onChange = () => {
-    console.warn('onChange');
+  onChange = (args?:any) => {
+    console.warn('arguments change', args);
+    this.changes.emit(args);
   };
   onTouched = () => {
   };
@@ -52,15 +50,6 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   get requiresDynamicArray(): boolean {
     if (!this.filterDefinition) return false;
     return this.filterTypesService.expectsDynamicArguments(this.filterDefinition!);
-  }
-
-  get requiresRangeArray(): boolean {
-    if (!this.filterDefinition) return false;
-    return this.filterTypesService.expectsTwoArguments(this.filterDefinition!);
-  }
-
-  get requiresArray(): boolean {
-    return this.requiresRangeArray || this.requiresDynamicArray;
   }
 
   constructor(
@@ -76,7 +65,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   writeValue(obj: any): void {
-    console.warn('writing value', obj);
+    console.warn('property-arg-array writing value', obj);
   }
 
   registerOnChange(fn: any): void {
@@ -96,10 +85,10 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   addArgumentControl(): void {
-    const argumentControl = this.formBuilder.group({
-      argument: [null, Validators.required]
+    const argumentControl = this.formBuilder.control({
     });
     this.argumentsFormArray.push(argumentControl);
+    this.onChange(this.argumentsFormArray.value);
   }
 
   get argumentControlInputType(): string {
@@ -122,6 +111,10 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
         this.argumentsFormArray.removeAt(lastIndex);
       }
     }
+  }
+
+  inputValueChange(_: any): void {
+    this.onChange(this.argumentsFormArray.value);
   }
 
   private markAsTouched() {

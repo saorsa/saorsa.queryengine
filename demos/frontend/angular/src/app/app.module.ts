@@ -18,7 +18,7 @@ import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
 import { DummyComponent } from './components/common/dummy/dummy.component';
 import { TypeDefinitionViewComponent } from './components/type-definition-view/type-definition-view.component';
-import { PropertyFilterBlockViewComponent } from './components/property-filter-block-view/property-filter-block-view.component';
+import { PropertyFilterBlockControlComponent } from './components/property-filter-block-view/property-filter-block-control.component';
 import { PropertyArgumentArrayControlComponent } from './components/property-argument-array-control/property-argument-array-control.component';
 import { PropertyFilterControlComponent } from './components/property-filter-control/property-filter-control.component';
 import { MatCardModule } from "@angular/material/card";
@@ -31,7 +31,7 @@ import {QueryEngineTypeSystemService} from "./services/query-engine-type-system.
     TypeDefinitionSelectComponent,
     DummyComponent,
     TypeDefinitionViewComponent,
-    PropertyFilterBlockViewComponent,
+    PropertyFilterBlockControlComponent,
     PropertyArgumentArrayControlComponent,
     PropertyFilterControlComponent,
   ],

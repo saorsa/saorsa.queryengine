@@ -1,29 +1,36 @@
 <div *ngIf="formGroup && typeDefinition">
-  <h2>Filters</h2>
+  <h2 *ngIf="depth <= 0">Filters</h2>
   <form [formGroup]="formGroup">
     <app-property-filter-control
       [typeDefinition]="typeDefinition"
-      [formControl]="firstControl">
+      [formGroup]="firstFormGroup">
     </app-property-filter-control>
-    <mat-form-field *ngIf="true">
-      <mat-select [formControl]="conditionControl">
+    <mat-form-field>
+      <mat-select>
         <mat-option *ngFor="let p of binaryOpsChoices" [value]="p">
           {{p}}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <span class="p-3 border-1">
+
+    <button class="btn btn-danger" (click)="addOthersBlockControl()">
+      +
+    </button>
+
+    <div style="padding-left: 20px; border: 1px solid red">
+      <div *ngIf="othersFormArray!.length > 1">START</div>
       <ng-container formArrayName="others">
         <ng-container *ngFor="let c of othersFormArray!.controls; let index = index">
-          <app-property-filter-control-block-view
+         {{c}}
+          <!--
+          <app-property-filter-control-block-control
+            [depth]="depth + 1"
             [typeDefinition]="typeDefinition">
-          </app-property-filter-control-block-view>
+          </app-property-filter-control-block-control>-->
         </ng-container>
       </ng-container>
-      <button class="btn btn-danger" (click)="addOthersBlockControl()">
-        +
-      </button>
-    </span>
+      <div *ngIf="othersFormArray!.length > 1">END</div>
+    </div>
   </form>
 </div>
 <div class="text text-danger" *ngIf="formGroup">

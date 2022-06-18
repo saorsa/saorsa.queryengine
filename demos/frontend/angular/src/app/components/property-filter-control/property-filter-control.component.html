@@ -26,7 +26,11 @@
       [filterDefinition]="selectedFilterDefinition"></app-property-argument-array-control>
   </form>
   <div class="alert alert-info" *ngIf="formGroup">
-    <div>{{formGroup.valid}}</div>
+    <div>
+      <b>Property Filter Is Valid = </b>
+      <span [ngClass]="{'text-danger': !formGroup.valid}">{{formGroup.valid}}</span>
+    </div>
+    <div></div>
     {{formGroup.value | json}}
   </div>
 </mat-card>

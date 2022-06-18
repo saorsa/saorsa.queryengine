@@ -5,12 +5,13 @@
     <mat-card [formGroup]="formGroup">
       <ng-container formArrayName="arguments">
         <ng-container *ngFor="let c of argumentsFormArray!.controls; let index = index">
-          <span class="" [formGroup]="c">
+          <span class="" [formControl]="c" ngDefaultControl>
               <mat-form-field appearance="fill">
                 <mat-label>Argument [{{index}}]</mat-label>
                 <input matInput
                        [type]="argumentControlInputType"
-                       formControlName="argument"
+                       (input)="inputValueChange($event)"
+                       (change)="inputValueChange($event)"
                        placeholder="Argument value ({{argumentControlInputType}})">
               </mat-form-field>
             <div *ngIf="c.get('argument')?.hasError('required')" class="text-danger">

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import {
-  ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators
+  ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators
 } from "@angular/forms";
 import {
   FilterDefinition, FilterType, PropertyFilter, TypeDefinition
@@ -29,8 +29,8 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   selectedFilterType?: FilterType;
   isDisabled = false;
   touched = false;
-  onChange = () => {
-    console.warn('onChange');
+  onChange = (arg?: any) => {
+    console.warn('onChange', arg);
   };
   onTouched = () => {};
 
@@ -42,6 +42,10 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
     return this.formGroup?.get('filterType') as FormControl;
   }
 
+  get argumentsControl(): FormArray {
+    return this.formGroup?.get('arguments') as FormArray;
+  }
+
   constructor(
     private formBuilder: FormBuilder,
   ){
@@ -49,9 +53,17 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
 
   writeValue(obj: any): void {
     console.warn('writing value', obj);
+    const filter = obj as PropertyFilter;
+    if (filter) {
+      this.nameControl.setValue(filter.name);
+      this.filterTypeControl.setValue(filter.filterType);
+      this.argumentsControl.setValue(filter.arguments);
+      console.warn('done writing');
+    }
   }
 
   registerOnChange(fn: any): void {
+    console.log('Registering parent change tracking');
     this.onChange = fn;
   }
 
@@ -70,6 +82,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   onPropertySelect(propertyName: string): void {
     this.selectedProperty = this.typeDefinition?.properties?.find(p => p.name == propertyName);
     console.warn('selected property', this.selectedProperty);
+    this.onChange(this.formGroup?.value);
   }
 
   onFilterTypeSelect(filterType: FilterType): void {
@@ -77,6 +90,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
     this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
     console.warn('selected filter', this.selectedFilterDefinition);
+    this.onChange(this.formGroup?.value);
   }
 
   private markAsTouched() {

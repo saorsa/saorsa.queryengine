@@ -6,9 +6,10 @@ import {
   FormArray,
   FormBuilder, FormControl,
   FormGroup,
-  NG_VALUE_ACCESSOR, Validators
+  NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import {QueryEngineTypeSystemService} from "../../services/query-engine-type-system.service";
+
 
 @Component({
   selector: 'app-property-argument-array-control',
@@ -117,7 +118,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
     this.onChange(this.argumentsFormArray.value);
   }
 
-  private markAsTouched() {
+  protected markAsTouched() {
     if (!this.touched) {
       this.onTouched();
       this.touched = true;

@@ -6,11 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-view.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-view.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/type-definition-view/type-definition-view.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/type-definition-view/type-definition-view.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +67,7 @@
       <workItem from="1655446040380" duration="1927000" />
       <workItem from="1655476495019" duration="645000" />
       <workItem from="1655481642126" duration="1829000" />
-      <workItem from="1655565567877" duration="1879000" />
+      <workItem from="1655565567877" duration="2707000" />
     </task>
     <servers />
   </component>

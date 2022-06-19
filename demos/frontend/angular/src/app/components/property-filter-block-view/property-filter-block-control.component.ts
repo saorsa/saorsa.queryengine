@@ -21,7 +21,7 @@ import {MatSelect} from "@angular/material/select";
 @Component({
   selector: 'app-property-filter-control-block-control',
   templateUrl: './property-filter-block-control.component.html',
-  styleUrls: ['./property-filter-block-view.component.sass'],
+  styleUrls: ['./property-filter-block-control.component.sass'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -6,7 +6,7 @@
       [formGroup]="firstFormGroup">
     </app-property-filter-control>
     <mat-form-field>
-      <mat-select>
+      <mat-select [formControl]="conditionControl">
         <mat-option *ngFor="let p of binaryOpsChoices" [value]="p">
           {{p}}
         </mat-option>

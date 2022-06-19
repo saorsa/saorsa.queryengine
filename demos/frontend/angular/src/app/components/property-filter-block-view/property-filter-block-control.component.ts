@@ -16,7 +16,6 @@ import {
   NG_VALUE_ACCESSOR,
   Validators
 } from "@angular/forms";
-import {MatSelect} from "@angular/material/select";
 
 @Component({
   selector: 'app-property-filter-control-block-control',
@@ -47,26 +46,30 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   selectedFilterType?: FilterType;
   selectedFilterDefinition?: FilterDefinition;
 
-  formGroup?: FormGroup;
+  @Input() formGroup?: FormGroup = this.buildInternalFormGroup();
+
+  get safeFormGroupInstance(): FormGroup {
+    return this.formGroup ?? this.internalFormGroup;
+  }
+
+  protected internalFormGroup: FormGroup = this.buildInternalFormGroup();
 
   get firstFormGroup(): FormGroup {
-    return this.formGroup?.get('first') as FormGroup;
+    return this.safeFormGroupInstance.get('first') as FormGroup;
   }
 
   get conditionControl(): FormControl {
-    const result = this.formGroup?.get('condition') as FormControl;
+    const result = this.safeFormGroupInstance.get('condition') as FormControl;
     console.warn('condition', result);
     return result;
   }
 
   get othersFormArray(): FormArray<FormGroup> {
-    return this.formGroup?.controls["others"] as FormArray;
+    return this.safeFormGroupInstance.controls["others"] as FormArray;
   }
 
   addOthersBlockControl(): void {
-    const argumentControl = this.formBuilder.group({
-      argument: [null, Validators.required]
-    });
+    const argumentControl = this.buildInternalFormGroup();
     this.othersFormArray.push(argumentControl);
   }
 
@@ -81,10 +84,12 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   ){ }
 
   ngOnInit(): void {
-    this.buildForm();
+    this.buildInternalFormGroup();
   }
   writeValue(obj: any): void {
     console.warn('WRITING BLOCK value', obj);
+    if (obj) {
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -100,7 +105,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.isDisabled = isDisabled;
   }
 
-  private buildForm(): void {
+  protected buildInternalFormGroup(): FormGroup {
     const filterType =
       'Is_NOT_NULL';
 
@@ -111,7 +116,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
       this.typeDefinition.properties[0].name :
       null;
 
-    this.formGroup = this.formBuilder.group({
+    return this.formBuilder.group({
       first: this.formBuilder.group({
         name: [firstProperty, Validators.required],
         filterType: [filterType, Validators.required],
@@ -122,5 +127,3 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     });
   }
 }
-
-

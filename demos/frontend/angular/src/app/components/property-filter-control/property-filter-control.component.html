@@ -1,5 +1,5 @@
 <mat-card>
-  <form *ngIf="formGroup && typeDefinition" class="d-inline p-0 m-0" [formGroup]="formGroup">
+  <form *ngIf="typeDefinition" class="d-inline p-0 m-0" [formGroup]="safeFormGroupInstance">
     <mat-form-field>
       <mat-label>Property</mat-label>
       <mat-select formControlName="name"
@@ -21,7 +21,7 @@
     <app-property-argument-array-control
       formArrayName="arguments"
       (changes)="onArgumentsChange($event)"
-      [formGroup]="formGroup"
+      [formGroup]="safeFormGroupInstance"
       [type]="typeDefinition"
       [property]="selectedProperty"
       [filterDefinition]="selectedFilterDefinition"></app-property-argument-array-control>

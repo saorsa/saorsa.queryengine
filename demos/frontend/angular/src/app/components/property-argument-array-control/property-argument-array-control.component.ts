@@ -6,7 +6,7 @@ import {
   FormArray,
   FormBuilder, FormControl,
   FormGroup,
-  NG_VALUE_ACCESSOR,
+  NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import {QueryEngineTypeSystemService} from "../../services/query-engine-type-system.service";
 
@@ -31,10 +31,22 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   @Input() formGroup?: FormGroup;
   @Output() changes = new EventEmitter<any>();
 
-  get argumentsFormArray(): FormArray<FormControl> {
-    return this.formGroup?.controls["arguments"] as FormArray;
+  get safeFormGroupInstance(): FormGroup {
+    return this.formGroup ?? this.internalFormGroup;
   }
 
+  get argumentsFormArray(): FormArray<FormControl> {
+    const argumentsFormArray = this.safeFormGroupInstance.controls['arguments'];
+    if (argumentsFormArray == null) {
+      throw new Error(
+        "The property argument array control requires a form group with an 'arguments' " +
+        "form array."
+      )
+    }
+    return argumentsFormArray as FormArray;
+  }
+
+  protected internalFormGroup: FormGroup;
   isDisabled = false;
   touched = false;
   minArgumentsCount = -1;
@@ -57,6 +69,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
     readonly formBuilder: FormBuilder,
     readonly filterTypesService: QueryEngineTypeSystemService,
   ) {
+    this.internalFormGroup = this.buildInternalFormGroup();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -86,8 +99,9 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   addArgumentControl(): void {
-    const argumentControl = this.formBuilder.control({
-    });
+    const argumentControl = this.formBuilder.control(
+      null, Validators.required
+    );
     this.argumentsFormArray.push(argumentControl);
     this.onChange(this.argumentsFormArray.value);
   }
@@ -125,7 +139,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
     }
   }
 
-  private rebuildFormIfNeeded(): void {
+  protected rebuildFormIfNeeded(): void {
     this.minArgumentsCount = -1;
     if (this.filterDefinition) {
       this.minArgumentsCount = this.filterTypesService.argumentsMinCount(this.filterDefinition);
@@ -158,5 +172,11 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
         }
       }
     }
+  }
+
+  protected buildInternalFormGroup(): FormGroup {
+    return this.formBuilder.group({
+      arguments: this.formBuilder.array([])
+    });
   }
 }

@@ -1,6 +1,6 @@
 <div *ngIf="formGroup && typeDefinition">
   <h2 *ngIf="depth <= 0">Filters</h2>
-  <form [formGroup]="formGroup">
+  <form [formGroup]="safeFormGroupInstance">
     <app-property-filter-control
       [typeDefinition]="typeDefinition"
       [formGroup]="firstFormGroup">
@@ -21,12 +21,11 @@
       <div *ngIf="othersFormArray!.length > 1">START</div>
       <ng-container formArrayName="others">
         <ng-container *ngFor="let c of othersFormArray!.controls; let index = index">
-         {{c}}
-          <!--
           <app-property-filter-control-block-control
             [depth]="depth + 1"
+            [formGroup]="c"
             [typeDefinition]="typeDefinition">
-          </app-property-filter-control-block-control>-->
+          </app-property-filter-control-block-control>
         </ng-container>
       </ng-container>
       <div *ngIf="othersFormArray!.length > 1">END</div>

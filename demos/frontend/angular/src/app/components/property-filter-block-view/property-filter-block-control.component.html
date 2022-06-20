@@ -32,6 +32,11 @@
     </div>
   </form>
 </div>
-<div class="text text-danger" *ngIf="formGroup">
+<div class="alert alert-info" *ngIf="formGroup">
+  <div>
+    <b>Property Filter Block Is Valid = </b>
+    <span [ngClass]="{'text-danger': !formGroup.valid}">{{formGroup.valid}}</span>
+  </div>
+  <div></div>
   {{formGroup.value | json}}
 </div>

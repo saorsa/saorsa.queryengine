@@ -26,12 +26,15 @@
       [property]="selectedProperty"
       [filterDefinition]="selectedFilterDefinition"></app-property-argument-array-control>
   </form>
-  <div class="alert alert-info" *ngIf="formGroup">
+  <div class="alert alert-info" *ngIf="formGroup && false">
     <div>
       <b>Property Filter Is Valid = </b>
       <span [ngClass]="{'text-danger': !formGroup.valid}">{{formGroup.valid}}</span>
     </div>
     <div></div>
     {{formGroup.value | json}}
+    <div>
+      selectedProperty : {{selectedProperty | json}}
+    </div>
   </div>
 </mat-card>

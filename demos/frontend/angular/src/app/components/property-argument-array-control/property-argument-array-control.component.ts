@@ -52,7 +52,6 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   minArgumentsCount = -1;
   maxArgumentCount?: number | null;
   onChange = (args?:any) => {
-    console.warn('arguments change', args);
     this.changes.emit(args);
   };
   onTouched = () => {
@@ -79,7 +78,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   writeValue(obj: any): void {
-    console.warn('property-arg-array writing value', obj);
+    console.error('property-arg-array writing value', obj);
   }
 
   registerOnChange(fn: any): void {

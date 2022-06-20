@@ -1,5 +1,4 @@
 <span *ngIf="formGroup && type && property && filterDefinition">
-  <span *ngIf="!filterDefinition.arg1Required" >No arguments required</span>
   <span *ngIf="filterDefinition.arg1Required === true">
     <mat-card [formGroup]="formGroup">
       <ng-container formArrayName="arguments">
@@ -13,10 +12,9 @@
                        (change)="inputValueChange($event)"
                        placeholder="Argument value ({{argumentControlInputType}})">
               </mat-form-field>
-            <div *ngIf="c.get('argument')?.hasError('required')" class="text-danger">
+            <div *ngIf="c.hasError('required')" class="text-danger">
               This is a required field.
             </div>
-
               <button class="btn btn-danger" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
                 -
               </button>

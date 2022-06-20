@@ -60,7 +60,6 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
 
   get conditionControl(): FormControl {
     const result = this.safeFormGroupInstance.get('condition') as FormControl;
-    console.warn('condition', result);
     return result;
   }
 
@@ -70,6 +69,8 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
 
   addOthersBlockControl(): void {
     const argumentControl = this.buildInternalFormGroup();
+
+    console.warn('adding child control', argumentControl);
     this.othersFormArray.push(argumentControl);
   }
 
@@ -89,6 +90,9 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   writeValue(obj: any): void {
     console.warn('WRITING BLOCK value', obj);
     if (obj) {
+      this.firstFormGroup.setValue(obj.first);
+      this.conditionControl.setValue(obj.condition);
+      this.othersFormArray.setValue(obj.arguments);
     }
   }
 
@@ -106,8 +110,8 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   }
 
   protected buildInternalFormGroup(): FormGroup {
-    const filterType =
-      'Is_NOT_NULL';
+    const filterType: FilterType =
+      'IS_NOT_NULL';
 
     const firstProperty = this.typeDefinition?.properties != null &&
       this.typeDefinition.properties.length > 0

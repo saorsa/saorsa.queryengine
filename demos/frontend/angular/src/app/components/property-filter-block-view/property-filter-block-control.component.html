@@ -26,6 +26,9 @@
             [formGroup]="c"
             [typeDefinition]="typeDefinition">
           </app-property-filter-control-block-control>
+          <button class="btn btn-danger" (click)="removeOthersBlockControl(c)">
+            -
+          </button>
         </ng-container>
       </ng-container>
       <div *ngIf="othersFormArray!.length > 1">END</div>

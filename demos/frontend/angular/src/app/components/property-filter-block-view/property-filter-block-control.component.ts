@@ -74,6 +74,13 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.othersFormArray.push(argumentControl);
   }
 
+  removeOthersBlockControl(blockFrom: FormGroup): void {
+    const matchIndex = this.othersFormArray.controls.findIndex(c => c === blockFrom);
+    if (matchIndex >= 0) {
+      this.othersFormArray.removeAt(matchIndex);
+    }
+  }
+
   readonly binaryOpsChoices: BinaryOperator[] = [ 'And', 'Or'];
 
   get hasFilters(): boolean{

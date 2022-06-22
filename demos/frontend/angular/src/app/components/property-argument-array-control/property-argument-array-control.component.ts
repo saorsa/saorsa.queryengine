@@ -91,6 +91,22 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
 
   setDisabledState(isDisabled: boolean): void{
     this.isDisabled = isDisabled;
+    this.argumentsFormArray.controls.forEach(c => {
+      isDisabled
+        ? c.disable()
+        : c.enable()
+    });
+  }
+
+  getLabelText(index: number): string {
+    let brief = 'Filter Value';
+    if (this.filterDefinition?.filterType === 'RANGE') {
+      brief = index == 0 ? 'Min Value' : 'Max Value';
+    }
+    if (this.filterDefinition?.filterType === 'SEQUENCE') {
+      brief = `Argument [${index}]`;
+    }
+    return `${brief} (${this.argumentPropertyType})`;
   }
 
   ngOnInit(): void {
@@ -107,7 +123,14 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
 
   get argumentControlInputType(): string {
     if (this.property) {
-      return this.filterTypesService.getInputControlType(this.property!.type);
+      return this.filterTypesService.getInputControlType(this.property.type);
+    }
+    return "unknown"
+  }
+
+  get argumentPropertyType(): string {
+    if (this.property) {
+      return this.property.type;
     }
     return "unknown"
   }

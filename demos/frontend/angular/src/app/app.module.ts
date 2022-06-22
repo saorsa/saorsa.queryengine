@@ -22,8 +22,12 @@ import { PropertyFilterBlockControlComponent } from './components/property-filte
 import { PropertyArgumentArrayControlComponent } from './components/property-argument-array-control/property-argument-array-control.component';
 import { PropertyFilterControlComponent } from './components/property-filter-control/property-filter-control.component';
 import { MatCardModule } from "@angular/material/card";
-import {QueryEngineTypeSystemService} from "./services/query-engine-type-system.service";
-import {FlexModule} from "@angular/flex-layout";
+import { QueryEngineTypeSystemService } from "./services/query-engine-type-system.service";
+import { FlexModule } from "@angular/flex-layout";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+
 
 @NgModule({
   declarations: [
@@ -36,21 +40,24 @@ import {FlexModule} from "@angular/flex-layout";
     PropertyArgumentArrayControlComponent,
     PropertyFilterControlComponent,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        NgbModule,
-        HttpClientModule,
-        BrowserAnimationsModule,
-        MatAutocompleteModule,
-        MatProgressSpinnerModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatSelectModule,
-        MatCardModule,
-        FlexModule,
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    NgbModule,
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatSelectModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    FlexModule,
+  ],
   providers: [
     ApiService,
     HealthService,

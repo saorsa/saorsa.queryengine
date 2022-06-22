@@ -1,14 +1,14 @@
 <div *ngIf="formGroup && typeDefinition">
   <h2 *ngIf="depth <= 0">Filters</h2>
   <div [formGroup]="safeFormGroupInstance">
-    <div fxLayout="row" fxLayoutAlign="start">
-      <span fxFlex="1 1 auto">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
+      <span>
         <app-property-filter-control
           [typeDefinition]="typeDefinition"
           [formGroup]="firstFormGroup">
         </app-property-filter-control>
       </span>
-      <span fxFlex="auto">
+      <span>
         <mat-form-field>
           <mat-label>Condition</mat-label>
           <mat-select [formControl]="conditionControl">

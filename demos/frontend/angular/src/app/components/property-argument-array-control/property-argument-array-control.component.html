@@ -6,34 +6,44 @@
           <span [formControl]="c" ngDefaultControl>
             <div fxLayout="column">
               <span fxFlex="auto">
-                <mat-form-field appearance="fill"
-                  [ngClass]="{'d-block' : !requiresDynamicArray}">
-                  <mat-label>Argument [{{index}}]</mat-label>
-                  <input matInput
-                         class="d-block w-100"
-                         [type]="argumentControlInputType"
-                         (input)="inputValueChange($event)"
-                         (change)="inputValueChange($event)"
-                         placeholder="Argument value ({{argumentControlInputType}})">
-                </mat-form-field>
-                <button class="btn btn-danger" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
-                  -
-                </button>
-                <button class="btn btn-danger" (click)="addArgumentControl()"
-                        *ngIf="last && requiresDynamicArray">
-                  +
-                </button>
+                <div fxLayout="row">
+                  <mat-form-field
+                    appearance="fill"
+                    [ngClass]="{'d-block' : !requiresDynamicArray}">
+                    <mat-label>{{getLabelText(index)}}</mat-label>
+                    <input matInput
+                           class="d-block w-100"
+                           [type]="argumentControlInputType"
+                           (input)="inputValueChange($event)"
+                           (change)="inputValueChange($event)"
+                           placeholder="{{argumentControlInputType}}">
+                  </mat-form-field>
+                  <button
+                    matTooltip="Remove argument at index {{index}}"
+                    mat-mini-fab color="primary"
+                    class="ms-1 mt-2" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
+                    <mat-icon>remove</mat-icon>
+                  </button>
+                  <button
+                    matTooltip="Add argument index {{index + 1}}"
+                    mat-mini-fab color="primary"
+                    class="mt-2 ms-1 me-1" (click)="addArgumentControl()"
+                          *ngIf="last && requiresDynamicArray">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
               </span>
-              <span fxFlex="auto" *ngIf="c.hasError('required')" class="text-danger">
+              <span fxFlex="auto" *ngIf="c.hasError('required')" class="text-danger ms-2 mb-3">
                 This is a required field.
               </span>
             </div>
           </span>
         </ng-container>
-
-        <button class="btn btn-danger" (click)="addArgumentControl()"
-                *ngIf="argumentsFormArray!.length == 0 && requiresDynamicArray">
-          +
+        <button
+          matTooltip="Add argument"
+          mat-mini-fab class="m-1" (click)="addArgumentControl()"
+          *ngIf="argumentsFormArray!.length == 0 && requiresDynamicArray">
+          <mat-icon>add</mat-icon>
         </button>
       </ng-container>
     </span>

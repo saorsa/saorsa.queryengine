@@ -1,13 +1,10 @@
 import {
-  AfterViewChecked,
   ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges
 } from '@angular/core';
 import {
   ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators
@@ -124,10 +121,15 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
 
   onPropertySelect(propertyName: string): void {
     this.selectedProperty = this.typeDefinition?.properties?.find(p => p.name == propertyName);
+    this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.length ?
+      this.selectedProperty.allowedFilters[0] :
+      undefined;
+    this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
     this.onChange(this.safeFormGroupInstance.value);
   }
 
   onFilterTypeSelect(filterType: FilterType): void {
+    console.warn('triggered', filterType);
     this.selectedFilterType = filterType;
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
     this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
@@ -135,6 +137,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   }
 
   onArgumentsChange(args?: any) : void {
+    console.warn('arguments changed', args);
     this.onChange(this.safeFormGroupInstance.value);
   }
 

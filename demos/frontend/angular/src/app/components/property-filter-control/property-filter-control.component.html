@@ -1,23 +1,36 @@
-<mat-card>
-  <form *ngIf="typeDefinition" class="d-inline p-0 m-0" [formGroup]="safeFormGroupInstance">
-    <mat-form-field>
-      <mat-label>Property</mat-label>
-      <mat-select formControlName="name"
-                  (selectionChange)="onPropertySelect($event.value)"
-                  placeholder="Select a property">
-        <mat-option *ngFor="let p of typeDefinition.properties" [value]="p.name">
-          {{p.name}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field *ngIf="selectedProperty">
-      <mat-label>Filter</mat-label>
-      <mat-select [formControl]="filterTypeControl" (selectionChange)="onFilterTypeSelect($event.value)" placeholder="Select a filter">
-        <mat-option *ngFor="let f of selectedProperty.allowedFilters" [value]="f.filterType">
-          {{f.filterType}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<div
+  *ngIf="typeDefinition" [formGroup]="safeFormGroupInstance"
+  style="background: beige"
+  fxLayout="row" fxLayout.xs="column" fxFlexFill>
+  <mat-form-field
+    class="filter-property-control"
+    appearance="fill">
+    <mat-label>Property</mat-label>
+    <mat-select formControlName="name"
+                panelClass="panel-override"
+                (selectionChange)="onPropertySelect($event.value)"
+                placeholder="Select a property">
+      <mat-option *ngFor="let p of typeDefinition.properties" [value]="p.name">
+        {{p.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field
+    *ngIf="selectedProperty"
+    class="filter-type-control"
+    appearance="fill">
+    <mat-label>Filter</mat-label>
+    <mat-select
+      panelClass="panel-override"
+      [formControl]="filterTypeControl"
+      (selectionChange)="onFilterTypeSelect($event.value)"
+      placeholder="Select a filter">
+      <mat-option *ngFor="let f of selectedProperty.allowedFilters" [value]="f.filterType">
+        {{f.filterType}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <span fxFlex="auto" *ngIf="selectedFilterDefinition && selectedFilterDefinition.arg1Required">
     <app-property-argument-array-control
       formArrayName="arguments"
       (changes)="onArgumentsChange($event)"
@@ -25,16 +38,5 @@
       [type]="typeDefinition"
       [property]="selectedProperty"
       [filterDefinition]="selectedFilterDefinition"></app-property-argument-array-control>
-  </form>
-  <div class="alert alert-info" *ngIf="formGroup && false">
-    <div>
-      <b>Property Filter Is Valid = </b>
-      <span [ngClass]="{'text-danger': !formGroup.valid}">{{formGroup.valid}}</span>
-    </div>
-    <div></div>
-    {{formGroup.value | json}}
-    <div>
-      selectedProperty : {{selectedProperty | json}}
-    </div>
-  </div>
-</mat-card>
+  </span>
+</div>

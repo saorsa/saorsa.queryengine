@@ -1,29 +1,41 @@
 <span *ngIf="formGroup && type && property && filterDefinition">
   <span *ngIf="filterDefinition.arg1Required === true">
-    <mat-card [formGroup]="formGroup">
+    <span [formGroup]="formGroup">
       <ng-container formArrayName="arguments">
-        <ng-container *ngFor="let c of argumentsFormArray!.controls; let index = index">
-          <span class="" [formControl]="c" ngDefaultControl>
-              <mat-form-field appearance="fill">
-                <mat-label>Argument [{{index}}]</mat-label>
-                <input matInput
-                       [type]="argumentControlInputType"
-                       (input)="inputValueChange($event)"
-                       (change)="inputValueChange($event)"
-                       placeholder="Argument value ({{argumentControlInputType}})">
-              </mat-form-field>
-            <div *ngIf="c.hasError('required')" class="text-danger">
-              This is a required field.
+        <ng-container *ngFor="let c of argumentsFormArray!.controls; let index = index; let last = last">
+          <span [formControl]="c" ngDefaultControl>
+            <div fxLayout="column">
+              <span fxFlex="auto">
+                <mat-form-field appearance="fill"
+                  [ngClass]="{'d-block' : !requiresDynamicArray}">
+                  <mat-label>Argument [{{index}}]</mat-label>
+                  <input matInput
+                         class="d-block w-100"
+                         [type]="argumentControlInputType"
+                         (input)="inputValueChange($event)"
+                         (change)="inputValueChange($event)"
+                         placeholder="Argument value ({{argumentControlInputType}})">
+                </mat-form-field>
+                <button class="btn btn-danger" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
+                  -
+                </button>
+                <button class="btn btn-danger" (click)="addArgumentControl()"
+                        *ngIf="last && requiresDynamicArray">
+                  +
+                </button>
+              </span>
+              <span fxFlex="auto" *ngIf="c.hasError('required')" class="text-danger">
+                This is a required field.
+              </span>
             </div>
-              <button class="btn btn-danger" (click)="removeArgumentControl(c)" *ngIf="requiresDynamicArray">
-                -
-              </button>
           </span>
         </ng-container>
+
+        <button class="btn btn-danger" (click)="addArgumentControl()"
+                *ngIf="argumentsFormArray!.length == 0 && requiresDynamicArray">
+          +
+        </button>
       </ng-container>
-      <button class="btn btn-danger" (click)="addArgumentControl()" *ngIf="requiresDynamicArray">
-        +
-      </button>
-    </mat-card>
+    </span>
   </span>
 </span>

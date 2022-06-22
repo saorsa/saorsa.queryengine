@@ -23,6 +23,7 @@ import { PropertyArgumentArrayControlComponent } from './components/property-arg
 import { PropertyFilterControlComponent } from './components/property-filter-control/property-filter-control.component';
 import { MatCardModule } from "@angular/material/card";
 import {QueryEngineTypeSystemService} from "./services/query-engine-type-system.service";
+import {FlexModule} from "@angular/flex-layout";
 
 @NgModule({
   declarations: [
@@ -35,20 +36,21 @@ import {QueryEngineTypeSystemService} from "./services/query-engine-type-system.
     PropertyArgumentArrayControlComponent,
     PropertyFilterControlComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatAutocompleteModule,
-    MatProgressSpinnerModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCardModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgbModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatAutocompleteModule,
+        MatProgressSpinnerModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCardModule,
+        FlexModule,
+    ],
   providers: [
     ApiService,
     HealthService,

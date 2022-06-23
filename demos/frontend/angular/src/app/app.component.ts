@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 import { HealthService } from "./services/health.service";
-import { catchError, Observable, of } from "rxjs";
+import {
+  catchError,
+  Observable,
+  of
+} from "rxjs";
 import { ApiHealthResult } from "./model/api.model";
-import {TypeDefinition} from "./model/query-engine.model";
-import {ActivatedRoute, ActivatedRouteSnapshot, Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-root',
@@ -18,9 +21,7 @@ export class AppComponent {
   loading = false;
 
   constructor(
-    private api: HealthService,
-    private route: ActivatedRoute,
-    private router: Router) {
+    private api: HealthService) {
   }
 
   ngOnInit() {

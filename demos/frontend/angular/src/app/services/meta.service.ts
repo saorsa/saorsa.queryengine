@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
-import { ApiTypeDefinitionSingleResult, ApiTypeDefinitionsResult } from "../model/api.model";
+import {
+  ApiTypeDefinitionSingleResult,
+  ApiTypeDefinitionsResult
+} from "../model/api.model";
+
 
 @Injectable({
   providedIn: 'root'

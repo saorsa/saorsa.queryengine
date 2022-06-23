@@ -1,10 +1,13 @@
-import {Injectable} from '@angular/core';
+import {
+  Injectable
+} from '@angular/core';
 import {
   FilterDefinition,
   FilterType,
   PropertyType,
   PropertyTypeStringMap
 } from "../model/query-engine.model";
+
 
 @Injectable({
   providedIn: 'root'

@@ -63,7 +63,7 @@
   </div>
 </div>
 <app-inspect-button
-  *ngIf="formGroup"
+  *ngIf="formGroup && isRootBlock"
   class="m-1 mt-2"
   [color]="formGroup.valid ? 'primary' : 'warn'"
   [data]="{ isValid: formGroup.valid, query: formGroup.value }"></app-inspect-button>

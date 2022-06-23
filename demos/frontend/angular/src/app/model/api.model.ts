@@ -1,4 +1,4 @@
-import {TypeDefinition} from "./query-engine.model";
+import { TypeDefinition } from "./query-engine.model";
 
 export type ApiResultStatus = 'Ok' | 'Warning' | 'Error' | 'Fatal';
 

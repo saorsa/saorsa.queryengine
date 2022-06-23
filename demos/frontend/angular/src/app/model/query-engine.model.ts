@@ -1,5 +1,6 @@
 
 export type BinaryOperator = 'And' | 'Or';
+
 export type FilterType =
   'IS_NULL' | 'IS_NOT_NULL'
   | 'EQ' | 'NOT_EQ'

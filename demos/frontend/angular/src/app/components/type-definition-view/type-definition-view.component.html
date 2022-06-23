@@ -5,6 +5,8 @@
   <app-error-view [error]="error"></app-error-view>
 </div>
 <div *ngIf="typeDefinition" class="container-fluid">
- <app-property-filter-control-block-control [typeDefinition]="typeDefinition">
+ <app-property-filter-control-block-control
+   (onValueChange)="onExpressionValueChange($event)"
+   [typeDefinition]="typeDefinition">
  </app-property-filter-control-block-control>
 </div>

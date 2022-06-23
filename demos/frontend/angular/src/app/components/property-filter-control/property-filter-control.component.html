@@ -30,10 +30,12 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <span fxFlex="1 1 auto" *ngIf="selectedFilterDefinition && selectedFilterDefinition.arg1Required">
+  <span fxFlex="1 1 auto" *ngIf="selectedFilterDefinition">
     <app-property-argument-array-control
       formArrayName="arguments"
-      (changes)="onArgumentsChange($event)"
+      (onChanges)="onArgumentChanges($event)"
+      (onValidationError)="onArgumentsArrayValidationErrors($event)"
+      (onValueChange)="onArgumentsArrayValueChange($event)"
       [formGroup]="safeFormGroupInstance"
       [type]="typeDefinition"
       [property]="selectedProperty"

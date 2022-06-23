@@ -1,6 +1,19 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BinaryOperator, FilterType, PropertyFilterBlock, TypeDefinition} from "../../model/query-engine.model";
-import {Subject} from "rxjs";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+import {
+  BinaryOperator,
+  FilterType, PropertyFilter,
+  PropertyFilterBlock,
+  TypeDefinition
+} from "../../model/query-engine.model";
+import {
+  Subject
+} from "rxjs";
 import {
   ControlValueAccessor,
   FormArray,
@@ -8,8 +21,10 @@ import {
   FormControl,
   FormGroup,
   NG_VALUE_ACCESSOR,
+  ValidationErrors,
   Validators
 } from "@angular/forms";
+import {ReactiveFormsHelperService} from "../../services/reactive-forms-helper.service";
 
 
 @Component({
@@ -32,12 +47,26 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   @Input() filterExpression = new Subject<PropertyFilterBlock>();
   @Input() depth = 0;
   @Input() formGroup?: FormGroup = this.buildInternalFormGroup('And');
+  @Output() onChanges = new EventEmitter<any>();
+  @Output() onValueChange = new EventEmitter<PropertyFilterBlock>();
+  @Output() onValidationError = new EventEmitter<ValidationErrors>();
   @Output() onRemoveBlockItem = new EventEmitter<[PropertyFilterBlock, number]>();
 
   isDisabled = false;
   touched = false;
   onChange = (arg: any) => {
-    console.warn('onChange', arg);
+    console.warn('BLOCK ON CHANGE', arg);
+    const validationErrors = this.formsHelper.getErrorsInDepth(this.safeFormGroupInstance);
+
+    if (this.safeFormGroupInstance.valid) {
+      const propFilterBlock = this.safeFormGroupInstance.value as PropertyFilterBlock;
+      console.warn('BLOCK VALIDATION SUCCESS', propFilterBlock);
+      this.onValueChange.emit(propFilterBlock);
+    }
+    else if (validationErrors) {
+      console.error('BLOCK VALIDATION ERROR', validationErrors);
+      this.onValidationError.emit(validationErrors!);
+    }
   };
   onTouched = () => {};
 
@@ -61,11 +90,6 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   get isSeparateConditionBlockLeaf(): boolean {
     return this.parentCondition != undefined
       && this.parentCondition !== this.condition;
-  }
-
-  get isSameConditionBlockLeaf(): boolean {
-    return this.parentCondition != undefined
-      && this.parentCondition === this.condition;
   }
 
   get hasChildBlocks(): boolean {
@@ -92,11 +116,13 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
       console.warn('pushing child with value', ac.value.first);
       this.othersFormArray.push(ac);
     });
+    this.onChange(this.safeFormGroupInstance.value);
   }
 
   addSingleOtherBlockControl(): void {
     const argumentControl = this.buildInternalFormGroup(this.condition);
     this.othersFormArray.push(argumentControl);
+    this.onChange(this.safeFormGroupInstance.value);
   }
 
   removeOthersBlockControl(blockFrom?: FormGroup): void {
@@ -111,6 +137,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
         this.othersFormArray.removeAt(0);
       }
     }
+    this.onChange(this.safeFormGroupInstance.value);
   }
 
   removeFirstControl(): void {
@@ -133,16 +160,19 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
       console.warn('Removing other item at index', index)
       this.othersFormArray.removeAt(index);
     }
+
+    this.onChange(this.safeFormGroupInstance.value);
   }
 
   readonly binaryOpsChoices: BinaryOperator[] = [ 'And', 'Or'];
 
   constructor(
     private readonly formBuilder: FormBuilder,
+    private readonly formsHelper: ReactiveFormsHelperService,
   ){ }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
+
   writeValue(obj: any): void {
     console.warn('WRITING BLOCK value', obj);
     if (obj) {
@@ -162,6 +192,36 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
 
   setDisabledState(isDisabled: boolean): void{
     this.isDisabled = isDisabled;
+  }
+
+  onFirstChanges(args: any): void {
+    console.warn('onFirstChanges', args);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onFirstValueChange(arg: PropertyFilter): void {
+    console.warn('onFirstValueChange', arg);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onFirstValidationErrors(errors: ValidationErrors): void {
+    console.warn('onFirstValidationErrors', errors);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onOthersBlockChanges(args: any): void {
+    console.warn('onOthersBlockChanges', args);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onOthersBlockValidationErrors(errors: ValidationErrors): void {
+    console.warn('onOthersBlockValidationErrors', errors);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onOthersBlockValueChange(arg: PropertyFilterBlock): void {
+    console.warn('onOthersBlockValueChange', arg);
+    this.onChange(this.safeFormGroupInstance.value);
   }
 
   protected buildInternalFormGroup(condition: BinaryOperator): FormGroup {

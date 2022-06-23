@@ -7,6 +7,9 @@
         (mouseenter)="isHoveringConditionBlock = true"
         (mouseleave)="isHoveringConditionBlock = false">
         <app-property-filter-control
+          (onChanges)="onFirstChanges($event)"
+          (onValueChange)="onFirstValueChange($event)"
+          (onValidationError)="onFirstValidationErrors($event)"
           [typeDefinition]="typeDefinition"
           [formGroup]="firstFormGroup">
         </app-property-filter-control>
@@ -50,6 +53,9 @@
       <ng-container formArrayName="others">
         <ng-container *ngFor="let c of othersFormArray.controls; let index = index">
           <app-property-filter-control-block-control
+            (onChanges)="onOthersBlockChanges($event)"
+            (onValueChange)="onOthersBlockValueChange($event)"
+            (onValidationError)="onOthersBlockValidationErrors($event)"
             [depth]="depth + 1"
             [index]="index"
             [parentCondition]="condition"

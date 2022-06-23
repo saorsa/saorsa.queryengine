@@ -1,14 +1,26 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
-import {FilterDefinition, TypeDefinition} from "../../model/query-engine.model";
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
+import {
+  FilterDefinition,
+  TypeDefinition
+} from "../../model/query-engine.model";
 import {
   AbstractControl,
   ControlValueAccessor,
   FormArray,
   FormBuilder, FormControl,
   FormGroup,
-  NG_VALUE_ACCESSOR, Validators,
+  NG_VALUE_ACCESSOR, ValidationErrors, Validators,
 } from "@angular/forms";
-import {QueryEngineTypeSystemService} from "../../services/query-engine-type-system.service";
+import { QueryEngineTypeSystemService } from "../../services/query-engine-type-system.service";
+import { ReactiveFormsHelperService } from "../../services/reactive-forms-helper.service";
 
 
 @Component({
@@ -29,7 +41,9 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   @Input() property?: TypeDefinition | null;
   @Input() filterDefinition?: FilterDefinition | null;
   @Input() formGroup?: FormGroup;
-  @Output() changes = new EventEmitter<any>();
+  @Output() onChanges = new EventEmitter<any>();
+  @Output() onValueChange = new EventEmitter<any[]>();
+  @Output() onValidationError = new EventEmitter<ValidationErrors>();
 
   get safeFormGroupInstance(): FormGroup {
     return this.formGroup ?? this.internalFormGroup;
@@ -51,11 +65,26 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   touched = false;
   minArgumentsCount = -1;
   maxArgumentCount?: number | null;
+
   onChange = (args?:any) => {
-    this.changes.emit(args);
+    console.warn('ARGS ON CHANGES', args);
+    this.onChanges.emit(args);
+
+    if (this.safeFormGroupInstance.valid) {
+      console.warn('ARGS VALIDATION SUCCESS', args, this.argumentsFormArray.value);
+      const value = this.argumentsFormArray.value;
+      this.onValueChange.emit(value)
+    }
+    else {
+      const validationErrors = this.formsHelper.getErrorsInDepth(this.safeFormGroupInstance);
+      if (validationErrors) {
+        console.error('ARGS VALIDATION ERROR', validationErrors);
+        this.onValidationError.emit(validationErrors!);
+      }
+    }
   };
-  onTouched = () => {
-  };
+
+  onTouched = () => {};
 
   readonly args: object[] = [];
 
@@ -67,12 +96,14 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   constructor(
     readonly formBuilder: FormBuilder,
     readonly filterTypesService: QueryEngineTypeSystemService,
+    readonly formsHelper: ReactiveFormsHelperService,
   ) {
     this.internalFormGroup = this.buildInternalFormGroup();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['filterDefinition']) {
+      console.warn('Rebuilding argument controls...')
       this.rebuildFormIfNeeded();
     }
   }
@@ -109,9 +140,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
     return `${brief} (${this.argumentPropertyType})`;
   }
 
-  ngOnInit(): void {
-    console.warn('INITIALIZING WITH VALS', this.argumentsFormArray.value);
-  }
+  ngOnInit(): void {}
 
   addArgumentControl(): void {
     const argumentControl = this.formBuilder.control(
@@ -148,6 +177,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
         this.argumentsFormArray.removeAt(lastIndex);
       }
     }
+    this.onChange(this.argumentsFormArray.value);
   }
 
   inputValueChange(_: any): void {

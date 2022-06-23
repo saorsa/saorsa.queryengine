@@ -31,6 +31,7 @@ import { InspectButtonComponent } from './components/common/inspect-button/inspe
 import { MatDialogModule } from "@angular/material/dialog";
 import { InspectViewComponent } from './components/common/inspect-view/inspect-view.component';
 import { MatToolbarModule } from "@angular/material/toolbar";
+import { ReactiveFormsHelperService } from "./services/reactive-forms-helper.service";
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { MatToolbarModule } from "@angular/material/toolbar";
     HealthService,
     MetaService,
     QueryEngineTypeSystemService,
+    ReactiveFormsHelperService,
   ],
   bootstrap: [AppComponent]
 })

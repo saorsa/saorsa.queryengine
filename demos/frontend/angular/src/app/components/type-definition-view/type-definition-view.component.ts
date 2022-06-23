@@ -35,6 +35,10 @@ export class TypeDefinitionViewComponent implements OnInit {
     });
   }
 
+  onExpressionValueChange(expression: PropertyFilterBlock): void {
+    console.warn('WILL ASK THE API', expression);
+  }
+
   private loadCachedTypeDef(typeName: string): Observable<ApiTypeDefinitionSingleResult> {
     this.loading = true;
     this.error = null;

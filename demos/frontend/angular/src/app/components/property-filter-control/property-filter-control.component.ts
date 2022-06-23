@@ -7,11 +7,12 @@ import {
   Output,
 } from '@angular/core';
 import {
-  ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, Validators
+  ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors, Validators
 } from "@angular/forms";
 import {
   FilterDefinition, FilterType, PropertyFilter, TypeDefinition
 } from "../../model/query-engine.model";
+import {ReactiveFormsHelperService} from "../../services/reactive-forms-helper.service";
 
 
 @Component({
@@ -31,7 +32,9 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   @Input() typeDefinition?: TypeDefinition;
   @Input() propertyFilter?: PropertyFilter;
   @Input() formGroup?: FormGroup;
-  @Output() changes = new EventEmitter<any>();
+  @Output() onChanges = new EventEmitter<any>();
+  @Output() onValueChange = new EventEmitter<PropertyFilter>();
+  @Output() onValidationError = new EventEmitter<ValidationErrors>();
 
   get safeFormGroupInstance(): FormGroup {
     return this.formGroup ?? this.internalFormGroup;
@@ -43,11 +46,24 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   selectedFilterType?: FilterType;
   isDisabled = false;
   touched = false;
+
   onChange = (arg?: any) => {
-    console.warn('ON CHANGE', arg)
-    this.changes.emit(arg);
     this.changeDetectorRef.detectChanges();
+    const validationErrors = this.formsHelper.getErrorsInDepth(this.safeFormGroupInstance);
+    console.warn('FILTERS ON CHANGES', this.safeFormGroupInstance.value, 'args', arg);
+    this.onChanges.emit(this.safeFormGroupInstance.value);
+
+    if (this.safeFormGroupInstance.valid) {
+      const propFilter = this.safeFormGroupInstance.value as PropertyFilter;
+      console.warn('FILTERS VALIDATION SUCCESS', propFilter);
+      this.onValueChange.emit(propFilter);
+    }
+    else if (validationErrors) {
+      console.error('FILTERS VALIDATION ERROR', validationErrors);
+      this.onValidationError.emit(validationErrors!);
+    }
   };
+
   onTouched = () => {
   };
 
@@ -87,6 +103,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
+    private formsHelper: ReactiveFormsHelperService,
   ) {
     this.internalFormGroup = this.buildInternalFormGroup();
   }
@@ -139,15 +156,24 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   }
 
   onFilterTypeSelect(filterType: FilterType): void {
-    console.warn('triggered', filterType);
     this.selectedFilterType = filterType;
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
     this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
     this.onChange(this.safeFormGroupInstance.value);
   }
 
-  onArgumentsChange(args?: any) : void {
-    console.warn('arguments changed', args);
+  onArgumentChanges(args: any) : void {
+    console.warn('onArgumentChanges', args);
+    //this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onArgumentsArrayValueChange(args: any[]) {
+    console.warn('onArgumentsArrayValueChange', args);
+    this.onChange(this.safeFormGroupInstance.value);
+  }
+
+  onArgumentsArrayValidationErrors(errors: ValidationErrors) {
+    console.warn('onArgumentsArrayValidationErrors', errors);
     this.onChange(this.safeFormGroupInstance.value);
   }
 

@@ -1,0 +1,18 @@
+<mat-toolbar [color]="color">
+  Inspect View
+</mat-toolbar>
+<mat-card-content>
+  <div class="ps-2 pt-2 pe-2">
+    <pre>
+      {{data?.dataItem | json}}
+    </pre>
+  </div>
+</mat-card-content>
+<mat-card-actions>
+  <div fxFlexLayout="row">
+    <span fxFlex></span>
+    <button mat-raised-button [mat-dialog-close]="null" [color]="color" class="ms-2 mb-2 me-2">
+      Dismiss
+    </button>
+  </div>
+</mat-card-actions>

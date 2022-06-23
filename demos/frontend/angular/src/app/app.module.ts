@@ -27,6 +27,10 @@ import { FlexModule } from "@angular/flex-layout";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { InspectButtonComponent } from './components/common/inspect-button/inspect-button.component';
+import { MatDialogModule } from "@angular/material/dialog";
+import { InspectViewComponent } from './components/common/inspect-view/inspect-view.component';
+import { MatToolbarModule } from "@angular/material/toolbar";
 
 
 @NgModule({
@@ -39,6 +43,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     PropertyFilterBlockControlComponent,
     PropertyArgumentArrayControlComponent,
     PropertyFilterControlComponent,
+    InspectButtonComponent,
+    InspectViewComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,7 +62,9 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
+    MatDialogModule,
     FlexModule,
+    MatToolbarModule,
   ],
   providers: [
     ApiService,

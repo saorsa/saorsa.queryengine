@@ -13,6 +13,7 @@
                     <mat-label>{{getLabelText(index)}}</mat-label>
                     <input matInput
                            class="d-block w-100"
+                           [value]="c.value"
                            [type]="argumentControlInputType"
                            (input)="inputValueChange($event)"
                            (change)="inputValueChange($event)"

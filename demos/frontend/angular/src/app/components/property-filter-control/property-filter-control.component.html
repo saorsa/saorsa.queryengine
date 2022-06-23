@@ -2,7 +2,7 @@
   *ngIf="typeDefinition" [formGroup]="safeFormGroupInstance"
   style="background: beige"
   fxLayout="row" fxLayout.xs="column" fxFlexFill>
-  <mat-form-field
+  <mat-form-field fxFlex="1 1 auto"
     class="filter-property-control"
     appearance="fill">
     <mat-label>Property</mat-label>
@@ -30,7 +30,7 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <span fxFlex="auto" *ngIf="selectedFilterDefinition && selectedFilterDefinition.arg1Required">
+  <span fxFlex="1 1 auto" *ngIf="selectedFilterDefinition && selectedFilterDefinition.arg1Required">
     <app-property-argument-array-control
       formArrayName="arguments"
       (changes)="onArgumentsChange($event)"

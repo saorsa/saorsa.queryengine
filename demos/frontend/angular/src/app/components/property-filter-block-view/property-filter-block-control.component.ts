@@ -1,11 +1,5 @@
-import {Component, Input, OnInit, Output} from '@angular/core';
-import {
-  BinaryOperator,
-  FilterDefinition,
-  FilterType,
-  PropertyFilterBlock,
-  TypeDefinition
-} from "../../model/query-engine.model";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {BinaryOperator, FilterType, PropertyFilterBlock, TypeDefinition} from "../../model/query-engine.model";
 import {Subject} from "rxjs";
 import {
   ControlValueAccessor,
@@ -16,6 +10,7 @@ import {
   NG_VALUE_ACCESSOR,
   Validators
 } from "@angular/forms";
+
 
 @Component({
   selector: 'app-property-filter-control-block-control',
@@ -32,8 +27,13 @@ import {
 export class PropertyFilterBlockControlComponent implements OnInit, ControlValueAccessor {
 
   @Input() typeDefinition?: TypeDefinition;
+  @Input() parentCondition?: BinaryOperator;
+  @Input() index = 0;
   @Input() filterExpression = new Subject<PropertyFilterBlock>();
   @Input() depth = 0;
+  @Input() formGroup?: FormGroup = this.buildInternalFormGroup('And');
+  @Output() onRemoveBlockItem = new EventEmitter<[PropertyFilterBlock, number]>();
+
   isDisabled = false;
   touched = false;
   onChange = (arg: any) => {
@@ -42,57 +42,106 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   onTouched = () => {};
 
   expression?: PropertyFilterBlock;
-  selectedProperty?: TypeDefinition;
-  selectedFilterType?: FilterType;
-  selectedFilterDefinition?: FilterDefinition;
+  isHoveringConditionBlock = false;
 
-  @Input() formGroup?: FormGroup = this.buildInternalFormGroup();
+  protected internalFormGroup: FormGroup = this.buildInternalFormGroup('And');
 
   get safeFormGroupInstance(): FormGroup {
     return this.formGroup ?? this.internalFormGroup;
   }
 
-  protected internalFormGroup: FormGroup = this.buildInternalFormGroup();
+  get condition(): BinaryOperator {
+    return this.conditionControl.value as BinaryOperator;
+  }
+
+  get isRootBlock(): boolean {
+    return this.depth === 0;
+  }
+
+  get isSeparateConditionBlockLeaf(): boolean {
+    return this.parentCondition != undefined
+      && this.parentCondition !== this.condition;
+  }
+
+  get isSameConditionBlockLeaf(): boolean {
+    return this.parentCondition != undefined
+      && this.parentCondition === this.condition;
+  }
+
+  get hasChildBlocks(): boolean {
+    return this.othersFormArray != null && this.othersFormArray.length > 0;
+  }
 
   get firstFormGroup(): FormGroup {
     return this.safeFormGroupInstance.get('first') as FormGroup;
   }
 
   get conditionControl(): FormControl {
-    const result = this.safeFormGroupInstance.get('condition') as FormControl;
-    return result;
+    return this.safeFormGroupInstance.get('condition') as FormControl;
   }
 
   get othersFormArray(): FormArray<FormGroup> {
     return this.safeFormGroupInstance.controls["others"] as FormArray;
   }
 
-  addOthersBlockControl(): void {
-    const argumentControl = this.buildInternalFormGroup();
+  createChildBlocks(blocks: PropertyFilterBlock[]): void {
+    const argumentControls = this.buildInternalFormGroups(blocks);
+    console.warn('block controls', argumentControls.length, argumentControls);
+    argumentControls.forEach(ac => {
 
-    console.warn('adding child control', argumentControl);
+      console.warn('pushing child with value', ac.value.first);
+      this.othersFormArray.push(ac);
+    });
+  }
+
+  addSingleOtherBlockControl(): void {
+    const argumentControl = this.buildInternalFormGroup(this.condition);
     this.othersFormArray.push(argumentControl);
   }
 
-  removeOthersBlockControl(blockFrom: FormGroup): void {
-    const matchIndex = this.othersFormArray.controls.findIndex(c => c === blockFrom);
-    if (matchIndex >= 0) {
-      this.othersFormArray.removeAt(matchIndex);
+  removeOthersBlockControl(blockFrom?: FormGroup): void {
+    if (blockFrom) {
+      const matchIndex = this.othersFormArray.controls.findIndex(c => c === blockFrom);
+      if (matchIndex >= 0) {
+        this.othersFormArray.removeAt(matchIndex);
+      }
+    }
+    else {
+      while (this.othersFormArray.length > 0){
+        this.othersFormArray.removeAt(0);
+      }
+    }
+  }
+
+  removeFirstControl(): void {
+    if (this.parentCondition != null) {
+      const blockValue = this.safeFormGroupInstance.value as PropertyFilterBlock;
+      console.warn('FIRING REMOVE EVENT', blockValue, blockValue.others);
+      this.onRemoveBlockItem.emit([blockValue, this.index]);
+    }
+  }
+
+  handleRemoveBlockFirstItem(event: [PropertyFilterBlock, number]): void {
+    const block = event[0];
+    const index = event[1];
+    if (block.others?.length) {
+      console.warn('Generating other items from blocks', block.others);
+      this.createChildBlocks(block.others);
+    }
+
+    if (this.othersFormArray.length > index) {
+      console.warn('Removing other item at index', index)
+      this.othersFormArray.removeAt(index);
     }
   }
 
   readonly binaryOpsChoices: BinaryOperator[] = [ 'And', 'Or'];
-
-  get hasFilters(): boolean{
-    return this.expression?.first != null;
-  }
 
   constructor(
     private readonly formBuilder: FormBuilder,
   ){ }
 
   ngOnInit(): void {
-    this.buildInternalFormGroup();
   }
   writeValue(obj: any): void {
     console.warn('WRITING BLOCK value', obj);
@@ -104,7 +153,6 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   }
 
   registerOnChange(fn: any): void {
-    console.warn('here', fn);
     this.onChange = fn;
   }
 
@@ -116,16 +164,14 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.isDisabled = isDisabled;
   }
 
-  protected buildInternalFormGroup(): FormGroup {
+  protected buildInternalFormGroup(condition: BinaryOperator): FormGroup {
     const filterType: FilterType =
       'IS_NOT_NULL';
 
-    const firstProperty = this.typeDefinition?.properties != null &&
-      this.typeDefinition.properties.length > 0
-
-      ?
-      this.typeDefinition.properties[0].name :
-      null;
+    const firstProperty =
+      this.typeDefinition?.properties != null && this.typeDefinition.properties.length > 0
+        ? this.typeDefinition.properties[0].name
+        : null;
 
     return this.formBuilder.group({
       first: this.formBuilder.group({
@@ -133,8 +179,22 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
         filterType: [filterType, Validators.required],
         arguments: this.formBuilder.array([])
       }),
-      condition: ['And'],
+      condition: [ condition ],
       others: this.formBuilder.array([])
     });
+  }
+
+  protected buildInternalFormGroups(blocks: PropertyFilterBlock[]): FormGroup[] {
+    return blocks.map(otherItem =>
+      this.formBuilder.group({
+        first: this.formBuilder.group({
+          name: [otherItem.first.name, Validators.required],
+          filterType: [otherItem.first.filterType, Validators.required],
+          arguments: this.formBuilder.array(otherItem.first.arguments || [])
+        }),
+        condition: [otherItem.condition],
+        others: this.formBuilder.array([])
+      })
+    );
   }
 }

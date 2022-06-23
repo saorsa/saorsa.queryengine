@@ -44,6 +44,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   isDisabled = false;
   touched = false;
   onChange = (arg?: any) => {
+    console.warn('ON CHANGE', arg)
     this.changes.emit(arg);
     this.changeDetectorRef.detectChanges();
   };
@@ -91,6 +92,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   }
 
   writeValue(obj: any): void {
+    console.warn('WRITE VALUE', obj);
     const filter = obj as PropertyFilter;
     if (filter) {
       this.nameControl.setValue(filter.name);
@@ -117,6 +119,14 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   }
 
   ngOnInit(): void {
+    if (this.selectedProperty == null) {
+      this.selectedProperty = this.typeDefinition?.properties?.find(
+        p => p.name === this.nameControl.value
+      );
+      this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(
+        f => f.filterType === this.filterTypeControl.value
+      );
+    }
   }
 
   onPropertySelect(propertyName: string): void {

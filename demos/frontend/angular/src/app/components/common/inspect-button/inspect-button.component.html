@@ -1,0 +1,42 @@
+<ng-container [ngSwitch]="buttonType">
+  <ng-container *ngSwitchCase="'flat'">
+    <button
+      mat-flat-button [color]="color" [matTooltip]="tooltip"
+      [ngClass]="buttonNgClass"
+      (click)="openDebugDialog()">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'raised'">
+    <button
+      mat-raised-button [color]="color" [matTooltip]="tooltip"
+      [ngClass]="buttonNgClass"
+      (click)="openDebugDialog()">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'fab'">
+    <button
+      mat-fab [color]="color" [matTooltip]="tooltip"
+      [ngClass]="buttonNgClass"
+      (click)="openDebugDialog()">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchCase="'mini-fab'">
+    <button
+      mat-mini-fab [color]="color" [matTooltip]="tooltip"
+      [ngClass]="buttonNgClass"
+      (click)="openDebugDialog()">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <button
+      mat-icon-button [color]="color" [matTooltip]="tooltip"
+      [ngClass]="buttonNgClass"
+      (click)="openDebugDialog()">
+      <mat-icon>{{icon}}</mat-icon>
+    </button>
+  </ng-container>
+</ng-container>

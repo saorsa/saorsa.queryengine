@@ -1,15 +1,20 @@
-<div *ngIf="formGroup && typeDefinition">
-  <h2 *ngIf="depth <= 0">Filters</h2>
+<div *ngIf="formGroup && typeDefinition"
+  [ngClass]="{'separate-condition-block' : isSeparateConditionBlockLeaf && hasChildBlocks }">
+  <h2 *ngIf="isRootBlock">Filters</h2>
   <div [formGroup]="safeFormGroupInstance">
     <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
-      <span>
+      <span
+        (mouseenter)="isHoveringConditionBlock = true"
+        (mouseleave)="isHoveringConditionBlock = false">
         <app-property-filter-control
           [typeDefinition]="typeDefinition"
           [formGroup]="firstFormGroup">
         </app-property-filter-control>
       </span>
-      <span>
-        <mat-form-field>
+      <span fxLayout="row"
+        (mouseenter)="isHoveringConditionBlock = true"
+        (mouseleave)="isHoveringConditionBlock = false">
+        <mat-form-field appearance="fill" *ngIf="hasChildBlocks">
           <mat-label>Condition</mat-label>
           <mat-select [formControl]="conditionControl">
             <mat-option *ngFor="let p of binaryOpsChoices" [value]="p">
@@ -17,34 +22,48 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <button class="btn btn-danger" (click)="addOthersBlockControl()">
-          +
+        <button
+          color="primary"
+          matTooltip="Add a child condition item"
+          mat-mini-fab class="m-1 mt-2" (click)="addSingleOtherBlockControl()">
+          <mat-icon>join_full</mat-icon>
+        </button>
+        <button *ngIf="isHoveringConditionBlock && parentCondition"
+                color="warn"
+                matTooltip="Remove this condition only. All related child conditions will be attached to the parent condition."
+                mat-mini-fab class="m-1 mt-2" (click)="removeFirstControl()">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <button *ngIf="isHoveringConditionBlock && hasChildBlocks"
+          color="warn"
+          matTooltip="Remove all child condition items."
+          mat-mini-fab class="m-1 mt-2" (click)="removeOthersBlockControl()">
+          <mat-icon>delete</mat-icon>
         </button>
       </span>
     </div>
-    <div style="padding-left: 20px; border: 1px solid red">
-      <div *ngIf="othersFormArray!.length > 1">START</div>
+    <div *ngIf="hasChildBlocks"
+      [ngClass]="{'scope-child-block' : isHoveringConditionBlock }">
+      <h4 *ngIf="isHoveringConditionBlock && hasChildBlocks">
+        Condition Expressions:
+      </h4>
       <ng-container formArrayName="others">
-        <ng-container *ngFor="let c of othersFormArray!.controls; let index = index">
+        <ng-container *ngFor="let c of othersFormArray.controls; let index = index">
           <app-property-filter-control-block-control
             [depth]="depth + 1"
+            [index]="index"
+            [parentCondition]="condition"
             [formGroup]="c"
-            [typeDefinition]="typeDefinition">
+            [typeDefinition]="typeDefinition"
+            (onRemoveBlockItem)="handleRemoveBlockFirstItem($event)">
           </app-property-filter-control-block-control>
-          <button class="btn btn-danger" (click)="removeOthersBlockControl(c)">
-            -
-          </button>
         </ng-container>
       </ng-container>
-      <div *ngIf="othersFormArray!.length > 1">END</div>
     </div>
   </div>
 </div>
-<div class="alert alert-info" *ngIf="formGroup">
-  <div>
-    <b>Property Filter Block Is Valid = </b>
-    <span [ngClass]="{'text-danger': !formGroup.valid}">{{formGroup.valid}}</span>
-  </div>
-  <div></div>
-  {{formGroup.value | json}}
-</div>
+<app-inspect-button
+  *ngIf="formGroup"
+  class="m-1 mt-2"
+  [color]="formGroup.valid ? 'primary' : 'warn'"
+  [data]="{ isValid: formGroup.valid, query: formGroup.value }"></app-inspect-button>

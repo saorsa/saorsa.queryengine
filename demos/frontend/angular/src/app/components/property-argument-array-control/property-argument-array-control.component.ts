@@ -110,7 +110,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   ngOnInit(): void {
-
+    console.warn('INITIALIZING WITH VALS', this.argumentsFormArray.value);
   }
 
   addArgumentControl(): void {

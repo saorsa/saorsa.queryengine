@@ -1,7 +1,7 @@
 <div *ngIf="formGroup && typeDefinition"
   [ngClass]="{'separate-condition-block' : isSeparateConditionBlockLeaf && hasChildBlocks }">
-  <h2 *ngIf="isRootBlock">Filters</h2>
-  <div [formGroup]="safeFormGroupInstance">
+  <mat-toolbar *ngIf="isRootBlock" [color]="formGroup.valid ? 'primary' : 'warn'">Filters</mat-toolbar>
+  <div [formGroup]="safeFormGroupInstance" [ngClass]="{ 'p-2' : isRootBlock }">
     <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="start">
       <span
         (mouseenter)="isHoveringConditionBlock = true"
@@ -68,8 +68,12 @@
     </div>
   </div>
 </div>
-<app-inspect-button
-  *ngIf="formGroup && isRootBlock"
-  class="m-1 mt-2"
-  [color]="formGroup.valid ? 'primary' : 'warn'"
-  [data]="{ isValid: formGroup.valid, query: formGroup.value }"></app-inspect-button>
+<div *ngIf="isRootBlock" fxFlexLayout="row" class="ps-2 pe-2 pb-2">
+  <span fxFlex></span>
+  <app-inspect-button
+    *ngIf="formGroup"
+    [buttonType]="'flat'"
+    [buttonText]="'Expression'"
+    [color]="formGroup.valid ? 'primary' : 'warn'"
+    [data]="{ isValid: formGroup.valid, query: formGroup.value }"></app-inspect-button>
+</div>

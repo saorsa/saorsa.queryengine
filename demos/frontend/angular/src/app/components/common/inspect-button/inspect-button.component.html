@@ -5,6 +5,7 @@
       [ngClass]="buttonNgClass"
       (click)="openDebugDialog()">
       <mat-icon>{{icon}}</mat-icon>
+      <span *ngIf="buttonText">{{buttonText}}</span>
     </button>
   </ng-container>
   <ng-container *ngSwitchCase="'raised'">
@@ -13,6 +14,7 @@
       [ngClass]="buttonNgClass"
       (click)="openDebugDialog()">
       <mat-icon>{{icon}}</mat-icon>
+      <span *ngIf="buttonText">{{buttonText}}</span>
     </button>
   </ng-container>
   <ng-container *ngSwitchCase="'fab'">
@@ -37,6 +39,7 @@
       [ngClass]="buttonNgClass"
       (click)="openDebugDialog()">
       <mat-icon>{{icon}}</mat-icon>
+      <span *ngIf="buttonText">{{buttonText}}</span>
     </button>
   </ng-container>
 </ng-container>

@@ -14,6 +14,7 @@ export class InspectButtonComponent implements OnInit {
 
   @Input() color: ThemePalette = 'primary';
   @Input() data: any = null;
+  @Input() buttonText?: string | null;
   @Input() buttonType: ButtonType = 'mini-fab';
   @Input() buttonNgClass: string | string[] | Set<string> | {
     [klass: string]: any;

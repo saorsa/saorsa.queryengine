@@ -12,9 +12,6 @@ import {
   TypeDefinition
 } from "../../model/query-engine.model";
 import {
-  Subject
-} from "rxjs";
-import {
   ControlValueAccessor,
   FormArray,
   FormBuilder,
@@ -25,6 +22,7 @@ import {
   Validators
 } from "@angular/forms";
 import {ReactiveFormsHelperService} from "../../services/reactive-forms-helper.service";
+import {Subject} from "rxjs";
 
 
 @Component({
@@ -43,10 +41,10 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
 
   @Input() typeDefinition?: TypeDefinition;
   @Input() parentCondition?: BinaryOperator;
+  @Input() initialValue?: PropertyFilterBlock;
   @Input() index = 0;
-  @Input() filterExpression = new Subject<PropertyFilterBlock>();
   @Input() depth = 0;
-  @Input() formGroup?: FormGroup = this.buildInternalFormGroup('And');
+  @Input() formGroup?: FormGroup = this.buildFormGroupFromState('And');
   @Output() onChanges = new EventEmitter<any>();
   @Output() onValueChange = new EventEmitter<PropertyFilterBlock>();
   @Output() onValidationError = new EventEmitter<ValidationErrors>();
@@ -73,7 +71,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   expression?: PropertyFilterBlock;
   isHoveringConditionBlock = false;
 
-  protected internalFormGroup: FormGroup = this.buildInternalFormGroup('And');
+  protected internalFormGroup: FormGroup = this.buildFormGroupFromState('And');
 
   get safeFormGroupInstance(): FormGroup {
     return this.formGroup ?? this.internalFormGroup;
@@ -109,7 +107,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   }
 
   createChildBlocks(blocks: PropertyFilterBlock[]): void {
-    const argumentControls = this.buildInternalFormGroups(blocks);
+    const argumentControls = this.buildFormGroups(blocks);
     console.warn('block controls', argumentControls.length, argumentControls);
     argumentControls.forEach(ac => {
 
@@ -120,7 +118,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   }
 
   addSingleOtherBlockControl(): void {
-    const argumentControl = this.buildInternalFormGroup(this.condition);
+    const argumentControl = this.buildFormGroupFromState(this.condition);
     this.othersFormArray.push(argumentControl);
     this.onChange(this.safeFormGroupInstance.value);
   }
@@ -171,7 +169,13 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     private readonly formsHelper: ReactiveFormsHelperService,
   ){ }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.initialValue) {
+      console.warn('INITIALIZING', this.initialValue);
+      this.internalFormGroup = this.buildFormGroup(this.initialValue);
+      this.formGroup = this.buildFormGroup(this.initialValue);
+    }
+  }
 
   writeValue(obj: any): void {
     console.warn('WRITING BLOCK value', obj);
@@ -224,7 +228,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.onChange(this.safeFormGroupInstance.value);
   }
 
-  protected buildInternalFormGroup(condition: BinaryOperator): FormGroup {
+  protected buildFormGroupFromState(condition: BinaryOperator): FormGroup {
     const filterType: FilterType =
       'IS_NOT_NULL';
 
@@ -244,17 +248,21 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     });
   }
 
-  protected buildInternalFormGroups(blocks: PropertyFilterBlock[]): FormGroup[] {
-    return blocks.map(otherItem =>
-      this.formBuilder.group({
-        first: this.formBuilder.group({
-          name: [otherItem.first.name, Validators.required],
-          filterType: [otherItem.first.filterType, Validators.required],
-          arguments: this.formBuilder.array(otherItem.first.arguments || [])
-        }),
-        condition: [otherItem.condition],
-        others: this.formBuilder.array([])
-      })
-    );
+  protected buildFormGroups(blocks: PropertyFilterBlock[]): FormGroup[] {
+    return blocks.map(otherItem => this.buildFormGroup(otherItem));
+  }
+
+  protected buildFormGroup(block: PropertyFilterBlock): FormGroup {
+    return this.formBuilder.group({
+      first: this.formBuilder.group({
+        name: [block.first.name, Validators.required],
+        filterType: [block.first.filterType, Validators.required],
+        arguments: this.formBuilder.array(block.first.arguments || [])
+      }),
+      condition: [block.condition],
+      others: this.formBuilder.array(
+        this.buildFormGroups(block.others ?? [])
+      )
+    });
   }
 }

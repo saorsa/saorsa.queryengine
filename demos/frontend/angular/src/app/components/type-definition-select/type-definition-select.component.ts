@@ -1,9 +1,20 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {MetaService} from "../../services/meta.service";
-import {catchError, Observable, of} from "rxjs";
-import {ApiTypeDefinitionsResult} from "../../model/api.model";
-import {TypeDefinition} from "../../model/query-engine.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {
+  Component, OnInit
+} from '@angular/core';
+import { MetaService } from "../../services/meta.service";
+import {
+  catchError, Observable, of
+} from "rxjs";
+import {
+  ApiTypeDefinitionsResult
+} from "../../model/api.model";
+import {
+  TypeDefinition
+} from "../../model/query-engine.model";
+import {
+  ActivatedRoute, Router
+} from "@angular/router";
+
 
 @Component({
   selector: 'app-type-definition-select',
@@ -12,12 +23,19 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class TypeDefinitionSelectComponent implements OnInit {
 
-  @Output() onTypeDefinitionSelect = new EventEmitter<TypeDefinition>();
-
+  /** Stores the result with all type definitions, cached by the server. */
   apiResult?: ApiTypeDefinitionsResult | null;
+
+  /** Stores the last known error when communicating with the server. */
   error?: any;
+
+  /** Stores indication, if the component is loading data from the server. */
   loading = false;
+
+  /** Stores the name of the currently active type definition from the activated route. */
   typeNameFromRoute?: string;
+
+  /** Stores the currently selected type definition. */
   selectedTypDef?: TypeDefinition;
 
   constructor(
@@ -29,16 +47,16 @@ export class TypeDefinitionSelectComponent implements OnInit {
     this.activatedRoute.firstChild?.params?.subscribe(p => {
       this.typeNameFromRoute = p['type'];
     });
-    this.loadCachedTypeDefs();
+    this.loadTypeDefinitions();
   }
 
-  onChange(event: any): void {
+  onChangeSelectedType(event: any): void {
     const val: TypeDefinition = event?.source?.value;
     this.selectedTypDef = val;
     this.router.navigate([val?.name]).finally(() =>{});
   }
 
-  private loadCachedTypeDefs(): Observable<ApiTypeDefinitionsResult> {
+  protected loadTypeDefinitions(): Observable<ApiTypeDefinitionsResult> {
     this.loading = true;
     this.error = null;
     this.apiResult = null;

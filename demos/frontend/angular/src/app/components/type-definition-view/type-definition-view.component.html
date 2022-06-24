@@ -4,9 +4,14 @@
 <div *ngIf="error">
   <app-error-view [error]="error"></app-error-view>
 </div>
-<div *ngIf="typeDefinition" class="container-fluid">
- <app-property-filter-control-block-control
-   (onValueChange)="onExpressionValueChange($event)"
-   [typeDefinition]="typeDefinition">
- </app-property-filter-control-block-control>
+<div *ngIf="typeDefinition" class="ps-2 pe-2">
+  <mat-card>
+    <mat-card-content>
+      <app-property-filter-control-block-control
+        (onValueChange)="onExpressionValueChange($event)"
+        [initialValue]="initialFilterBlock"
+        [typeDefinition]="typeDefinition">
+      </app-property-filter-control-block-control>
+    </mat-card-content>
+  </mat-card>
 </div>

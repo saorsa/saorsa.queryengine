@@ -110,6 +110,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
 
   writeValue(obj: any): void {
     console.error('property-arg-array writing value', obj);
+    this.argumentsFormArray.setValue(obj);
   }
 
   registerOnChange(fn: any): void {

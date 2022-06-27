@@ -11,13 +11,26 @@
                     appearance="fill"
                     [ngClass]="{'d-block' : !requiresDynamicArray}">
                     <mat-label>{{getLabelText(index)}}</mat-label>
-                    <input matInput
-                           class="d-block w-100"
-                           [value]="c.value"
-                           [type]="argumentControlInputType"
-                           (input)="inputValueChange($event)"
-                           (change)="inputValueChange($event)"
-                           placeholder="{{argumentControlInputType}}">
+                    <ng-container [ngSwitch]="argumentControlInputType">
+                      <ng-container *ngSwitchCase="'number'">
+                        <input matInput
+                               class="d-block w-100"
+                               [value]="c.value"
+                               type="number"
+                               (input)="inputValueChange($event)"
+                               (change)="inputValueChange($event)"
+                               placeholder="{{argumentControlInputType}}">
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>
+                        <input matInput
+                               class="d-block w-100"
+                               [value]="c.value"
+                               [type]="argumentControlInputType"
+                               (input)="inputValueChange($event)"
+                               (change)="inputValueChange($event)"
+                               placeholder="{{argumentControlInputType}}">
+                      </ng-container>
+                    </ng-container>
                   </mat-form-field>
                   <button
                     matTooltip="Remove argument at index {{index}}"

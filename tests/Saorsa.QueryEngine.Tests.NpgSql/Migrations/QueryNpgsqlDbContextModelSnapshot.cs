@@ -11,7 +11,7 @@ using Saorsa.QueryEngine.Tests.NpgSql.Data;
 namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 {
     [DbContext(typeof(QueryNpgsqlDbContext))]
-    partial class QueryDbContextModelSnapshot : ModelSnapshot
+    partial class QueryNpgsqlDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {

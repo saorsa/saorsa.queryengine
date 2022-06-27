@@ -31,4 +31,10 @@ public static class ErrorCodes
     /// Error while performing conversion from a source to target type.
     /// </summary>
     public const int TypeConversionError = 21500;
+    
+    /// <summary>
+    /// Error while performing conversion from a source to target type - expected argument is a literal value,
+    /// not an object or array;
+    /// </summary>
+    public const int TypeConversionLiteralValueExpectedError = 21550;
 }

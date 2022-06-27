@@ -12,7 +12,7 @@ import {
 import {
   FilterDefinition, FilterType, PropertyFilter, TypeDefinition
 } from "../../model/query-engine.model";
-import {ReactiveFormsHelperService} from "../../services/reactive-forms-helper.service";
+import {FormsHelperService} from "../../services/forms-helper.service";
 
 
 @Component({
@@ -103,7 +103,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private formBuilder: FormBuilder,
-    private formsHelper: ReactiveFormsHelperService,
+    private formsHelper: FormsHelperService,
   ) {
     this.internalFormGroup = this.buildInternalFormGroup();
   }

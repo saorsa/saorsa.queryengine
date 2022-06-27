@@ -12,8 +12,8 @@ using Saorsa.QueryEngine.Tests.NpgSql.Data;
 namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 {
     [DbContext(typeof(QueryNpgsqlDbContext))]
-    [Migration("20220615132034_init")]
-    partial class init
+    [Migration("20220624082754_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

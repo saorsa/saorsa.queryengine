@@ -5,7 +5,7 @@ namespace Saorsa.QueryEngine.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class MetaController : Controller
+public class MetaController : ControllerBase
 {
     [HttpGet("scan")]
     public ActionResult<ResultRef<TypeDefinition[]>> GetScannedTypes()

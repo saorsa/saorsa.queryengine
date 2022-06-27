@@ -9,7 +9,7 @@ import {
 @Injectable({
   providedIn: 'root'
 })
-export class ReactiveFormsHelperService {
+export class FormsHelperService {
 
   constructor() { }
 

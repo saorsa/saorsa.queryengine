@@ -21,7 +21,7 @@ import {
   ValidationErrors,
   Validators
 } from "@angular/forms";
-import {ReactiveFormsHelperService} from "../../services/reactive-forms-helper.service";
+import {FormsHelperService} from "../../services/forms-helper.service";
 import {Subject} from "rxjs";
 
 
@@ -166,7 +166,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
 
   constructor(
     private readonly formBuilder: FormBuilder,
-    private readonly formsHelper: ReactiveFormsHelperService,
+    private readonly formsHelper: FormsHelperService,
   ){ }
 
   ngOnInit(): void {

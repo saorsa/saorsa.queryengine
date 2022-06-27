@@ -28,6 +28,11 @@ export class ApiService {
     return this.http.get<T>(fullPath, { params: httpParams });
   }
 
+  post<TBody, TResult>(path: string, params?: TBody): Observable<TResult> {
+    const fullPath = `${this.baseUrl}${path}`;
+    return this.http.post<TResult>(fullPath, params ?? {});
+  }
+
   private static toQueryParams(obj: any): HttpParams{
     let params = new HttpParams();
     for (const key in obj) {

@@ -20,7 +20,7 @@ import {
   NG_VALUE_ACCESSOR, ValidationErrors, Validators,
 } from "@angular/forms";
 import { QueryEngineTypeSystemService } from "../../services/query-engine-type-system.service";
-import { ReactiveFormsHelperService } from "../../services/reactive-forms-helper.service";
+import { FormsHelperService } from "../../services/forms-helper.service";
 
 
 @Component({
@@ -96,7 +96,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   constructor(
     readonly formBuilder: FormBuilder,
     readonly filterTypesService: QueryEngineTypeSystemService,
-    readonly formsHelper: ReactiveFormsHelperService,
+    readonly formsHelper: FormsHelperService,
   ) {
     this.internalFormGroup = this.buildInternalFormGroup();
   }

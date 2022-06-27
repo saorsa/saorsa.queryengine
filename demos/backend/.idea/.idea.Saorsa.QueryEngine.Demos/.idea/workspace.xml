@@ -5,12 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseUsersQueryController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/ResultUsers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/MetaController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-block-view/property-filter-block-control.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-filter-control/property-filter-control.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/services/api.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/services/api.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/services/reactive-forms-helper.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/services/forms-helper.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ErrorCodes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ErrorCodes.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/Model/QueryEnginePageRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/Model/QueryEnginePageRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Bootstrap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Bootstrap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Migrations/20220615132034_init.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Migrations/20220615132034_init.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Migrations/QueryDbContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Saorsa.QueryEngine.Tests.NpgSql.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Saorsa.QueryEngine.Tests.NpgSql.csproj" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +31,18 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../saorsa.corelib/src/Saorsa.CoreLib/Model/BusinessPageRequest.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../saorsa.corelib/src/Saorsa.CoreLib/Model/BusinessPageResult.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../saorsa.extensions/src/Saorsa.Extensions/TypeUtilityExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/36efc3621bcc23c7f225294b106168c89815fca37e9f34b3ff8bc86f51c0fa/JsonElement.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3896256222d490c8451ec3b7fe9548f36a11fd0aa119436ff1a17e6289b/UnaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6823b2dff2d81a72c191393975dfd757bdc28475c828db3adda735b75c34531/QueryableMethodTranslatingExpressionVisitor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7cca252cfdab9d23707e342d5c2b1f31c91339e0c77d16857daff617559e0/BinaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9575b7d86a1d2c7187597a6e6d4d7ca12f4b1f9edfea43b9b3f39817ecf1c7/JsonDocument.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/97ff884ce3c0b8d07093729bcf815db710327f8e4c233c5282d34b45a118fa9a/Contains.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -74,6 +98,9 @@
       <workItem from="1655565567877" duration="3299000" />
       <workItem from="1655625177493" duration="2223000" />
       <workItem from="1655721110196" duration="667000" />
+      <workItem from="1655889893945" duration="3840000" />
+      <workItem from="1655988262891" duration="2322000" />
+      <workItem from="1656073173770" duration="11295000" />
     </task>
     <servers />
   </component>
@@ -95,5 +122,76 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseUsersQueryController.cs</url>
+          <line>21</line>
+          <properties documentPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseUsersQueryController.cs" initialLine="21" containingFunctionPresentation="method 'Query'">
+            <startOffsets>
+              <option value="576" />
+            </startOffsets>
+            <endOffsets>
+              <option value="611" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs</url>
+          <line>274</line>
+          <properties documentPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" initialLine="274" containingFunctionPresentation="method 'BuildComparisonExpression'">
+            <startOffsets>
+              <option value="10264" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10348" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs</url>
+          <line>290</line>
+          <properties documentPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" initialLine="290" containingFunctionPresentation="method 'ConvertQueryEngineType'">
+            <startOffsets>
+              <option value="10805" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10824" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs</url>
+          <line>393</line>
+          <properties documentPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" initialLine="393" containingFunctionPresentation="method 'ConvertQueryEngineType'">
+            <startOffsets>
+              <option value="14248" />
+            </startOffsets>
+            <endOffsets>
+              <option value="14273" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs</url>
+          <line>276</line>
+          <properties documentPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" initialLine="276" containingFunctionPresentation="method 'BuildComparisonExpression'">
+            <startOffsets>
+              <option value="10366" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10509" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

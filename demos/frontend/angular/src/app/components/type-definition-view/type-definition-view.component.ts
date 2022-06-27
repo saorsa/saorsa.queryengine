@@ -12,6 +12,7 @@ import {
   catchError, Observable, of, Subject
 } from "rxjs";
 import { ApiTypeDefinitionSingleResult } from "../../model/api.model";
+import {QueryEngineUsersService} from "../../services/query-engine-users.service";
 
 
 @Component({
@@ -45,7 +46,8 @@ export class TypeDefinitionViewComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private api: MetaService) { }
+    private metaService: MetaService,
+    private queryEngineUsers: QueryEngineUsersService) { }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe( routeParams => {
@@ -78,6 +80,13 @@ export class TypeDefinitionViewComponent implements OnInit {
     })
     .finally(() => {
       this.currentFilterBlock = expression;
+
+
+      this.queryEngineUsers.filterUsers(expression).subscribe((res) => {
+        console.warn('RESULTS FROM API:', res);
+      }, (err) => {
+        console.error('ERROR FROM API:', err);
+      });
     });
   }
 
@@ -117,7 +126,7 @@ export class TypeDefinitionViewComponent implements OnInit {
     this.loading = true;
     this.error = null;
     this.typeDefinitionApiResult = null;
-    const result = this.api.getCachedTypeDefinition(typeName);
+    const result = this.metaService.getCachedTypeDefinition(typeName);
     result
       .pipe(catchError(err => {
         this.error = err;

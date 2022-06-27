@@ -12,8 +12,7 @@ public class BootstrapTestId
     public void SetupDb()
     {
         var dbContext = new QueryNpgsqlDbContext();
-        Assert.That(dbContext.Database.CanConnect, Is.True);
-        
+        //Assert.That(dbContext.Database.CanConnect, Is.True);
         Assert.DoesNotThrow(() => dbContext.Database.Migrate());
         
         PurgeDb(dbContext);

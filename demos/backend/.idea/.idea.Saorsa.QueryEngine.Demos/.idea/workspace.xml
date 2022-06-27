@@ -4,10 +4,7 @@
     <projectFile profileName="Saorsa.QueryEngine.API">Saorsa.QueryEngine.API/Saorsa.QueryEngine.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.component.html" afterDir="false" />
-    </list>
+    <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +81,7 @@
       <workItem from="1655721110196" duration="667000" />
       <workItem from="1655889893945" duration="3840000" />
       <workItem from="1655988262891" duration="2322000" />
-      <workItem from="1656073173770" duration="13036000" />
+      <workItem from="1656073173770" duration="13483000" />
     </task>
     <servers />
   </component>

@@ -269,10 +269,7 @@ public static class ExpressionBuilder
             return directExpression;
         }
 
-        var isValueType = parameterPropertyType.IsValueType;
-        var isNullable = parameterPropertyType.IsNullable();
-        var required = isValueType && !isNullable;
-        var convertedVal = argument.ConvertQueryEngineType(parameterPropertyType, required);
+        var convertedVal = argument.ConvertQueryEngineType(parameterPropertyType);
         
         var expectedConvertedConstant = Expression.Convert(
             Expression.Constant(convertedVal),
@@ -285,9 +282,14 @@ public static class ExpressionBuilder
 
     public static object? ConvertQueryEngineType(
         this object? source,
-        Type targetType,
-        bool required = true)
+        Type targetType)
     {
+        
+        var isValueType = targetType.IsValueType;
+        var isNullable = targetType.IsNullable();
+        var required = isValueType && !isNullable;
+        targetType = targetType.GetUnderlyingTypeIfNullable();
+        
         if (source == null)
         {
             throw new QueryEngineException(

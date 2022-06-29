@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using Saorsa.QueryEngine;
 using Saorsa.QueryEngine.Tests.NpgSql.Data;
 
@@ -37,6 +38,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    var depScope = app.Services.CreateScope();
+    var db = depScope.ServiceProvider.GetRequiredService<QueryNpgsqlDbContext>();
+    db.Database.Migrate();
+    db.Dispose();
+    depScope.Dispose();
 }
 
 app.UseHttpsRedirection();

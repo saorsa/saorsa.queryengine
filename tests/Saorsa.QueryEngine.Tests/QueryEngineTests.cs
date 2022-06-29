@@ -13,17 +13,18 @@ public class QueryEngineTests
        // Assert.IsEmpty(results!.Properties);
     }
     
-  //  [Test]
+    [Test]
     public void TestBuildPropertyDefinitionsOnEnums()
     {
         var results = QueryEngine.BuildTypeDefinition<TestEnum>();
-      //  Assert.IsEmpty(results!.Properties);
+        Assert.NotNull(results);
+        Assert.Null(results!.Properties);
     }
 
    // [Test]
     public void TestBuildPropertyDefinitionsOnSimpleTypes()
     {
-        QueryEngine.SimpleTypes.ToList().ForEach(t =>
+        QueryEngine.AtomicTypes.ToList().ForEach(t =>
         {
             var results = QueryEngine.BuildTypeDefinition(t);
             Assert.That(results, Is.Not.Null);

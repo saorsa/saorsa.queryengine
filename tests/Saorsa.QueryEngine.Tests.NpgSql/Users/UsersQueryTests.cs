@@ -93,13 +93,13 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.Age),
                 FilterType = FilterType.LT,
                 Arguments = new object[] { 40 }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.CategoryId),
                 FilterType = FilterType.EQ,
@@ -161,12 +161,12 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterType.IS_NULL,
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.CategoryId),
                 FilterType = FilterType.EQ,
@@ -228,12 +228,12 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterType.IS_NOT_NULL,
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.CategoryId),
                 FilterType = FilterType.EQ,
@@ -295,13 +295,13 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { null! }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.CategoryId),
                 FilterType = FilterType.EQ,
@@ -363,13 +363,13 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterType.NOT_EQ,
                 Arguments = new object[] { null! }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(User.CategoryId),
                 FilterType = FilterType.EQ,
@@ -436,7 +436,7 @@ public class UsersQueryTests
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .AddPropertyFilterBlock(new PropertyFilterBlock
+            .Where(new PropertyFilterBlock
             {
                 First = new PropertyFilter()
                 {

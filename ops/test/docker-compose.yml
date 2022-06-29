@@ -6,13 +6,13 @@ services:
     ports:
       - 5950:5432
     environment:
-      ENVIRONMENT: development
+      ENVIRONMENT: test
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
       POSTGRES_DB: testdb
     volumes:
       - ./pg-init-scripts:/docker-entrypoint-initdb.d
-      - $HOME/Data/queryengine_dev:/var/lib/postgresql/data 
+      - $HOME/Data/queryengine_test:/var/lib/postgresql/data 
     networks:
       default:
         ipv4_address: 172.56.1.10

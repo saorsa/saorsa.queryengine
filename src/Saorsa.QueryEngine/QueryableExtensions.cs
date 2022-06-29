@@ -4,14 +4,14 @@ namespace Saorsa.QueryEngine;
 
 public static class QueryableExtensions
 {
-    public static IQueryable<TEntity> AddPropertyFilter<TEntity>(
+    public static IQueryable<TEntity> Where<TEntity>(
         this IQueryable<TEntity> source,
         PropertyFilter propertyFilter)
     {
         return QueryEngine.AddPropertyFilter(source, propertyFilter);
     }
     
-    public static IQueryable<TEntity> AddPropertyFilterBlock<TEntity>(
+    public static IQueryable<TEntity> Where<TEntity>(
         this IQueryable<TEntity> source,
         PropertyFilterBlock block)
     {

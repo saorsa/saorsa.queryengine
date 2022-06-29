@@ -50,14 +50,14 @@ public class QueryEngineBuildDepthTests
     [Test]
     public void TestSimpleTypes()
     {
-        QueryEngine.SimpleTypes.ToList().ForEach(t => {
+        QueryEngine.AtomicTypes.ToList().ForEach(t => {
             var typeDef = QueryEngine.BuildTypeDefinition(t);
             Assert.Multiple(() =>
             {
                 Assert.That(typeDef, Is.Not.Null);
-                Assert.That(QueryEngine.SimpleTypesStringMap[t], Is.EqualTo(typeDef!.Type),
+                Assert.That(QueryEngine.AtomicTypesStringMap[t], Is.EqualTo(typeDef!.Type),
                     $"Type '{t}' is a simple type and is expected to be configured in " +
-                    $"The '{nameof(QueryEngine.SimpleTypesStringMap)}' map.");
+                    $"The '{nameof(QueryEngine.AtomicTypesStringMap)}' map.");
             });
         });
     }

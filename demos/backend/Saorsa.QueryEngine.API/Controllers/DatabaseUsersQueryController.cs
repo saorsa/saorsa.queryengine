@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using Saorsa.QueryEngine.Model;
 using Saorsa.QueryEngine.Tests.NpgSql.Data;
@@ -23,7 +22,7 @@ public class DatabaseUsersQueryController : ControllerBase
 
         if (pageRequest.FilterExpression != null)
         {
-            query = query.AddPropertyFilterBlock(pageRequest.FilterExpression);
+            query = query.Where(pageRequest.FilterExpression);
         }
 
         var totalCount = query.LongCount();

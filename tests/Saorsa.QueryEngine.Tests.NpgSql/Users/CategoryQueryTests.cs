@@ -39,7 +39,7 @@ public class CategoryQueryTests
         Assert.That(savedCount, Is.EqualTo(1));
         
         var query = db.Categories
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.Name),
                 FilterType = FilterType.EQ,
@@ -72,13 +72,13 @@ public class CategoryQueryTests
         Assert.That(savedCount, Is.EqualTo(1));
         
         var query = db.Categories
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.ParentCategory),
                 FilterType = FilterType.IS_NULL,
@@ -111,13 +111,13 @@ public class CategoryQueryTests
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Categories
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.ParentCategory),
                 FilterType = FilterType.IS_NULL,
@@ -153,13 +153,13 @@ public class CategoryQueryTests
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Categories
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.ParentCategory),
                 FilterType = FilterType.IS_NOT_NULL,
@@ -197,13 +197,13 @@ public class CategoryQueryTests
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Categories
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
-            .AddPropertyFilter(new PropertyFilter
+            .Where(new PropertyFilter
             {
                 Name = nameof(Category.ParentCategory),
                 FilterType = FilterType.IS_NULL,

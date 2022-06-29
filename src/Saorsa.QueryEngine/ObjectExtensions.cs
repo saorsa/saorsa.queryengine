@@ -15,8 +15,7 @@ public static class ObjectExtensions
     {
         return QueryEngine.ConvertToAtom(source, targetType);
     }
-    
-    
+
     public static object? ConvertToAtom(
         this JsonElement source,
         Type targetType)

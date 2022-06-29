@@ -2,7 +2,7 @@ namespace Saorsa.QueryEngine.Tests;
 
 public class QueryEngineTypeSystemTests
 {
-    private readonly Type[] NullableAtomTypes =
+    public static readonly Type[] NullableAtomTypes =
     {
         typeof(char?),
         typeof(byte?),
@@ -484,5 +484,18 @@ public class QueryEngineTypeSystemTests
         Assert.That(val, Is.EqualTo(nullableVal));
         
         Assert.That(val, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestConvertNullableAtomFromNullableSource()
+    {
+        var val1 = QueryEngine.ConvertToAtom<short?>(null);
+        Assert.IsNull(val1);
+
+        int? nullableInt = default;
+        var val2 = nullableInt.ConvertToAtom<short?>();
+        Assert.IsNull(val2);
+        var val3 = nullableInt.ConvertToAtom(typeof(short?));
+        Assert.IsNull(val3);
     }
 }

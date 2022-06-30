@@ -12,10 +12,12 @@ public class User : EntityBase
     public int? Age { get; set; }
     public long? ExternalId { get; set; }
     
+    public UserLogonType? LatestLogonType { get; set; }
+    
     // one to many
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }
-    
+
     // many-to-many
     public ICollection<Group> Groups { get; } = new List<Group>();
 }

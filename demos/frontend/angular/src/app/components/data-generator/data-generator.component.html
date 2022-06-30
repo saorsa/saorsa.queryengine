@@ -1,0 +1,12 @@
+<div *ngIf="loading" class="my-3 mx-3 text-center mat-display-1">
+  Loading...
+</div>
+<div *ngIf="error">
+  <app-error-view [error]="error"></app-error-view>
+</div>
+<div>
+  <button mat-raised-button [disabled]="loading" color="primary" (click)="generateData()">
+    <mat-icon inline>engineering</mat-icon> Fill Default Data
+  </button>
+  <app-inspect-button [data]="result" [buttonType]="'raised'" class="ms-3"></app-inspect-button>
+</div>

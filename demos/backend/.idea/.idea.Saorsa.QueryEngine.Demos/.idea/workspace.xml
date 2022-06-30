@@ -5,26 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="99e7243a-f39a-4c2e-b8a7-896fb6af2643" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ObjectExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/Entities/UserLogonType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Saorsa.QueryEngine.Demos/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseUsersQueryController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseUsersQueryController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/components/property-argument-array-control/property-argument-array-control.sass" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/styles.sass" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/styles.sass" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ops/development/compose.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ops/development/destroy.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../ops/development/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/QueryEngine.Types.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/QueryEngine.Types.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/QueryableExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/QueryableExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/TypeExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/TypeExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Data/QueryNpgsqlDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Data/QueryNpgsqlDbContext.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Users/CategoryQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Users/CategoryQueryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Users/UsersQueryTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Users/UsersQueryTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineBuildDepthTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineBuildDepthTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineTests.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineTypeSystemTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests/QueryEngineTypeSystemTests.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.API/Controllers/DatabaseController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Saorsa.QueryEngine.Demos.sln.DotSettings" beforeDir="false" afterPath="$PROJECT_DIR$/Saorsa.QueryEngine.Demos.sln.DotSettings" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/angular/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/QueryDbContextBase.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/QueryDbContextBase.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/Usings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.EFCore/Usings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Migrations/QueryNpgsqlDbContextModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../tests/Saorsa.QueryEngine.Tests.NpgSql/Migrations/QueryNpgsqlDbContextModelSnapshot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +30,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7cca252cfdab9d23707e342d5c2b1f31c91339e0c77d16857daff617559e0/BinaryExpression.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../saorsa.corelib/src/Saorsa.CoreLib/Model/BusinessPageRequest.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../saorsa.corelib/src/Saorsa.CoreLib/Model/BusinessPageResult.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../../../saorsa.corelib/src/Saorsa.CoreLib/Model/BusinessRequest.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../../../saorsa.extensions/src/Saorsa.Extensions/TypeUtilityExtensions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -101,6 +92,9 @@
       <workItem from="1656073173770" duration="13483000" />
       <workItem from="1656402822246" duration="1247000" />
       <workItem from="1656404352132" duration="690000" />
+      <workItem from="1656491755658" duration="715000" />
+      <workItem from="1656492863158" duration="8154000" />
+      <workItem from="1656567275758" duration="3457000" />
     </task>
     <servers />
   </component>
@@ -144,10 +138,10 @@
           <line>276</line>
           <properties documentPath="$PROJECT_DIR$/../../src/Saorsa.QueryEngine/ExpressionBuilder.cs" initialLine="276" containingFunctionPresentation="method 'BuildComparisonExpression'">
             <startOffsets>
-              <option value="10366" />
+              <option value="-1" />
             </startOffsets>
             <endOffsets>
-              <option value="10473" />
+              <option value="-1" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="21" />

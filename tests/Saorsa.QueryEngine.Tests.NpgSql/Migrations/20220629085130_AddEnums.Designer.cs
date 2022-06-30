@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Saorsa.QueryEngine.Tests.NpgSql.Data;
@@ -11,9 +12,10 @@ using Saorsa.QueryEngine.Tests.NpgSql.Data;
 namespace Saorsa.QueryEngine.Tests.NpgSql.Migrations
 {
     [DbContext(typeof(QueryNpgsqlDbContext))]
-    partial class QueryNpgsqlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220629085130_AddEnums")]
+    partial class AddEnums
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

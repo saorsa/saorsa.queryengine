@@ -33,6 +33,10 @@ import { InspectViewComponent } from './components/common/inspect-view/inspect-v
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { FormsHelperService } from "./services/forms-helper.service";
 import { QueryEngineUsersService } from "./services/query-engine-users.service";
+import { DataGeneratorComponent } from './components/data-generator/data-generator.component';
+import { LayoutComponent } from './components/layout/layout.component';
+import { MatMenuModule } from "@angular/material/menu";
+import { DataGeneratorService } from "./services/data-generator.service";
 
 
 @NgModule({
@@ -47,6 +51,8 @@ import { QueryEngineUsersService } from "./services/query-engine-users.service";
     PropertyFilterControlComponent,
     InspectButtonComponent,
     InspectViewComponent,
+    DataGeneratorComponent,
+    LayoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -67,6 +73,7 @@ import { QueryEngineUsersService } from "./services/query-engine-users.service";
     MatDialogModule,
     FlexModule,
     MatToolbarModule,
+    MatMenuModule,
   ],
   providers: [
     ApiService,
@@ -75,6 +82,7 @@ import { QueryEngineUsersService } from "./services/query-engine-users.service";
     QueryEngineTypeSystemService,
     QueryEngineUsersService,
     FormsHelperService,
+    DataGeneratorService,
   ],
   bootstrap: [AppComponent]
 })

@@ -53,7 +53,9 @@ export class TypeDefinitionSelectComponent implements OnInit {
   onChangeSelectedType(event: any): void {
     const val: TypeDefinition = event?.source?.value;
     this.selectedTypDef = val;
-    this.router.navigate([val?.name]).finally(() =>{});
+    this.router
+      .navigate([val?.name],{ relativeTo: this.activatedRoute })
+      .finally(() =>{});
   }
 
   protected loadTypeDefinitions(): Observable<ApiTypeDefinitionsResult> {

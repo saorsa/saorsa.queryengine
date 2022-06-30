@@ -1,0 +1,16 @@
+<div>
+  <mat-toolbar color="primary">
+    Query Engine
+    <span class="simple-spacer"></span>
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="generator">Generate Data</button>
+      <button mat-menu-item routerLink="query">Query Engine</button>
+    </mat-menu>
+  </mat-toolbar>
+  <div class="ps-3 pe-3 pt-3">
+    <router-outlet></router-outlet>
+  </div>
+</div>

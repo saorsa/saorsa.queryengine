@@ -17,8 +17,7 @@
                                class="d-block w-100"
                                [value]="c.value"
                                type="number"
-                               (input)="inputValueChange($event)"
-                               (change)="inputValueChange($event)"
+                               (keyup)="inputValueChange($event)"
                                placeholder="{{argumentControlInputType}}">
                       </ng-container>
                       <ng-container *ngSwitchDefault>
@@ -26,8 +25,7 @@
                                class="d-block w-100"
                                [value]="c.value"
                                [type]="argumentControlInputType"
-                               (input)="inputValueChange($event)"
-                               (change)="inputValueChange($event)"
+                               (keyup)="inputValueChange($event)"
                                placeholder="{{argumentControlInputType}}">
                       </ng-container>
                     </ng-container>

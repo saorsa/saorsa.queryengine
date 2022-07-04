@@ -81,6 +81,7 @@ export class TypeDefinitionViewComponent implements OnInit {
     .finally(() => {
       this.currentFilterBlock = expression;
 
+      console.warn('WE ARE LOADING FROM API');
 
       this.queryEngineUsers.filterUsers(expression).subscribe((res) => {
         console.warn('RESULTS FROM API:', res);

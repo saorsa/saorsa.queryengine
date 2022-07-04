@@ -199,8 +199,8 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
   }
 
   onFirstChanges(args: any): void {
-    console.warn('onFirstChanges', args);
-    this.onChange(this.safeFormGroupInstance.value);
+    console.warn('onFirstChanges', this.safeFormGroupInstance.valid, args);
+    //this.onChange(this.safeFormGroupInstance.value);
   }
 
   onFirstValueChange(arg: PropertyFilter): void {

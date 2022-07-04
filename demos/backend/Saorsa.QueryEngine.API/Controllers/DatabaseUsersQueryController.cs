@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Saorsa.QueryEngine.Model;
+using Saorsa.QueryEngine.Tests.EFCore.Entities;
 using Saorsa.QueryEngine.Tests.NpgSql.Data;
 
 namespace Saorsa.QueryEngine.API.Controllers;
@@ -18,29 +19,7 @@ public class DatabaseUsersQueryController : ControllerBase
     [HttpPost("query")]
     public ActionResult<ResultUsers> Query([FromBody] QueryEnginePageRequest<Guid> pageRequest)
     {
-        var query = Db.Users.AsQueryable();
-
-        if (pageRequest.FilterExpression != null)
-        {
-            query = query.Where(pageRequest.FilterExpression);
-        }
-
-        var totalCount = query.LongCount();
-        var pageSize = Convert.ToInt32(pageRequest.PageSize ?? 10);
-        var pageIndex = Convert.ToInt32(pageRequest.PageIndex ?? 0);
-
-        query = query
-            .Skip(pageSize * pageIndex)
-            .Take(pageSize);
-
-        var pageResults = query.ToList();
-        
-        var result = new ResultUsers
-        {
-            Context = pageRequest,
-            TotalCount = Convert.ToUInt64(totalCount),
-            Result = pageResults,
-        };
+        var result = Db.Users.DynamicSearch<QueryEnginePageRequest<Guid>, Guid, User>(pageRequest);
 
         return Ok(result);
     }

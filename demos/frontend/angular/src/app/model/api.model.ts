@@ -18,3 +18,36 @@ export interface ApiHealthResult extends ApiResult<any> {}
 export interface ApiTypeDefinitionSingleResult extends ApiResult<TypeDefinition> {}
 
 export interface ApiTypeDefinitionsResult extends ApiResult<TypeDefinition[]> {}
+
+export interface EntityBase {
+  testCaseId?: string;
+  testSubCaseId?: string;
+  createdAtUtc?: string;
+  createdBy?: string;
+}
+
+export interface Category extends EntityBase {
+  id: number;
+  name: string;
+  parentCategoryId?: number;
+  parentCategory?: Category;
+}
+
+export interface Group extends EntityBase {
+  id: string;
+  categoryId?: number;
+  category?: Category;
+}
+
+export type UserLogonType = 'ActiveDirectory' | 'Oidc' | 'Saml';
+
+export interface User extends EntityBase {
+  id: string;
+  username: string;
+  password?: string;
+  gender?: string;
+  externalId?: number;
+  latestLogonType?: UserLogonType;
+  categoryId?: number;
+  category?: Category;
+}

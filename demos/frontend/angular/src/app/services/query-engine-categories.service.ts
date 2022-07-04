@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
+import { PropertyFilterBlock } from "../model/query-engine.model";
 import { Observable } from "rxjs";
 import { ApiService } from "./api.service";
-import { PropertyFilterBlock } from "../model/query-engine.model";
 
 @Injectable({
   providedIn: 'root'
 })
-export class QueryEngineUsersService extends ApiService {
+export class QueryEngineCategoriesService extends ApiService {
 
-  public filterUsers(
+  public filterCategories(
     expression: PropertyFilterBlock,
     pageIndex = 0,
     pageSize = 10): Observable<any> {
@@ -17,7 +17,6 @@ export class QueryEngineUsersService extends ApiService {
       pageSize,
       filterExpression: expression,
     };
-    return this.post<any, any>('database/users/query', pageRequest);
+    return this.post<any, any>('database/categories/query', pageRequest);
   }
 }
-

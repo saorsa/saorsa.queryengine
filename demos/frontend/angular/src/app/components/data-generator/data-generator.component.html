@@ -8,5 +8,91 @@
   <button mat-raised-button [disabled]="loading" color="primary" (click)="generateData()">
     <mat-icon inline>engineering</mat-icon> Fill Default Data
   </button>
-  <app-inspect-button [data]="result" [buttonType]="'raised'" class="ms-3"></app-inspect-button>
+  <app-inspect-button [data]="result" *ngIf="result" [buttonType]="'raised'" class="ms-3"
+                      tooltip="Show generated data."></app-inspect-button>
+</div>
+<div class="pt-5">
+  <mat-card class="m-0 p-0">
+    <mat-toolbar [color]="formGroup.valid ? 'primary' : 'warn'">
+      Create a user
+    </mat-toolbar>
+    <mat-card-content>
+      <div *ngIf="formGroup.value.id">
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Id</mat-label>
+          <input matInput [formControl]="idControl"
+                 class="d-block w-100"
+                 type="text"
+                 placeholder="Unique ID of the user.">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Username</mat-label>
+          <input matInput [formControl]="usernameControl"
+                 class="d-block w-100"
+                 type="text"
+                 placeholder="Unique name of the user.">
+        </mat-form-field>
+        <div *ngIf="usernameControl.errors?.['required']" class="ps-3 text-warn">
+          This is a required field.
+        </div>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Password</mat-label>
+          <input matInput [formControl]="passwordControl"
+                 class="d-block w-100"
+                 type="text"
+                 placeholder="Password for the user.">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Logon Type</mat-label>
+          <mat-select [formControl]="logonTypeControl" placeholder="User's logon type">
+            <mat-option [value]="null">[None]</mat-option>
+            <mat-option *ngFor="let l of logonTypes" [value]="l">{{l}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Gender</mat-label>
+          <input matInput [formControl]="genderControl"
+                 class="d-block w-100"
+                 type="text"
+                 placeholder="Gender of the user.">
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>External ID</mat-label>
+          <input matInput [formControl]="externalIdControl"
+                 class="d-block w-100"
+                 type="number"
+                 placeholder="External ID of the user.">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="d-block w-100">
+          <mat-label>Category</mat-label>
+          <input type="text" matInput [matAutocomplete]="auto" [formControl]="categoryIdSearchControl">
+          <input type="hidden" [formControl]="categoryIdControl">
+          <mat-autocomplete #auto="matAutocomplete"
+                            [displayWith]="renderCategoryAutocomplete"
+                            (optionSelected)="optionSelected($event)">
+            <mat-option *ngFor="let option of categories" [value]="option">
+              {{option.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <div fxFlexLayout="row" class="ps-3 pe-3 pb-3">
+      <span fxFlex></span>
+      <button mat-raised-button color="primary" [disabled]="!formGroup.valid">
+        Save
+      </button>
+      <app-inspect-button class="ms-2" [buttonType]="'raised'" [data]="{ form: formGroup.value }"></app-inspect-button>
+    </div>
+  </mat-card>
 </div>

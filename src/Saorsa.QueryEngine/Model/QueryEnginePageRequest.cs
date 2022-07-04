@@ -2,7 +2,7 @@ using Saorsa.Model;
 
 namespace Saorsa.QueryEngine.Model;
 
-public class QueryEnginePageRequest<T> : BusinessPageRequest<T>
+public class QueryEnginePageRequest<TId> : BusinessPageRequest<TId>
 {
     public PropertyFilterBlock? FilterExpression { get; set; }
 }

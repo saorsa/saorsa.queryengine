@@ -300,6 +300,10 @@ public static partial class QueryEngine
                 propertyFilter.Arguments[0], parameter),
             FilterType.GT_EQ => ExpressionBuilder.PropertyGreaterThanOrEqualExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
+            FilterType.CONTAINS => ExpressionBuilder.BuildContainsExpression<TEntity>(
+                propertyDef.Name,
+                propertyFilter.Arguments[0],
+                parameter),
             _ => throw new QueryEngineException(ErrorCodes.PropertyFilterNotImplementedError,
                 $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter {propertyFilter.FilterType}" +
                 $"is not implemented yet.")

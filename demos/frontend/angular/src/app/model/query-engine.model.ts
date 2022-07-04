@@ -55,7 +55,7 @@ export interface TypeDefinition {
 export interface PropertyFilter {
   name: string;
   filterType: FilterType;
-  arguments: [];
+  arguments: any[];
 }
 
 export interface PropertyFilterBlock {

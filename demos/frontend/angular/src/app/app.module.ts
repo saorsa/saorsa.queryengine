@@ -37,6 +37,7 @@ import { DataGeneratorComponent } from './components/data-generator/data-generat
 import { LayoutComponent } from './components/layout/layout.component';
 import { MatMenuModule } from "@angular/material/menu";
 import { DataGeneratorService } from "./services/data-generator.service";
+import {QueryEngineCategoriesService} from "./services/query-engine-categories.service";
 
 
 @NgModule({
@@ -83,6 +84,7 @@ import { DataGeneratorService } from "./services/data-generator.service";
     QueryEngineUsersService,
     FormsHelperService,
     DataGeneratorService,
+    QueryEngineCategoriesService,
   ],
   bootstrap: [AppComponent]
 })

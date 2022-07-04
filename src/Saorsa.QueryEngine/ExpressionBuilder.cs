@@ -279,5 +279,63 @@ public static class ExpressionBuilder
         var conversionExpression = compareFunc(parameterProperty, expectedConvertedConstant);
         return conversionExpression;
     }
+    
+    public static BinaryExpression BuildContainsExpression<TParam>(
+        string propertyName,
+        object argument,
+        ParameterExpression? existingParameter = null)
+    {
+        /**
+         * 
+        var baseType = propertyExpression.Type.GetGenericArguments()[0];
+        var enumerableCountMethod = typeof(Enumerable).GetMethods()
+            .First(method => method.Name == "Count" && method.GetParameters().Length == 1)
+            .MakeGenericMethod(baseType);
+        var expression = Expression.Call(enumerableCountMethod, propertyExpression);
+        return Expression.Lambda<Func<TEntity, int>>(expression, parameter);
+         */
+        
+        var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
+        var argumentType = argument.GetType();
+        var parameterProperty = Expression.Property(parameter, propertyName);
+        var parameterPropertyType = ((PropertyInfo)parameterProperty.Member).PropertyType;
+        var convertedVal = argument.ConvertToAtom(parameterPropertyType);
 
+        if (convertedVal != null)
+        {
+            var argumentConstant = Expression.Constant(convertedVal);
+            
+            var truth = Expression.Constant(true);
+
+            var typeContainsMethod = parameterPropertyType.GetMethods()
+                .First(method => method.Name == "Contains" && method.GetParameters().Length == 1);
+
+            var containsExpression = Expression.Call(parameterProperty, typeContainsMethod, argumentConstant);
+            //var expression = Expression.Call(typeContainsMethod, parameterProperty, argumentConstant);
+
+            var containsExp = Expression.MakeBinary(
+                ExpressionType.Equal, containsExpression, truth, false, null);
+            return containsExp ;
+            
+            /**
+            return Expression.MakeBinary(ExpressionType.Call, expression, argumentConstant);
+
+            var method = typeof(ExpressionBuilder).GetMethod(
+                nameof(StringContains),
+                new[] { typeof(string), typeof(string) })!;
+            
+            var containsExp = Expression.MakeBinary(
+                ExpressionType.Equal, parameterProperty, argumentConstant, false, method);
+            return containsExp ;*/
+        }
+
+        throw new NotSupportedException(
+            $"Cannot build a contains expression for parameter of type {parameterPropertyType} " +
+            $"and argument of type {argumentType}");
+    }
+
+    public static bool StringContains(string source, string contained)
+    {
+        return source.Contains(contained, StringComparison.OrdinalIgnoreCase);
+    }
 }

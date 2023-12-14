@@ -63,29 +63,29 @@ public static partial class QueryEngine
         { typeof(TimeOnly), AtomicTypeStringKeys.Time },
     };
     
-    public static readonly Dictionary<Type, FilterDescriptor[]> AtomicTypesFiltersMap = new()
+    public static readonly Dictionary<Type, FilterMetaData[]> AtomicTypesFiltersMap = new()
     {
-        { typeof(char), FilterDescriptor.NumericFilters },
-        { typeof(string), FilterDescriptor.TextFilters  },
-        { typeof(bool), FilterDescriptor.NumericFilters  },
-        { typeof(byte), FilterDescriptor.NumericFilters  },
-        { typeof(sbyte), FilterDescriptor.NumericFilters  },
-        { typeof(short), FilterDescriptor.NumericFilters  },
-        { typeof(int), FilterDescriptor.NumericFilters  },
-        { typeof(long), FilterDescriptor.NumericFilters  }, 
-        { typeof(ushort), FilterDescriptor.NumericFilters  },
-        { typeof(uint), FilterDescriptor.NumericFilters  },
-        { typeof(ulong), FilterDescriptor.NumericFilters  },
-        { typeof(float), FilterDescriptor.NumericFilters  },
-        { typeof(double), FilterDescriptor.NumericFilters  },
+        { typeof(char), FilterMetaData.NumericFilters },
+        { typeof(string), FilterMetaData.TextFilters  },
+        { typeof(bool), FilterMetaData.NumericFilters  },
+        { typeof(byte), FilterMetaData.NumericFilters  },
+        { typeof(sbyte), FilterMetaData.NumericFilters  },
+        { typeof(short), FilterMetaData.NumericFilters  },
+        { typeof(int), FilterMetaData.NumericFilters  },
+        { typeof(long), FilterMetaData.NumericFilters  }, 
+        { typeof(ushort), FilterMetaData.NumericFilters  },
+        { typeof(uint), FilterMetaData.NumericFilters  },
+        { typeof(ulong), FilterMetaData.NumericFilters  },
+        { typeof(float), FilterMetaData.NumericFilters  },
+        { typeof(double), FilterMetaData.NumericFilters  },
         
-        { typeof(decimal), FilterDescriptor.NumericFilters  },
-        { typeof(Guid), FilterDescriptor.NumericFilters  },
-        { typeof(DateOnly), FilterDescriptor.NumericFilters  },
-        { typeof(DateTime), FilterDescriptor.NumericFilters  },
-        { typeof(DateTimeOffset), FilterDescriptor.NumericFilters  },
-        { typeof(TimeSpan), FilterDescriptor.NumericFilters  },
-        { typeof(TimeOnly), FilterDescriptor.NumericFilters  },
+        { typeof(decimal), FilterMetaData.NumericFilters  },
+        { typeof(Guid), FilterMetaData.NumericFilters  },
+        { typeof(DateOnly), FilterMetaData.NumericFilters  },
+        { typeof(DateTime), FilterMetaData.NumericFilters  },
+        { typeof(DateTimeOffset), FilterMetaData.NumericFilters  },
+        { typeof(TimeSpan), FilterMetaData.NumericFilters  },
+        { typeof(TimeOnly), FilterMetaData.NumericFilters  },
     };
     
     public static readonly IEnumerable<Type> AtomicTypes = AtomicTypesStringMap.Keys;
@@ -112,7 +112,7 @@ public static partial class QueryEngine
             : SpecialTypeStringKeys.Object;
     }
 
-    public static FilterDescriptor[] GetFilterDefinitions(Type type)
+    public static FilterMetaData[] GetFilterDefinitions(Type type)
     {
         if (IsAtomicType(type))
         {
@@ -121,12 +121,12 @@ public static partial class QueryEngine
 
         if (type.IsEnum)
         {
-            return FilterDescriptor.EnumFilters;
+            return FilterMetaData.EnumFilters;
         }
 
         return type.IsSingleElementTypeEnumeration()
-            ? FilterDescriptor.ArrayFilters
-            : FilterDescriptor.ReferenceFilters;
+            ? FilterMetaData.ArrayFilters
+            : FilterMetaData.ReferenceFilters;
     }
     
     public static TAtom? ConvertToAtom<TAtom>(object? source)

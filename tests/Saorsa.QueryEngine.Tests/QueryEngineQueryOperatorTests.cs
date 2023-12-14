@@ -26,7 +26,7 @@ public class QueryEngineQueryOperatorTests
     public void TestEqualsWithIntegerColumn()
     {
         
-        var propFilter = new PropertyFilter
+        var propFilter = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.IntValue).ToCamelCase(),
             FilterType = FilterOperatorType.EqualTo,
@@ -36,7 +36,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results);
         
         
-        var propFilter2 = new PropertyFilter
+        var propFilter2 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.IntValue).ToCamelCase(),
             FilterType = FilterOperatorType.NotEqualTo,
@@ -46,7 +46,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results2);
         
         
-        var propFilter3 = new PropertyFilter
+        var propFilter3 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.LongValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNull,
@@ -54,7 +54,7 @@ public class QueryEngineQueryOperatorTests
         var results3 = QueryEngine.AddPropertyFilter(Queryable01, propFilter3).ToList();
         Assert.IsNotEmpty(results3);
         
-        var propFilter4= new PropertyFilter
+        var propFilter4= new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.StringValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNull,
@@ -62,7 +62,7 @@ public class QueryEngineQueryOperatorTests
         var results4 = QueryEngine.AddPropertyFilter(Queryable01, propFilter4).ToList();
         Assert.IsNotEmpty(results4);
         
-        var propFilter5 = new PropertyFilter
+        var propFilter5 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.OptionalStringValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNull,
@@ -71,7 +71,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results5);
         
         
-        var propFilter6 = new PropertyFilter
+        var propFilter6 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.OptionalStringValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNotNull,
@@ -79,7 +79,7 @@ public class QueryEngineQueryOperatorTests
         var results6 = QueryEngine.AddPropertyFilter(Queryable01, propFilter6).ToList();
         Assert.IsNotEmpty(results6);
         
-        var propFilter7 = new PropertyFilter
+        var propFilter7 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.StringValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNotNull,
@@ -88,7 +88,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results7);
         
         
-        var propFilter8 = new PropertyFilter
+        var propFilter8 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.LongValue).ToCamelCase(),
             FilterType = FilterOperatorType.IsNotNull,
@@ -97,7 +97,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results8);
         
         
-        var propFilter9 = new PropertyFilter
+        var propFilter9 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.ArrayOfIntegers).ToCamelCase(),
             FilterType = FilterOperatorType.IsNotNull,
@@ -106,7 +106,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotEmpty(results9);
         
         
-        var propFilter10 = new PropertyFilter
+        var propFilter10 = new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.EnumerableOfIntegers).ToCamelCase(),
             FilterType = FilterOperatorType.IsNull,
@@ -128,7 +128,7 @@ public class QueryEngineQueryOperatorTests
             new(),
         }.AsQueryable();
 
-        var results = QueryEngine.AddPropertyFilter(x, new PropertyFilter
+        var results = QueryEngine.AddPropertyFilter(x, new FilterPropertyDescriptor
         {
             Name = nameof(TestRecursiveClass.RecursiveProperty).ToCamelCase(),
             FilterType = FilterOperatorType.IsNotNull,
@@ -136,7 +136,7 @@ public class QueryEngineQueryOperatorTests
         
         Assert.IsNotEmpty(results);
 
-        var results2 = QueryEngine.AddPropertyFilter(x, new PropertyFilter
+        var results2 = QueryEngine.AddPropertyFilter(x, new FilterPropertyDescriptor
         {
             Name = nameof(TestRecursiveClass.RecursiveProperty).ToCamelCase(),
             FilterType = FilterOperatorType.IsNull,
@@ -149,7 +149,7 @@ public class QueryEngineQueryOperatorTests
     public void TestGreaterThan()
     {
         var results = QueryEngine
-            .AddPropertyFilter(Queryable01, new PropertyFilter
+            .AddPropertyFilter(Queryable01, new FilterPropertyDescriptor
             {
                 Name = nameof(TestDummyClass.LongValue).ToCamelCase(),
                 FilterType = FilterOperatorType.GreaterThanOrEqual,
@@ -163,7 +163,7 @@ public class QueryEngineQueryOperatorTests
     public void TestGreaterThan2()
     {
         var results = QueryEngine
-            .AddPropertyFilter(Queryable01, new PropertyFilter
+            .AddPropertyFilter(Queryable01, new FilterPropertyDescriptor
             {
                 Name = nameof(TestDummyClass.LongValue).ToCamelCase(),
                 FilterType = FilterOperatorType.GreaterThan,
@@ -174,7 +174,7 @@ public class QueryEngineQueryOperatorTests
         Assert.IsNotNull(l1);
 
 
-        results = QueryEngine.AddPropertyFilter(results, new PropertyFilter
+        results = QueryEngine.AddPropertyFilter(results, new FilterPropertyDescriptor
         {
             Name = nameof(TestDummyClass.LongValue).ToCamelCase(),
             FilterType = FilterOperatorType.LessThan,

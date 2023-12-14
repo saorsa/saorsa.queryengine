@@ -14,7 +14,40 @@ public static class ExpressionBuilder
     /// The default expression matching a NULL constant.
     /// </summary>
     public static readonly ConstantExpression NullObjectConstant = Expression.Constant(null);
-    
+
+    /// <summary>
+    /// Creates an expression lambda that returns the value of an entity property at runtime.
+    /// </summary>
+    /// <param name="propertyName">The property belonging to the TEntity class.</param>
+    /// <typeparam name="TEntity">The type of the entity the property belongs to.</typeparam>
+    /// <typeparam name="TProperty">
+    /// The type of the property associated with the <paramref name="propertyName"/>.
+    /// </typeparam>
+    public static Expression<Func<TEntity, TProperty>> GetPropertyAccessorExpression<TEntity, TProperty>(
+        string propertyName)
+    {
+        var parameterType = typeof(TEntity);
+        var parameter = Expression.Parameter(
+            parameterType, 
+            $"Param_ToLambda<{parameterType.Name},{typeof(TProperty).Name}>");
+
+        var property = parameter.GetPropertyExpression(propertyName);
+        var propAsObject = Expression.Convert(property, typeof(TProperty));
+
+        return Expression.Lambda<Func<TEntity, TProperty>>(propAsObject, parameter);
+    }
+
+    /// <summary>
+    /// Creates an expression lambda that returns the value of an entity property at runtime.
+    /// </summary>
+    /// <param name="propertyName">The property belonging to the TEntity class.</param>
+    /// <typeparam name="TEntity">The type of the entity the property belongs to.</typeparam>
+    public static Expression<Func<TEntity, object>> GetPropertyAccessorExpression<TEntity>(
+        string propertyName)
+    {
+        return GetPropertyAccessorExpression<TEntity, object>(propertyName);
+    }
+
     /// <summary>
     /// Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> that represents accessing a property
     /// of an object instance of the type specified by <typeparamref name="TParam"/>.
@@ -328,7 +361,7 @@ public static class ExpressionBuilder
     {
         var parameter = existingParameter ?? Expression.Parameter(typeof(TParam));
         var argumentType = argument.GetType();
-        var parameterProperty = Expression.Property(parameter, propertyName);
+        var parameterProperty = parameter.GetPropertyExpression(propertyName);
         var parameterPropertyType = ((PropertyInfo)parameterProperty.Member).PropertyType;
 
         if (argumentType == parameterPropertyType)

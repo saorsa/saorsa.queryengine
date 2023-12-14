@@ -7,48 +7,72 @@ namespace Saorsa.QueryEngine;
 
 public static class QueryableExtensions
 {
-    /// <summary>
-    /// Creates an expression lambda that returns the value of an entity property at runtime.
-    /// </summary>
-    /// <param name="propertyName">The property belonging to the TEntity class.</param>
-    /// <typeparam name="TEntity">The type of the entity the property belongs to.</typeparam>
-    public static Expression<Func<TEntity, object>> ToLambda<TEntity>(string propertyName)
+    /// <summary>Sorts the elements of a sequence in ascending order according to a key.</summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="propertyName">
+    /// The name of the property belonging to the type defined by <typeparamref name="TEntity"/>.
+    /// </param>
+    /// <typeparam name="TEntity">The type of the elements of <paramref name="source" />.</typeparam>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// Thrown if <paramref name="source" />  is <see langword="null" />.
+    /// </exception>
+    public static IOrderedQueryable<TEntity> OrderBy<TEntity>(
+        this IQueryable<TEntity> source,
+        string propertyName)
     {
-        ExpressionBuilder.CreateParameterPropertyExpression<TEntity>(propertyName);
-        var parameter = Expression.Parameter(typeof(TEntity));
-        var property = Expression.Property(parameter, propertyName);
-        var propAsObject = Expression.Convert(property, typeof(object));
+        var parameterType = typeof(TEntity);
+        var parameter =  Expression.Parameter(
+            parameterType, 
+            $"Param_OrderBy<{parameterType.Name}>");
+        var propertyExpression = parameter.GetPropertyExpression(propertyName);
 
-        return Expression.Lambda<Func<TEntity, object>>(propAsObject, parameter);
-    }
-
-    public static IOrderedQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> source, string propertyName)
-    {
-        var parameter = Expression.Parameter(typeof(TEntity), "type");
-        var propertyExpression = Expression.Property(parameter, propertyName);
-
-        if (propertyExpression.Type != typeof(AutocompleteResponseModel))
+        if (propertyExpression.Type != typeof(QueryEngineAutocompleteDescriptor))
             return typeof(IEnumerable).IsAssignableFrom(propertyExpression.Type)
                 ? source.OrderBy(propertyExpression.ToCountExpression<TEntity>())
-                : source.OrderBy(ToLambda<TEntity>(propertyName));
-        var property = parameter.GetPropertyExpression($"{propertyName}.Key");
-        return source.OrderBy(Expression.Lambda<Func<TEntity, object>>(property, parameter));
+                : source.OrderBy(ExpressionBuilder.GetPropertyAccessorExpression<TEntity>(propertyName));
+        var sortProperty = parameter.GetPropertyExpression(
+            $"{propertyName}.{nameof(QueryEngineAutocompleteDescriptor.Key)}");
+        return source.OrderByDescending(Expression.Lambda<Func<TEntity, object>>(sortProperty, parameter));
     }
 
-    public static IOrderedQueryable<TEntity> OrderByDescending<TEntity>(this IQueryable<TEntity> source, string propertyName)
+    /// <summary>Sorts the elements of a sequence in descending order according to a key.</summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="propertyName">
+    /// The name of the property belonging to the type defined by <typeparamref name="TEntity"/>.
+    /// </param>
+    /// <typeparam name="TEntity">The type of the elements of <paramref name="source" />.</typeparam>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// Thrown if <paramref name="source" />  is <see langword="null" />.
+    /// </exception>
+    public static IOrderedQueryable<TEntity> OrderByDescending<TEntity>(
+        this IQueryable<TEntity> source,
+        string propertyName)
     {
-        var parameter = Expression.Parameter(typeof(TEntity), "type");
-        var propertyExpression = Expression.Property(parameter, propertyName);
+        var parameterType = typeof(TEntity);
+        var parameter =  Expression.Parameter(
+            parameterType, 
+            $"Param_OrderByDescending<{parameterType.Name}>");
+        var propertyExpression = parameter.GetPropertyExpression(propertyName);
 
-        if (propertyExpression.Type != typeof(AutocompleteResponseModel))
+        if (propertyExpression.Type != typeof(QueryEngineAutocompleteDescriptor))
             return typeof(IEnumerable).IsAssignableFrom(propertyExpression.Type)
                 ? source.OrderByDescending(propertyExpression.ToCountExpression<TEntity>())
-                : source.OrderByDescending(ToLambda<TEntity>(propertyName));
-        var property = parameter.GetPropertyExpression($"{propertyName}.Key");
-        return source.OrderByDescending(Expression.Lambda<Func<TEntity, object>>(property, parameter));
+                : source.OrderByDescending(ExpressionBuilder.GetPropertyAccessorExpression<TEntity>(propertyName));
+        var sortProperty = parameter.GetPropertyExpression(
+            $"{propertyName}.{nameof(QueryEngineAutocompleteDescriptor.Key)}");
+        return source.OrderByDescending(Expression.Lambda<Func<TEntity, object>>(sortProperty, parameter));
     }
-    
-    public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, IEnumerable<SortDescriptor>? sortDescriptors)
+ 
+    /// <summary>Sorts the elements of a sequence.</summary>
+    /// <param name="source">A sequence of values to order.</param>
+    /// <param name="sortDescriptors">
+    /// The collection of sort descriptors to be used for sort. Sort descriptors are applied one after another in
+    /// their original order, provided in the collection.
+    /// </param>
+    /// <typeparam name="TEntity">The type of the elements of <paramref name="source" />.</typeparam>
+    public static IQueryable<TEntity> OrderBy<TEntity>(
+        this IQueryable<TEntity> source,
+        IEnumerable<SortDescriptor>? sortDescriptors)
     {
         if (sortDescriptors == null || !sortDescriptors.Any())
         {
@@ -68,16 +92,16 @@ public static class QueryableExtensions
 
     public static IQueryable<TEntity> Where<TEntity>(
         this IQueryable<TEntity> source,
-        PropertyFilter propertyFilter)
+        FilterPropertyDescriptor filterPropertyDescriptor)
     {
-        return QueryEngine.AddPropertyFilter(source, propertyFilter);
+        return QueryEngine.AddPropertyFilter(source, filterPropertyDescriptor);
     }
     
     public static IQueryable<TEntity> Where<TEntity>(
         this IQueryable<TEntity> source,
-        PropertyFilterBlock block)
+        FilterBlockDescriptor blockDescriptor)
     {
-        return QueryEngine.AddPropertyFilterBlock(source, block);
+        return QueryEngine.AddPropertyFilterBlock(source, blockDescriptor);
     }
     
     public static BusinessPageResult<TRequest, TId, TEntity>

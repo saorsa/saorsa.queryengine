@@ -25,7 +25,7 @@ public static class TypeExtensions
         return QueryEngine.GetStringRepresentation(type);
     }
 
-    public static FilterDescriptor[] GetQueryEngineFilterDefinitions(this Type type)
+    public static FilterMetaData[] GetQueryEngineFilterDefinitions(this Type type)
     {
         return QueryEngine.GetFilterDefinitions(type);
     }

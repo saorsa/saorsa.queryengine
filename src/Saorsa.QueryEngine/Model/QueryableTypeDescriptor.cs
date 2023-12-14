@@ -46,7 +46,7 @@ public class QueryableTypeDescriptor
     /// <summary>
     /// Gets or sets the collection of allowed filter expressions for this queryable item.
     /// </summary>
-    public FilterDescriptor[] AllowedFilters { get; set; } = Array.Empty<FilterDescriptor>();
+    public FilterMetaData[] AllowedFilters { get; set; } = Array.Empty<FilterMetaData>();
 
     /// <summary>
     /// Gets the string representation of the descriptor.

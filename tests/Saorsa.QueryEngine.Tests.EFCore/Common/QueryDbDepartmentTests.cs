@@ -41,7 +41,7 @@ public class QueryDbDepartmentTests: EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(1));
         
         var query = db.Departments
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.Name),
                 FilterType = FilterOperatorType.EqualTo,
@@ -74,13 +74,13 @@ public class QueryDbDepartmentTests: EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(1));
         
         var query = db.Departments
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.Name),
                 FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { department.Name }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.ParentDepartment),
                 FilterType = FilterOperatorType.IsNull,
@@ -113,13 +113,13 @@ public class QueryDbDepartmentTests: EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Departments
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.Name),
                 FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { department.Name }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.ParentDepartment),
                 FilterType = FilterOperatorType.IsNull,
@@ -155,13 +155,13 @@ public class QueryDbDepartmentTests: EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Departments
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.Name),
                 FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { department.Name }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.ParentDepartment),
                 FilterType = FilterOperatorType.IsNotNull,
@@ -199,13 +199,13 @@ public class QueryDbDepartmentTests: EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(2));
         
         var query = db.Departments
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.Name),
                 FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { department.Name }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(Department.ParentDepartment),
                 FilterType = FilterOperatorType.IsNull,

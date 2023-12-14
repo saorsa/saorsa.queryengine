@@ -72,11 +72,11 @@ public class QueryableTypeDescriptorTests
         
         Assert.That(typeDef.AllowedFilters, Is.Empty);
 
-        typeDef.AllowedFilters = FilterDescriptor.ArrayFilters;
+        typeDef.AllowedFilters = FilterMetaData.ArrayFilters;
         
         Assert.That(typeDef.AllowedFilters, Is.Not.Null);
         Assert.That(typeDef.AllowedFilters, Is.Not.Empty);
-        Assert.That(typeDef.AllowedFilters, Has.Length.EqualTo(FilterDescriptor.ArrayFilters.Length));
+        Assert.That(typeDef.AllowedFilters, Has.Length.EqualTo(FilterMetaData.ArrayFilters.Length));
     }
     
     [Test]

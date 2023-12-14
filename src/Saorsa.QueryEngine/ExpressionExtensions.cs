@@ -55,6 +55,23 @@ public static class ExpressionExtensions
     /// <typeparam name="TEntity">
     /// The type of the source entity, which contains the property.
     /// </typeparam>
+    /// <exception cref="Т:System.ArgumentNullException">
+    /// Thrown if the source <paramref name="property"/> is NULL.
+    /// </exception>
+    /// <exception cref="Т:System.ArgumentException">
+    /// Thrown under one of the following conditions:
+    /// <list type="bullet">
+    /// <item>
+    ///     The Expression property of the source <paramref name="property"/> is NULL</item>
+    /// <item>
+    ///     The Expression property of the source <paramref name="property"/> is not a valid
+    ///     <seealso cref="T:System.Linq.Expressions.ParameterExpression"/> instance</item>
+    /// <item>
+    ///     The Expression property of the source <paramref name="property"/> is not of the same type
+    ///     as the source <typeparamref name="TEntity"/>.
+    /// </item>
+    /// </list>
+    /// </exception>
     public static Expression<Func<TEntity, int>> ToCountExpression<TEntity>(
         this MemberExpression property)
     {

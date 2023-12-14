@@ -2,13 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Saorsa.QueryEngine.Tests.Model;
 
-public class FilterDescriptorTests
+public class FilterMetaDataTests
 {
     [Test]
     public void TestConstructorFilterTypes()
     {
         Enum.GetValues<FilterOperatorType>().ToList().ForEach(filterType => {
-            var filter = new FilterDescriptor(filterType);
+            var filter = new FilterMetaData(filterType);
             Assert.Multiple(() =>
             {
                 Assert.That(filter, Is.Not.Null);
@@ -25,7 +25,7 @@ public class FilterDescriptorTests
     public void TestToString()
     {
         var key1 = Guid.NewGuid().ToString("N");
-        var filter1 = new FilterDescriptor(FilterOperatorType.EqualTo, key1, true);
+        var filter1 = new FilterMetaData(FilterOperatorType.EqualTo, key1, true);
         var toString1 = filter1.ToString();
         Assert.Multiple(() =>
         {
@@ -35,7 +35,7 @@ public class FilterDescriptorTests
         });
         
         var key2 = Guid.NewGuid().ToString("N");
-        var filter2 = new FilterDescriptor(FilterOperatorType.EqualTo, arg2: key2, arg2Required: false);
+        var filter2 = new FilterMetaData(FilterOperatorType.EqualTo, arg2: key2, arg2Required: false);
         var toString2 = filter2.ToString();
         Assert.Multiple(() =>
         {
@@ -50,12 +50,12 @@ public class FilterDescriptorTests
     public void TestGetHashCodeCollisions(int sampleSize)
     {
         var sampleIndices = Enumerable.Range(0, sampleSize - 1).ToList();
-        var hashes = new Dictionary<int, FilterDescriptor>();
+        var hashes = new Dictionary<int, FilterMetaData>();
         Enum.GetValues<FilterOperatorType>().ToList().ForEach(ft =>
         {
             sampleIndices.ForEach(index =>
             {
-                var filterDef = new FilterDescriptor(
+                var filterDef = new FilterMetaData(
                     ft,
                     arg1:  Guid.NewGuid().ToString("N"),
                     arg1Required: index % 2 == 0,
@@ -72,22 +72,22 @@ public class FilterDescriptorTests
     [Test]
     public void TestGetHashCodeCollisionsForCommonFilters()
     {
-        var hashes = new Dictionary<int, FilterDescriptor>();
+        var hashes = new Dictionary<int, FilterMetaData>();
         new []
         {
-            FilterDescriptor.IsNull,
-            FilterDescriptor.IsNotNull,
-            FilterDescriptor.EqualTo,
-            FilterDescriptor.NotEqualTo,
-            FilterDescriptor.GreaterThan,
-            FilterDescriptor.GreaterThanOrEqual,
-            FilterDescriptor.LessThan,
-            FilterDescriptor.LessThanOrEqual,
-            FilterDescriptor.ValueInRange,
-            FilterDescriptor.ValueInSequence,
-            FilterDescriptor.StringContains,
-            FilterDescriptor.CollectionIsEmpty,
-            FilterDescriptor.CollectionIsNotEmpty,
+            FilterMetaData.IsNull,
+            FilterMetaData.IsNotNull,
+            FilterMetaData.EqualTo,
+            FilterMetaData.NotEqualTo,
+            FilterMetaData.GreaterThan,
+            FilterMetaData.GreaterThanOrEqual,
+            FilterMetaData.LessThan,
+            FilterMetaData.LessThanOrEqual,
+            FilterMetaData.ValueInRange,
+            FilterMetaData.ValueInSequence,
+            FilterMetaData.StringContains,
+            FilterMetaData.CollectionIsEmpty,
+            FilterMetaData.CollectionIsNotEmpty,
         }.ToList().ForEach(f =>
         {
             var hash = f.GetHashCode();
@@ -102,9 +102,9 @@ public class FilterDescriptorTests
         "NUnit2009:The same value has been provided as both the actual and the expected argument")]
     public void TestEquality()
     {
-        var f1 = new FilterDescriptor(FilterOperatorType.EqualTo);
-        var f2 = new FilterDescriptor(FilterOperatorType.EqualTo);
-        var f3 = new FilterDescriptor(FilterOperatorType.NotEqualTo);
+        var f1 = new FilterMetaData(FilterOperatorType.EqualTo);
+        var f2 = new FilterMetaData(FilterOperatorType.EqualTo);
+        var f3 = new FilterMetaData(FilterOperatorType.NotEqualTo);
         
         Assert.True(f1.Equals(f1));
         Assert.False(f1.Equals(null));
@@ -127,8 +127,8 @@ public class FilterDescriptorTests
         "NUnit2004:Consider using Assert.That(expr, Is.True) instead of Assert.True(expr)")]
     public void TestEqualityToObjects()
     {
-        var f1 = new FilterDescriptor(FilterOperatorType.EqualTo);
-        var f2 = new FilterDescriptor(FilterOperatorType.EqualTo);
+        var f1 = new FilterMetaData(FilterOperatorType.EqualTo);
+        var f2 = new FilterMetaData(FilterOperatorType.EqualTo);
         
         Assert.True(f1.Equals((object)f1));
         Assert.True(f1.Equals((object)f2));

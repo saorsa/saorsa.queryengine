@@ -109,82 +109,101 @@ public static partial class QueryEngine
 
     public static QueryableTypeDescriptor GetPropertyDefinitionOrThrow<TEntity>(
         QueryableTypeDescriptor queryableTypeDef,
-        PropertyFilter propertyFilter)
+        FilterPropertyDescriptor filterPropertyDescriptor)
     {
-        var matchingTypeDef = queryableTypeDef.Properties?.FirstOrDefault(p =>
-            p.Name.Equals(propertyFilter.Name.ToCamelCase()));
-        if (matchingTypeDef == null)
+        var sequence = filterPropertyDescriptor.AsSequence();
+        QueryableTypeDescriptor sequenceDescriptor = queryableTypeDef;
+
+        if (sequence.Length == 0)
         {
-            throw new QueryEngineException(
-                ErrorCodes.PropertyNotFoundError, 
-                $"Type {typeof(TEntity)} does not have a property named {propertyFilter.Name}.");
+            throw new ArgumentException(
+                $"Property filter {filterPropertyDescriptor.Name} is invalid.");
+        }
+        
+        foreach (var property in sequence)
+        {
+            var nextDescriptor = sequenceDescriptor
+                .Properties?
+                .FirstOrDefault(p => p.Name.Equals(property.ToCamelCase()));
+            if (nextDescriptor == null)
+            {
+                throw new QueryEngineException(
+                    ErrorCodes.PropertyNotFoundError, 
+                    $"Type {typeof(TEntity)} does not have a property named {filterPropertyDescriptor.Name}.");
+            }
+
+            sequenceDescriptor = nextDescriptor;
         }
 
-        var filterDef = matchingTypeDef.AllowedFilters.FirstOrDefault(f => f.OperatorType == propertyFilter.FilterType);
+        var filterDef = sequenceDescriptor.AllowedFilters.FirstOrDefault(f => f.OperatorType == filterPropertyDescriptor.FilterType);
         if (filterDef == null)
         {
             throw new QueryEngineException(
                 ErrorCodes.PropertyFilterInvalidError, 
-                $"Type {typeof(TEntity)}, property {propertyFilter.Name} does not support filter {propertyFilter.FilterType}.");
+                $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name} does not support filter {filterPropertyDescriptor.FilterType}.");
         }
 
         if (filterDef.Arg1Required.GetValueOrDefault())
         {
-            if (propertyFilter.Arguments.Length < 1)
+            if (filterPropertyDescriptor.Arguments.Length < 1)
             { 
                 throw new QueryEngineException(
                 ErrorCodes.ArgumentLengthError,
-                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
-                $"{propertyFilter.FilterType} expects a single argument which is not provided.");
+                $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter " +
+                $"{filterPropertyDescriptor.FilterType} expects a single argument which is not provided.");
             }
         }
-        else if (propertyFilter.Arguments.Length > 0)
+        else if (filterPropertyDescriptor.Arguments.Length > 0)
         {
             throw new QueryEngineException(
                 ErrorCodes.ArgumentLengthError,
-                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
-                $"{propertyFilter.FilterType} does not expect an argument, but it was provided.");
+                $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter " +
+                $"{filterPropertyDescriptor.FilterType} does not expect an argument, but it was provided.");
         }
         
         if (filterDef.Arg2Required.GetValueOrDefault())
         {
-            if (propertyFilter.Arguments.Length < 2)
+            if (filterPropertyDescriptor.Arguments.Length < 2)
             { 
                 throw new QueryEngineException(
                     ErrorCodes.ArgumentLengthError,
-                    $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
-                    $"{propertyFilter.FilterType} expects a second argument which was not provided.");
+                    $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter " +
+                    $"{filterPropertyDescriptor.FilterType} expects a second argument which was not provided.");
             }
         }
-        else if (propertyFilter.Arguments.Length > 1)
+        else if (filterPropertyDescriptor.Arguments.Length > 1)
         {
             throw new QueryEngineException(
                 ErrorCodes.ArgumentLengthError,
-                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter " +
-                $"{propertyFilter.FilterType} does not expect a second argument, but it was provided.");
+                $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter " +
+                $"{filterPropertyDescriptor.FilterType} does not expect a second argument, but it was provided.");
         }
 
-        return matchingTypeDef;
+        if (sequence.Length > 1)
+        {
+            sequenceDescriptor.Name = filterPropertyDescriptor.Name;
+        }
+        return sequenceDescriptor;
     }
 
     public static IQueryable<TEntity> AddPropertyFilter<TEntity>(
         IQueryable<TEntity> query,
-        PropertyFilter propertyFilter)
+        FilterPropertyDescriptor filterPropertyDescriptor)
     {
-        var expression = ToExpression<TEntity>(propertyFilter);
+        var expression = ToExpression<TEntity>(filterPropertyDescriptor);
         return query.Where(expression);
     }
 
     public static IQueryable<TEntity> AddPropertyFilterBlock<TEntity>(
         IQueryable<TEntity> query,
-        PropertyFilterBlock block)
+        FilterBlockDescriptor blockDescriptor)
     {
-        var expression = ToExpression<TEntity>(block);
+        var expression = ToExpression<TEntity>(blockDescriptor);
         return query.Where(expression);
     }
 
     public static Expression<Func<TEntity, bool>> ToExpression<TEntity>(
-        PropertyFilter propertyFilter)
+        FilterPropertyDescriptor filterPropertyDescriptor)
     {
         var typeDef = EnsureCompiled<TEntity>();
 
@@ -194,9 +213,9 @@ public static partial class QueryEngine
                 $"Type {typeof(TEntity)} is not supported by query engine.");
         }
 
-        var propertyDef = GetPropertyDefinitionOrThrow<TEntity>(typeDef, propertyFilter);
+        var propertyDef = GetPropertyDefinitionOrThrow<TEntity>(typeDef, filterPropertyDescriptor);
 
-        switch (propertyFilter.FilterType)
+        switch (filterPropertyDescriptor.FilterType)
         {
             case FilterOperatorType.IsNull:
             {
@@ -214,62 +233,62 @@ public static partial class QueryEngine
             {
                 return ExpressionBuilder.PropertyEqualTo<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             case FilterOperatorType.NotEqualTo:
             {
                 return ExpressionBuilder.PropertyNotEqualTo<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             case FilterOperatorType.LessThan:
             {
                 return ExpressionBuilder.PropertyLessThan<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             case FilterOperatorType.LessThanOrEqual:
             {
                 return ExpressionBuilder.PropertyLessThanOrEqual<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             case FilterOperatorType.GreaterThan:
             {
                 return ExpressionBuilder.PropertyGreaterThan<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             case FilterOperatorType.GreaterThanOrEqual:
             {
                 return ExpressionBuilder.PropertyGreaterThanOrEqual<TEntity>(
                     propertyDef.Name,
-                    propertyFilter.Arguments[0]);
+                    filterPropertyDescriptor.Arguments[0]);
             }
 
             default:
                 throw new QueryEngineException(1400, 
-                    $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter {propertyFilter.FilterType}" +
+                    $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter {filterPropertyDescriptor.FilterType}" +
                     $"is not implemented yet.");
         }
     }
 
     public static Expression<Func<TEntity, bool>> ToExpression<TEntity>(
-        PropertyFilterBlock block,
+        FilterBlockDescriptor blockDescriptor,
         ParameterExpression? existingParameter = null)
     {
         var parameter = existingParameter ?? Expression.Parameter(typeof(TEntity));
-        var expression = ToBinaryExpression<TEntity>(block, parameter);
+        var expression = ToBinaryExpression<TEntity>(blockDescriptor, parameter);
         return Expression.Lambda<Func<TEntity, bool>>(expression, parameter);
     }
 
     public static BinaryExpression ToBinaryExpression<TEntity>(
-        PropertyFilter propertyFilter,
+        FilterPropertyDescriptor filterPropertyDescriptor,
         ParameterExpression? existingParameter = null)
     {
         var parameter = existingParameter ?? Expression.Parameter(typeof(TEntity));
@@ -281,47 +300,47 @@ public static partial class QueryEngine
                 $"Type {typeof(TEntity)} is not supported by query engine.");
         }
         
-        var propertyDef = GetPropertyDefinitionOrThrow<TEntity>(typeDef, propertyFilter);
+        var propertyDef = GetPropertyDefinitionOrThrow<TEntity>(typeDef, filterPropertyDescriptor);
 
-        return propertyFilter.FilterType switch
+        return filterPropertyDescriptor.FilterType switch
         {
             FilterOperatorType.IsNull => ExpressionBuilder.PropertyIsNullExpression<TEntity>(propertyDef.Name, parameter),
             FilterOperatorType.IsNotNull => ExpressionBuilder.PropertyIsNotNullExpression<TEntity>(propertyDef.Name,
                 parameter),
             FilterOperatorType.EqualTo => ExpressionBuilder.PropertyEqualToExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.NotEqualTo => ExpressionBuilder.PropertyNotEqualToExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.LessThan => ExpressionBuilder.PropertyLessThanExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.LessThanOrEqual => ExpressionBuilder.PropertyLessThanOrEqualExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.GreaterThan => ExpressionBuilder.PropertyGreaterThanExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.GreaterThanOrEqual => ExpressionBuilder.PropertyGreaterThanOrEqualExpression<TEntity>(propertyDef.Name,
-                propertyFilter.Arguments[0], parameter),
+                filterPropertyDescriptor.Arguments[0], parameter),
             FilterOperatorType.StringContains => ExpressionBuilder.BuildContainsExpression<TEntity>(
                 propertyDef.Name,
-                propertyFilter.Arguments[0],
+                filterPropertyDescriptor.Arguments[0],
                 parameter),
             _ => throw new QueryEngineException(ErrorCodes.PropertyFilterNotImplementedError,
-                $"Type {typeof(TEntity)}, property {propertyFilter.Name}, filter {propertyFilter.FilterType}" +
+                $"Type {typeof(TEntity)}, property {filterPropertyDescriptor.Name}, filter {filterPropertyDescriptor.FilterType}" +
                 $"is not implemented yet.")
         };
     }
     
     public static BinaryExpression ToBinaryExpression<TEntity>(
-        PropertyFilterBlock block,
+        FilterBlockDescriptor blockDescriptor,
         ParameterExpression? existingParameter = null)
     {
         var parameter = existingParameter ?? Expression.Parameter(typeof(TEntity));
-        var result = ToBinaryExpression<TEntity>(block.First, parameter);
+        var result = ToBinaryExpression<TEntity>(blockDescriptor.First, parameter);
         
-        if (block.IsComposite)
+        if (blockDescriptor.IsComposite)
         {
-            var condition = block.Condition ?? LogicalOperator.And;
+            var condition = blockDescriptor.Condition ?? LogicalOperator.And;
                 
-            block.Others.ToList().ForEach(item =>
+            blockDescriptor.Others.ToList().ForEach(item =>
             {
                 var other = ToBinaryExpression<TEntity>(item, parameter);
                 var combined = condition == LogicalOperator.And

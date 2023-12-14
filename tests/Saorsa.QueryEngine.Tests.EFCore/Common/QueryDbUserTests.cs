@@ -95,13 +95,13 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.Age),
                 FilterType = FilterOperatorType.LessThan,
                 Arguments = new object[] { 40 }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.DepartmentId),
                 FilterType = FilterOperatorType.EqualTo,
@@ -163,12 +163,12 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterOperatorType.IsNull,
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.DepartmentId),
                 FilterType = FilterOperatorType.EqualTo,
@@ -230,12 +230,12 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterOperatorType.IsNotNull,
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.DepartmentId),
                 FilterType = FilterOperatorType.EqualTo,
@@ -297,13 +297,13 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { null! }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.DepartmentId),
                 FilterType = FilterOperatorType.EqualTo,
@@ -365,13 +365,13 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.ExternalId),
                 FilterType = FilterOperatorType.NotEqualTo,
                 Arguments = new object[] { null! }
             })
-            .Where(new PropertyFilter
+            .Where(new FilterPropertyDescriptor
             {
                 Name = nameof(User.DepartmentId),
                 FilterType = FilterOperatorType.EqualTo,
@@ -439,9 +439,9 @@ public class QueryDbUserTests : EFCoreTestBase
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
 
         var query = db.Users
-            .Where(new PropertyFilterBlock
+            .Where(new FilterBlockDescriptor
             {
-                First = new PropertyFilter()
+                First = new FilterPropertyDescriptor()
                 {
                     Name = nameof(User.DepartmentId),
                     FilterType = FilterOperatorType.EqualTo,
@@ -450,9 +450,9 @@ public class QueryDbUserTests : EFCoreTestBase
                 Condition = LogicalOperator.And,
                 Others = new []
                 {
-                    new PropertyFilterBlock
+                    new FilterBlockDescriptor
                     {
-                        First = new PropertyFilter
+                        First = new FilterPropertyDescriptor
                         {
                             Name = nameof(User.ExternalId),
                             FilterType = FilterOperatorType.EqualTo,
@@ -461,9 +461,9 @@ public class QueryDbUserTests : EFCoreTestBase
                         Condition = LogicalOperator.Or,
                         Others = new []
                         {
-                            new PropertyFilterBlock
+                            new FilterBlockDescriptor
                             {
-                                First = new PropertyFilter
+                                First = new FilterPropertyDescriptor
                                 {
                                     Name = nameof(User.Age),
                                     FilterType = FilterOperatorType.GreaterThanOrEqual,
@@ -482,9 +482,9 @@ public class QueryDbUserTests : EFCoreTestBase
             Is.EqualTo(users.Count(u => u.ExternalId == externalId || u.Age >= 32)));
 
         query = db.Users
-            .Where(new PropertyFilterBlock
+            .Where(new FilterBlockDescriptor
             {
-                First = new PropertyFilter()
+                First = new FilterPropertyDescriptor()
                 {
                     Name = $"{nameof(User.Department)}.{nameof(Department.Name)}",
                     FilterType = FilterOperatorType.EqualTo,

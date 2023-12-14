@@ -4,40 +4,40 @@ namespace Saorsa.QueryEngine.Model;
 /// <summary>
 /// Object that carries description and meta-data about a filter expression - its structure and operands.
 /// </summary>
-public class FilterDescriptor : IEquatable<FilterDescriptor>
+public class FilterMetaData : IEquatable<FilterMetaData>
 {
     /// <summary>
     /// Filter descriptor for an expression that checks if a target collection entity is empty.
     /// </summary>
-    public static readonly FilterDescriptor CollectionIsEmpty = new(
+    public static readonly FilterMetaData CollectionIsEmpty = new(
         FilterOperatorType.CollectionIsEmpty,
         description: "An expression that checks if a target collection entity is empty.");
 
     /// <summary>
     /// Filter descriptor for an expression that checks if a target collection entity is NOT empty.
     /// </summary>
-    public static readonly FilterDescriptor CollectionIsNotEmpty = new(
+    public static readonly FilterMetaData CollectionIsNotEmpty = new(
         FilterOperatorType.CollectionIsNotEmpty,
         description: "An expression that checks if a target collection entity is NOT empty.");
 
     /// <summary>
     /// Filter descriptor for an expression that checks if its target is NULL.
     /// </summary>
-    public static readonly FilterDescriptor IsNull = new(
+    public static readonly FilterMetaData IsNull = new(
         FilterOperatorType.IsNull,
         description: "An expression that checks if its target is NULL.");
 
     /// <summary>
     /// Filter descriptor for an expression that checks if ts target is NOT NULL.
     /// </summary>
-    public static readonly FilterDescriptor IsNotNull = new(
+    public static readonly FilterMetaData IsNotNull = new(
         FilterOperatorType.IsNotNull,
         description: "An expression that checks if ts target is NOT NULL.");
 
     /// <summary>
     /// Filter descriptor for an expression that checks if its target is equal to the first argument of the expression.
     /// </summary>
-    public static readonly FilterDescriptor EqualTo = new(
+    public static readonly FilterMetaData EqualTo = new(
         FilterOperatorType.EqualTo, "<value>", true,
         description: "An expression that checks if its target is equal to the first argument of the expression.");
 
@@ -45,7 +45,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target is NOT equal to the first argument of
     /// the expression.
     /// </summary>
-    public static readonly FilterDescriptor NotEqualTo = new(
+    public static readonly FilterMetaData NotEqualTo = new(
         FilterOperatorType.NotEqualTo, "<value>", true,
         description: "An expression that checks if its target is NOT equal to the first argument of the expression.");
 
@@ -53,7 +53,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target is less than the first argument of
     /// the expression.
     /// </summary>
-    public static readonly FilterDescriptor LessThan = new(
+    public static readonly FilterMetaData LessThan = new(
         FilterOperatorType.LessThan, "<value>", true,
         description: "An expression that checks if its target is less than the first argument of the expression.");
 
@@ -61,7 +61,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target is less than or equal to the first argument of
     /// the expression.
     /// </summary>
-    public static readonly FilterDescriptor LessThanOrEqual = new(
+    public static readonly FilterMetaData LessThanOrEqual = new(
         FilterOperatorType.LessThanOrEqual, "<less-than-or-equal>", true,
         description: "An expression that checks if its target is less than or equal to the first argument " +
                      "of the expression.");
@@ -70,7 +70,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target is greater than the first argument of
     /// the expression.
     /// </summary>
-    public static readonly FilterDescriptor GreaterThan = new(
+    public static readonly FilterMetaData GreaterThan = new(
         FilterOperatorType.GreaterThan, "<value>", true,
         description: "An expression that checks if its target is greater than the first argument of the expression.");
 
@@ -78,7 +78,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target is greater than or equal to the first argument of
     /// the expression.
     /// </summary>
-    public static readonly FilterDescriptor GreaterThanOrEqual = new(
+    public static readonly FilterMetaData GreaterThanOrEqual = new(
         FilterOperatorType.GreaterThanOrEqual, "<greater-than-or-equal>", true,
         description: "An expression that checks if its target is less than or equal to the first argument " +
                      "of the expression.");
@@ -87,7 +87,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target value is within the boundary specified between
     /// the first argument of the expression (MIN) and the second argument of the expression (MAX).
     /// </summary>
-    public static readonly FilterDescriptor ValueInRange = new(
+    public static readonly FilterMetaData ValueInRange = new(
         FilterOperatorType.ValueInRange, "<min-value>", true, "<max-value>", true,
         description: "An expression that checks if its target value is within the boundary specified between the " +
                      "first argument of the expression (MIN) and the second argument of the expression (MAX).");
@@ -97,7 +97,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// specified in the first argument of the expression (a collection); the second argument of the 
     /// expression, optional, specifies the separator of values used in the first item.
     /// </summary>
-    public static readonly FilterDescriptor ValueInSequence = new(
+    public static readonly FilterMetaData ValueInSequence = new(
         FilterOperatorType.ValueInSequence, 
         "<delimited-list-of-values>", true, 
         "<separator>", false,
@@ -109,7 +109,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// Filter descriptor for an expression that checks if its target contains a substring passed as the first
     /// argument of the expression.
     /// </summary>
-    public static readonly FilterDescriptor StringContains = new(
+    public static readonly FilterMetaData StringContains = new(
         FilterOperatorType.StringContains, "<substring>", true,
         description: "An expression that checks if its target contains a substring passed as the first " +
                      "argument of the expression");
@@ -117,7 +117,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <summary>
     /// Descriptors for filter expressions that can be applied on target numerics.
     /// </summary>
-    public static readonly FilterDescriptor[] NumericFilters =
+    public static readonly FilterMetaData[] NumericFilters =
     {
         IsNull,
         IsNotNull,
@@ -134,7 +134,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <summary>
     /// Descriptors for filter expressions that can be applied on target text / string-like objects.
     /// </summary>
-    public static readonly FilterDescriptor[] TextFilters =
+    public static readonly FilterMetaData[] TextFilters =
     {
         IsNull,
         IsNotNull,
@@ -147,7 +147,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <summary>
     /// Descriptors for filter expressions that can be applied on target enums.
     /// </summary>
-    public static readonly FilterDescriptor[] EnumFilters =
+    public static readonly FilterMetaData[] EnumFilters =
     {
         IsNull,
         IsNotNull,
@@ -159,7 +159,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <summary>
     /// Descriptors for filter expressions that can be applied on target reference objects.
     /// </summary>
-    public static readonly FilterDescriptor[] ReferenceFilters =
+    public static readonly FilterMetaData[] ReferenceFilters =
     {
         IsNull,
         IsNotNull,
@@ -168,7 +168,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <summary>
     /// Descriptors for filter expressions that can be applied on target arrays and collections.
     /// </summary>
-    public static readonly FilterDescriptor[] ArrayFilters =
+    public static readonly FilterMetaData[] ArrayFilters =
     {
         IsNull,
         IsNotNull,
@@ -200,7 +200,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
     /// <param name="arg2">Text, describing the 2nd argument of the filter, if any.</param>
     /// <param name="arg2Required">Value indicating, if the second argument of the filter is required or not.</param>
     /// <param name="description">Optional description text.</param>
-    public FilterDescriptor(
+    public FilterMetaData(
         FilterOperatorType operatorType,
         string? arg1 = default,
         bool? arg1Required = default,
@@ -227,7 +227,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
         return $"[Filter {OperatorType}, Argument1={Arg1}{arg1RequiredString}, Argument2={Arg2}{arg2RequiredString}]";
     }
 
-    public bool Equals(FilterDescriptor? other)
+    public bool Equals(FilterMetaData? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -243,7 +243,7 @@ public class FilterDescriptor : IEquatable<FilterDescriptor>
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         return obj.GetType() == GetType()
-               && Equals((FilterDescriptor) obj);
+               && Equals((FilterMetaData) obj);
     }
 
     public override int GetHashCode()

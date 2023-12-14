@@ -1,7 +1,7 @@
 // ReSharper disable InconsistentNaming
 namespace Saorsa.QueryEngine.Model;
 
-public enum FilterType
+public enum FilterOperatorType
 {
     IS_NULL,
     IS_NOT_NULL,

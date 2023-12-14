@@ -1,24 +1,26 @@
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
+using NUnit.Framework;
+using Saorsa.QueryEngine.Model;
 
-namespace Saorsa.QueryEngine.Tests.NpgSql.Users;
+namespace Saorsa.QueryEngine.Tests.EFCore.Common;
 
-public class CategoryQueryTests
+
+public class QueryDbDepartmentTests: TestBase
 {
     [Test]
     public void TestSimpleInsertDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
         
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -28,20 +30,20 @@ public class CategoryQueryTests
     public void TestSimpleInsertEqualsQueryDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
         
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
-        var query = db.Categories
+        var query = db.Departments
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.Name),
+                Name = nameof(Department.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             });
@@ -51,7 +53,7 @@ public class CategoryQueryTests
         Assert.That(queryResults, Is.Not.Empty);
         Assert.That(queryResults.Count, Is.EqualTo(1));
         
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -61,26 +63,26 @@ public class CategoryQueryTests
     public void TestQueryIsNullForReferenceColumn()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
         
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
-        var query = db.Categories
+        var query = db.Departments
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.Name),
+                Name = nameof(Department.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.ParentCategory),
+                Name = nameof(Department.ParentDepartment),
                 FilterType = FilterType.IS_NULL,
             });
         
@@ -89,7 +91,7 @@ public class CategoryQueryTests
         Assert.That(queryResults, Is.Not.Empty);
         Assert.That(queryResults.Count, Is.EqualTo(1));
         
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -99,27 +101,27 @@ public class CategoryQueryTests
     public void TestQueryIsNullForReferenceColumnNegative()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}",
-            ParentCategory = new Category()
+            ParentDepartment = new Department()
         };
-        
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
-        var query = db.Categories
+        var query = db.Departments
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.Name),
+                Name = nameof(Department.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.ParentCategory),
+                Name = nameof(Department.ParentDepartment),
                 FilterType = FilterType.IS_NULL,
             });
         
@@ -127,7 +129,7 @@ public class CategoryQueryTests
         
         Assert.That(queryResults, Is.Empty);
         
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -138,30 +140,30 @@ public class CategoryQueryTests
     {
         var key = Guid.NewGuid().ToString("N");
         var parentKey = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}",
-            ParentCategory = new Category
+            ParentDepartment = new Department
             {
                 Name = $"Group-{parentKey}"
             }
         };
-        
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
-        var query = db.Categories
+        var query = db.Departments
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.Name),
+                Name = nameof(Department.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.ParentCategory),
+                Name = nameof(Department.ParentDepartment),
                 FilterType = FilterType.IS_NOT_NULL,
             });
         
@@ -171,7 +173,7 @@ public class CategoryQueryTests
         Assert.That(queryResults.Count, Is.EqualTo(1));
         Assert.That(queryResults.First().Name, Is.EqualTo(category.Name));
 
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -182,30 +184,30 @@ public class CategoryQueryTests
     {
         var key = Guid.NewGuid().ToString("N");
         var parentKey = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}",
-            ParentCategory = new Category
+            ParentDepartment = new Department
             {
                 Name = $"Group-{parentKey}"
             }
         };
-        
-        var db = new QueryNpgsqlDbContext();
-        db.Categories.AddRange(category);
+
+        var db = GetQueryDbContext();
+        db.Departments.AddRange(category);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
-        var query = db.Categories
+        var query = db.Departments
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.Name),
+                Name = nameof(Department.Name),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Name }
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(Category.ParentCategory),
+                Name = nameof(Department.ParentDepartment),
                 FilterType = FilterType.IS_NULL,
             });
         
@@ -213,7 +215,7 @@ public class CategoryQueryTests
         
         Assert.That(queryResults, Is.Empty);
 
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();

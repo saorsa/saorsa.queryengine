@@ -1,11 +1,11 @@
 namespace Saorsa.QueryEngine.Tests.Model;
 
-public class TypeDefinitionTests
+public class QueryableTypeDescriptorTests
 {
     [Test]
     public void TestTypeName()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.TypeName, Is.Not.Null);
 
@@ -18,7 +18,7 @@ public class TypeDefinitionTests
     [Test]
     public void TestType()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.Type, Is.Null);
 
@@ -31,7 +31,7 @@ public class TypeDefinitionTests
     [Test]
     public void TestNullable()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.Nullable, Is.False);
 
@@ -43,7 +43,7 @@ public class TypeDefinitionTests
     [Test]
     public void TestEnumValues()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.EnumValues, Is.Null);
 
@@ -56,11 +56,11 @@ public class TypeDefinitionTests
     [Test]
     public void TestArrayElement()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.ArrayElement, Is.Null);
 
-        typeDef.ArrayElement = new TypeDefinition();
+        typeDef.ArrayElement = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.ArrayElement, Is.Not.Null);
     }
@@ -68,21 +68,21 @@ public class TypeDefinitionTests
     [Test]
     public void TestAllowedFilters()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         
         Assert.That(typeDef.AllowedFilters, Is.Empty);
 
-        typeDef.AllowedFilters = FilterDefinition.ArrayFilters;
+        typeDef.AllowedFilters = ExpressionDescriptor.ArrayFilters;
         
         Assert.That(typeDef.AllowedFilters, Is.Not.Null);
         Assert.That(typeDef.AllowedFilters, Is.Not.Empty);
-        Assert.That(typeDef.AllowedFilters, Has.Length.EqualTo(FilterDefinition.ArrayFilters.Length));
+        Assert.That(typeDef.AllowedFilters, Has.Length.EqualTo(ExpressionDescriptor.ArrayFilters.Length));
     }
     
     [Test]
     public void TestToString()
     {
-        var typeDef = new TypeDefinition();
+        var typeDef = new QueryableTypeDescriptor();
         var stringRep = typeDef.ToString();
         Assert.That(stringRep, Does.Contain(typeDef.TypeName));
     }

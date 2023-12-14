@@ -2,13 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Saorsa.QueryEngine.Tests.Model;
 
-public class FilterDefinitionTests
+public class FilterDescriptorTests
 {
     [Test]
     public void TestConstructorFilterTypes()
     {
         Enum.GetValues<FilterType>().ToList().ForEach(filterType => {
-            var filter = new FilterDefinition(filterType);
+            var filter = new FilterDescriptor(filterType);
             Assert.Multiple(() =>
             {
                 Assert.That(filter, Is.Not.Null);
@@ -25,7 +25,7 @@ public class FilterDefinitionTests
     public void TestToString()
     {
         var key1 = Guid.NewGuid().ToString("N");
-        var filter1 = new FilterDefinition(FilterType.EQ, key1, true);
+        var filter1 = new FilterDescriptor(FilterType.EQ, key1, true);
         var toString1 = filter1.ToString();
         Assert.Multiple(() =>
         {
@@ -35,7 +35,7 @@ public class FilterDefinitionTests
         });
         
         var key2 = Guid.NewGuid().ToString("N");
-        var filter2 = new FilterDefinition(FilterType.EQ, arg2: key2, arg2Required: false);
+        var filter2 = new FilterDescriptor(FilterType.EQ, arg2: key2, arg2Required: false);
         var toString2 = filter2.ToString();
         Assert.Multiple(() =>
         {
@@ -50,12 +50,12 @@ public class FilterDefinitionTests
     public void TestGetHashCodeCollisions(int sampleSize)
     {
         var sampleIndices = Enumerable.Range(0, sampleSize - 1).ToList();
-        var hashes = new Dictionary<int, FilterDefinition>();
+        var hashes = new Dictionary<int, FilterDescriptor>();
         Enum.GetValues<FilterType>().ToList().ForEach(ft =>
         {
             sampleIndices.ForEach(index =>
             {
-                var filterDef = new FilterDefinition(
+                var filterDef = new FilterDescriptor(
                     ft,
                     arg1:  Guid.NewGuid().ToString("N"),
                     arg1Required: index % 2 == 0,
@@ -72,22 +72,22 @@ public class FilterDefinitionTests
     [Test]
     public void TestGetHashCodeCollisionsForCommonFilters()
     {
-        var hashes = new Dictionary<int, FilterDefinition>();
+        var hashes = new Dictionary<int, FilterDescriptor>();
         new []
         {
-            FilterDefinition.IS_NULL,
-            FilterDefinition.IS_NOT_NULL,
-            FilterDefinition.EQ,
-            FilterDefinition.NOT_EQ,
-            FilterDefinition.GT,
-            FilterDefinition.GT_EQ,
-            FilterDefinition.LT,
-            FilterDefinition.LT_EQ,
-            FilterDefinition.RANGE,
-            FilterDefinition.SEQUENCE,
-            FilterDefinition.CONTAINS,
-            FilterDefinition.IS_EMPTY,
-            FilterDefinition.IS_NOT_EMPTY,
+            FilterDescriptor.IS_NULL,
+            FilterDescriptor.IS_NOT_NULL,
+            FilterDescriptor.EQ,
+            FilterDescriptor.NOT_EQ,
+            FilterDescriptor.GT,
+            FilterDescriptor.GT_EQ,
+            FilterDescriptor.LT,
+            FilterDescriptor.LT_EQ,
+            FilterDescriptor.RANGE,
+            FilterDescriptor.SEQUENCE,
+            FilterDescriptor.CONTAINS,
+            FilterDescriptor.IS_EMPTY,
+            FilterDescriptor.IS_NOT_EMPTY,
         }.ToList().ForEach(f =>
         {
             var hash = f.GetHashCode();
@@ -102,9 +102,9 @@ public class FilterDefinitionTests
         "NUnit2009:The same value has been provided as both the actual and the expected argument")]
     public void TestEquality()
     {
-        var f1 = new FilterDefinition(FilterType.EQ);
-        var f2 = new FilterDefinition(FilterType.EQ);
-        var f3 = new FilterDefinition(FilterType.NOT_EQ);
+        var f1 = new FilterDescriptor(FilterType.EQ);
+        var f2 = new FilterDescriptor(FilterType.EQ);
+        var f3 = new FilterDescriptor(FilterType.NOT_EQ);
         
         Assert.True(f1.Equals(f1));
         Assert.False(f1.Equals(null));
@@ -127,8 +127,8 @@ public class FilterDefinitionTests
         "NUnit2004:Consider using Assert.That(expr, Is.True) instead of Assert.True(expr)")]
     public void TestEqualityToObjects()
     {
-        var f1 = new FilterDefinition(FilterType.EQ);
-        var f2 = new FilterDefinition(FilterType.EQ);
+        var f1 = new FilterDescriptor(FilterType.EQ);
+        var f2 = new FilterDescriptor(FilterType.EQ);
         
         Assert.True(f1.Equals((object)f1));
         Assert.True(f1.Equals((object)f2));

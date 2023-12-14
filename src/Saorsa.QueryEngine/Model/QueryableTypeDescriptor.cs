@@ -1,6 +1,11 @@
 namespace Saorsa.QueryEngine.Model;
 
-public class TypeDefinition
+
+/// <summary>
+/// Object that carries meta description about an property type that can be used in dynamic queries used by
+/// the Query Engine runtime.
+/// </summary>
+public class QueryableTypeDescriptor
 {
     public string Name { get; set; } = $"name_{Guid.NewGuid():N}";
     
@@ -12,11 +17,11 @@ public class TypeDefinition
     
     public string[]? EnumValues { get; set; }
     
-    public TypeDefinition[]? Properties { get; set; } 
+    public QueryableTypeDescriptor[]? Properties { get; set; } 
 
-    public FilterDefinition[] AllowedFilters { get; set; } = Array.Empty<FilterDefinition>();
+    public ExpressionDescriptor[] AllowedFilters { get; set; } = Array.Empty<ExpressionDescriptor>();
     
-    public TypeDefinition? ArrayElement { get; set; }
+    public QueryableTypeDescriptor? ArrayElement { get; set; }
 
     public override string ToString()
     {

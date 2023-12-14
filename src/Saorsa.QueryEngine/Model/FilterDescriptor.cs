@@ -1,32 +1,35 @@
 namespace Saorsa.QueryEngine.Model;
 
-public class FilterDefinition : IEquatable<FilterDefinition>
+/// <summary>
+/// Object that carries description and meta data about a filter expression - its structure and operands.
+/// </summary>
+public class FilterDescriptor : IEquatable<FilterDescriptor>
 {
-    public static readonly FilterDefinition IS_EMPTY = new(FilterType.IS_EMPTY);
-    public static readonly FilterDefinition IS_NOT_EMPTY = new(FilterType.IS_NOT_EMPTY);
-    public static readonly FilterDefinition IS_NULL = new(FilterType.IS_NULL);
-    public static readonly FilterDefinition IS_NOT_NULL = new(FilterType.IS_NOT_NULL);
-    public static readonly FilterDefinition EQ = new(
+    public static readonly FilterDescriptor IS_EMPTY = new(FilterType.IS_EMPTY);
+    public static readonly FilterDescriptor IS_NOT_EMPTY = new(FilterType.IS_NOT_EMPTY);
+    public static readonly FilterDescriptor IS_NULL = new(FilterType.IS_NULL);
+    public static readonly FilterDescriptor IS_NOT_NULL = new(FilterType.IS_NOT_NULL);
+    public static readonly FilterDescriptor EQ = new(
         FilterType.EQ, "<equal-to>", true);
-    public static readonly FilterDefinition NOT_EQ = new(
+    public static readonly FilterDescriptor NOT_EQ = new(
         FilterType.NOT_EQ, "<not-equal-to>", true);
-    public static readonly FilterDefinition LT = new(
+    public static readonly FilterDescriptor LT = new(
         FilterType.LT, "<less-than>", true);
-    public static readonly FilterDefinition LT_EQ = new(
+    public static readonly FilterDescriptor LT_EQ = new(
         FilterType.LT_EQ, "<less-than-or-equal>", true);
-    public static readonly FilterDefinition GT = new(
+    public static readonly FilterDescriptor GT = new(
         FilterType.GT, "<greater-than>", true);
-    public static readonly FilterDefinition GT_EQ = new(
+    public static readonly FilterDescriptor GT_EQ = new(
         FilterType.GT_EQ, "<greater-than-or-equal>", true);
-    public static readonly FilterDefinition RANGE = new(
+    public static readonly FilterDescriptor RANGE = new(
         FilterType.RANGE, "<greater-than-or-equal>", true, "<less-than-or-equal>", true);
-    public static readonly FilterDefinition SEQUENCE = new(
+    public static readonly FilterDescriptor SEQUENCE = new(
         FilterType.SEQUENCE, "<delimited-list-of-values>", true, "<separator-or-comma>", false);
-    public static readonly FilterDefinition CONTAINS = new(
+    public static readonly FilterDescriptor CONTAINS = new(
         FilterType.CONTAINS, "<contained-string>", true);
     
     
-    public static readonly FilterDefinition[] NumericFilters =
+    public static readonly FilterDescriptor[] NumericFilters =
     {
         IS_NULL,
         IS_NOT_NULL,
@@ -40,7 +43,7 @@ public class FilterDefinition : IEquatable<FilterDefinition>
         SEQUENCE,
     };
 
-    public static readonly FilterDefinition[] TextFilters =
+    public static readonly FilterDescriptor[] TextFilters =
     {
         IS_NULL,
         IS_NOT_NULL,
@@ -50,7 +53,7 @@ public class FilterDefinition : IEquatable<FilterDefinition>
         CONTAINS,
     };
     
-    public static readonly FilterDefinition[] EnumFilters =
+    public static readonly FilterDescriptor[] EnumFilters =
     {
         IS_NULL,
         IS_NOT_NULL,
@@ -59,13 +62,13 @@ public class FilterDefinition : IEquatable<FilterDefinition>
         SEQUENCE,
     };
     
-    public static readonly FilterDefinition[] ReferenceFilters =
+    public static readonly FilterDescriptor[] ReferenceFilters =
     {
         IS_NULL,
         IS_NOT_NULL,
     };
     
-    public static readonly FilterDefinition[] ArrayFilters =
+    public static readonly FilterDescriptor[] ArrayFilters =
     {
         IS_NULL,
         IS_NOT_NULL,
@@ -83,7 +86,7 @@ public class FilterDefinition : IEquatable<FilterDefinition>
     
     public bool? Arg2Required { get; }
 
-    public FilterDefinition(
+    public FilterDescriptor(
         FilterType type,
         string? arg1 = default,
         bool? arg1Required = default,
@@ -108,7 +111,7 @@ public class FilterDefinition : IEquatable<FilterDefinition>
         return $"[Filter {FilterType}, Argument1={Arg1}{arg1RequiredString}, Argument2={Arg2}{arg2RequiredString}]";
     }
 
-    public bool Equals(FilterDefinition? other)
+    public bool Equals(FilterDescriptor? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -124,7 +127,7 @@ public class FilterDefinition : IEquatable<FilterDefinition>
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         return obj.GetType() == GetType()
-               && Equals((FilterDefinition) obj);
+               && Equals((FilterDescriptor) obj);
     }
 
     public override int GetHashCode()

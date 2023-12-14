@@ -1,15 +1,16 @@
+using NUnit.Framework;
 using Saorsa.QueryEngine.Model;
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
 
-namespace Saorsa.QueryEngine.Tests.NpgSql.Users;
+namespace Saorsa.QueryEngine.Tests.EFCore.Common;
 
-public class UsersQueryTests
+
+public class QueryDbUserTests : TestBase
 {
     [Test]
     public void TestSimpleInsertDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -18,35 +19,35 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("N"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -56,7 +57,7 @@ public class UsersQueryTests
     public void TestSimpleInsertQueryDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -65,29 +66,29 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("N"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -101,7 +102,7 @@ public class UsersQueryTests
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(User.CategoryId),
+                Name = nameof(User.DepartmentId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Id }
             });
@@ -114,7 +115,7 @@ public class UsersQueryTests
         
         
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -124,7 +125,7 @@ public class UsersQueryTests
     public void TestQueryByNullableColumnForIsNull()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -133,29 +134,29 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("N"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -168,7 +169,7 @@ public class UsersQueryTests
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(User.CategoryId),
+                Name = nameof(User.DepartmentId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Id }
             });
@@ -181,7 +182,7 @@ public class UsersQueryTests
         
         
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -191,7 +192,7 @@ public class UsersQueryTests
     public void TestQueryByNullableColumnForIsNotNull()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -200,29 +201,29 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("N"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -235,7 +236,7 @@ public class UsersQueryTests
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(User.CategoryId),
+                Name = nameof(User.DepartmentId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Id }
             });
@@ -248,7 +249,7 @@ public class UsersQueryTests
         
         
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -258,7 +259,7 @@ public class UsersQueryTests
     public void TestSimpleInsertQueryEqualToNullDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -267,29 +268,29 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("D"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -303,7 +304,7 @@ public class UsersQueryTests
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(User.CategoryId),
+                Name = nameof(User.DepartmentId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Id }
             });
@@ -316,7 +317,7 @@ public class UsersQueryTests
         
         
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -326,7 +327,7 @@ public class UsersQueryTests
     public void TestSimpleInsertQueryNotEqualToNullDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
@@ -335,29 +336,29 @@ public class UsersQueryTests
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = Guid.NewGuid().ToString("D"),
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -371,7 +372,7 @@ public class UsersQueryTests
             })
             .Where(new PropertyFilter
             {
-                Name = nameof(User.CategoryId),
+                Name = nameof(User.DepartmentId),
                 FilterType = FilterType.EQ,
                 Arguments = new object[] { category.Id }
             });
@@ -383,7 +384,7 @@ public class UsersQueryTests
             Is.EqualTo(users.Count(u => u.ExternalId != null)));
 
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();
@@ -393,44 +394,45 @@ public class UsersQueryTests
     [Test]
     public void TestSimpleInsertQueryBlockDelete()
     {
-        var x = new QueryNpgsqlDbContext();
+        var x = GetQueryDbContext();
 
         var typeDef = QueryEngine.CompileType<User>();
         var properties = typeDef?.Properties;
 
         var key = Guid.NewGuid().ToString("N");
-        var category = new Category
+        var category = new Department
         {
             Name = $"Group-{key}"
         };
+        var externalId = Guid.NewGuid().ToString("D");
         var users = new User[]
         {
             new()
             {
                 Username = $"user1-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                ExternalId = 123456,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                ExternalId = externalId,
                 Age = 30,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user2-{key}",
-                Password = Guid.NewGuid().ToString("N"),
+                PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Category = category,
+                Department = category,
             },
             
             new()
             {
                 Username = $"user3-{key}",
-                Password = Guid.NewGuid().ToString("N"),
-                Category = category,
+                PasswordHash = Guid.NewGuid().ToString("N"),
+                Department = category,
             }
         };
 
-        var db = new QueryNpgsqlDbContext();
+        var db = GetQueryDbContext();
         db.Users.AddRange(users);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
@@ -440,11 +442,11 @@ public class UsersQueryTests
             {
                 First = new PropertyFilter()
                 {
-                    Name = nameof(User.CategoryId),
+                    Name = nameof(User.DepartmentId),
                     FilterType = FilterType.EQ,
                     Arguments = new object[] { category.Id }
                 },
-                Condition = BinaryOperator.And,
+                Condition = LogicalOperator.And,
                 Others = new []
                 {
                     new PropertyFilterBlock
@@ -453,9 +455,9 @@ public class UsersQueryTests
                         {
                             Name = nameof(User.ExternalId),
                             FilterType = FilterType.EQ,
-                            Arguments = new object[] { 123456 }
+                            Arguments = new object[] { externalId }
                         },
-                        Condition = BinaryOperator.Or,
+                        Condition = LogicalOperator.Or,
                         Others = new []
                         {
                             new PropertyFilterBlock
@@ -476,10 +478,10 @@ public class UsersQueryTests
         
         Assert.That(
             queryResults.Count,
-            Is.EqualTo(users.Count(u => u.ExternalId == 123456 || u.Age >= 32)));
+            Is.EqualTo(users.Count(u => u.ExternalId == externalId || u.Age >= 32)));
 
         db.Users.RemoveRange(users);
-        db.Categories.Remove(category);
+        db.Departments.Remove(category);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();

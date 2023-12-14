@@ -3,14 +3,15 @@ using Saorsa.QueryEngine.Annotations;
 namespace Saorsa.QueryEngine.Tests.EFCore.Entities;
 
 [QueryEngineCompile]
-public class Group : EntityBase
+public class Tag : TestEntityBase<string>
 {
-    public string Id { get; set; } = $"group-{Guid.NewGuid():N}";
-    
     // one to many
     public int? CategoryId { get; set; }
     public Category? Category { get; set; }
-    
-    // many-to-many
+
+    /// <summary>
+    /// Gets the collection of users assigned to this role.
+    /// Many-to-Many relationship.
+    /// </summary>
     public ICollection<User> Users { get; } = new List<User>();
 }

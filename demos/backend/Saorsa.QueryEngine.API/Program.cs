@@ -1,7 +1,19 @@
-using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Saorsa.QueryEngine;
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
+using Saorsa.QueryEngine.API.Controllers;
+using Saorsa.QueryEngine.Tests.EFCore.NpgSql;
+using Serilog;
+using Serilog.Events;
+
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
 
 QueryEngine.ScanQueryEngineTypes().ToList().ForEach(t =>
 {
@@ -10,8 +22,14 @@ QueryEngine.ScanQueryEngineTypes().ToList().ForEach(t =>
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<QueryNpgsqlDbContext>();
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console());
 
+builder.Services.AddDbContext<QueryNpgsqlDbContext>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(
@@ -25,15 +43,20 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
+    .ConfigureApplicationPartManager(p => 
+        p.FeatureProviders.Add(new GenericControllerFeatureProvider()))
+    .AddNewtonsoftJson(options =>
     {
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        options.SerializerSettings.Converters.Add(new StringEnumConverter());
+        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {

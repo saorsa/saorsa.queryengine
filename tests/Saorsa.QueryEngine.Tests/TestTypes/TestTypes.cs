@@ -54,7 +54,10 @@ public class TestDummyClass
 {
     [QueryEngineIgnore]
     public object? IgnoreValue { get; set; }
-        
+
+    [QueryEngineIgnore]
+    public TestDummyClass? NestedDummy { get; set; }
+
     public int IntValue { get; set; }
         
     public long? LongValue { get; set; }
@@ -67,7 +70,7 @@ public class TestDummyClass
         
     public TestEnum EnumValue { get; set; }
 
-    public int[] ArrayOfInts { get; set; } = Array.Empty<int>();
+    public int[] ArrayOfIntegers { get; set; } = Array.Empty<int>();
 
-    public IEnumerable<int>? EnumerableOfInts { get; set; }
+    public IEnumerable<int>? EnumerableOfIntegers { get; set; }
 }

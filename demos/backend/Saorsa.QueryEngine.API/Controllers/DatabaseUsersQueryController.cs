@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Saorsa.QueryEngine.Model;
 using Saorsa.QueryEngine.Tests.EFCore.Entities;
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
+using Saorsa.QueryEngine.Tests.EFCore.NpgSql;
 
 namespace Saorsa.QueryEngine.API.Controllers;
 
 [ApiController]
-[Route("database/users")]
+[Route("database-hardcoded/users")]
 public class DatabaseUsersQueryController : ControllerBase
 {
     public QueryNpgsqlDbContext Db { get; }

@@ -9,9 +9,9 @@ public static partial class QueryEngine
 {
     // https://blog.jeremylikness.com/blog/dynamically-build-linq-expressions/
 
-    public const int DefaultTypeDefinitionDepth = 2;
+    public const int DefaultTypeDefinitionDepth = 3;
 
-    public static TypeDefinition? BuildTypeDefinition<TEntity>(
+    public static QueryableTypeDescriptor? BuildTypeDefinition<TEntity>(
         int maxReferenceDepth = DefaultTypeDefinitionDepth,
         string? name = null,
         bool overrideIgnores = false)
@@ -19,7 +19,7 @@ public static partial class QueryEngine
         return BuildTypeDefinition(typeof(TEntity), maxReferenceDepth, name, overrideIgnores);
     }
 
-    public static TypeDefinition? BuildTypeDefinition(
+    public static QueryableTypeDescriptor? BuildTypeDefinition(
         Type type,
         int maxReferenceDepth = DefaultTypeDefinitionDepth,
         string? name = null,
@@ -39,7 +39,7 @@ public static partial class QueryEngine
         var isSimpleType = underlyingType.IsQueryEngineSimpleType();
         var isCompositeType = !isSimpleType;
         
-        var result = new TypeDefinition
+        var result = new QueryableTypeDescriptor
         {
             Name = name ?? underlyingType.Name,
             TypeName = underlyingType.Name,
@@ -107,11 +107,11 @@ public static partial class QueryEngine
             .Any();
     }
 
-    public static TypeDefinition GetPropertyDefinitionOrThrow<TEntity>(
-        TypeDefinition typeDef,
+    public static QueryableTypeDescriptor GetPropertyDefinitionOrThrow<TEntity>(
+        QueryableTypeDescriptor queryableTypeDef,
         PropertyFilter propertyFilter)
     {
-        var matchingTypeDef = typeDef.Properties?.FirstOrDefault(p =>
+        var matchingTypeDef = queryableTypeDef.Properties?.FirstOrDefault(p =>
             p.Name.Equals(propertyFilter.Name.ToCamelCase()));
         if (matchingTypeDef == null)
         {
@@ -120,7 +120,7 @@ public static partial class QueryEngine
                 $"Type {typeof(TEntity)} does not have a property named {propertyFilter.Name}.");
         }
 
-        var filterDef = matchingTypeDef.AllowedFilters.FirstOrDefault(f => f.FilterType == propertyFilter.FilterType);
+        var filterDef = matchingTypeDef.AllowedFilters.FirstOrDefault(f => f.OperatorType == propertyFilter.FilterType);
         if (filterDef == null)
         {
             throw new QueryEngineException(
@@ -198,54 +198,54 @@ public static partial class QueryEngine
 
         switch (propertyFilter.FilterType)
         {
-            case FilterType.IS_NULL:
+            case FilterOperatorType.IsNull:
             {
                 return ExpressionBuilder.PropertyIsNull<TEntity>(
                     propertyDef.Name);
             }
 
-            case FilterType.IS_NOT_NULL:
+            case FilterOperatorType.IsNotNull:
             {
                 return ExpressionBuilder.PropertyIsNotNull<TEntity>(
                     propertyDef.Name);
             }
 
-            case FilterType.EQ:
+            case FilterOperatorType.EqualTo:
             {
                 return ExpressionBuilder.PropertyEqualTo<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
             }
 
-            case FilterType.NOT_EQ:
+            case FilterOperatorType.NotEqualTo:
             {
                 return ExpressionBuilder.PropertyNotEqualTo<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
             }
 
-            case FilterType.LT:
+            case FilterOperatorType.LessThan:
             {
                 return ExpressionBuilder.PropertyLessThan<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
             }
 
-            case FilterType.LT_EQ:
+            case FilterOperatorType.LessThanOrEqual:
             {
                 return ExpressionBuilder.PropertyLessThanOrEqual<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
             }
 
-            case FilterType.GT:
+            case FilterOperatorType.GreaterThan:
             {
                 return ExpressionBuilder.PropertyGreaterThan<TEntity>(
                     propertyDef.Name,
                     propertyFilter.Arguments[0]);
             }
 
-            case FilterType.GT_EQ:
+            case FilterOperatorType.GreaterThanOrEqual:
             {
                 return ExpressionBuilder.PropertyGreaterThanOrEqual<TEntity>(
                     propertyDef.Name,
@@ -285,22 +285,22 @@ public static partial class QueryEngine
 
         return propertyFilter.FilterType switch
         {
-            FilterType.IS_NULL => ExpressionBuilder.PropertyIsNullExpression<TEntity>(propertyDef.Name, parameter),
-            FilterType.IS_NOT_NULL => ExpressionBuilder.PropertyIsNotNullExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.IsNull => ExpressionBuilder.PropertyIsNullExpression<TEntity>(propertyDef.Name, parameter),
+            FilterOperatorType.IsNotNull => ExpressionBuilder.PropertyIsNotNullExpression<TEntity>(propertyDef.Name,
                 parameter),
-            FilterType.EQ => ExpressionBuilder.PropertyEqualToExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.EqualTo => ExpressionBuilder.PropertyEqualToExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.NOT_EQ => ExpressionBuilder.PropertyNotEqualToExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.NotEqualTo => ExpressionBuilder.PropertyNotEqualToExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.LT => ExpressionBuilder.PropertyLessThanExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.LessThan => ExpressionBuilder.PropertyLessThanExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.LT_EQ => ExpressionBuilder.PropertyLessThanOrEqualExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.LessThanOrEqual => ExpressionBuilder.PropertyLessThanOrEqualExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.GT => ExpressionBuilder.PropertyGreaterThanExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.GreaterThan => ExpressionBuilder.PropertyGreaterThanExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.GT_EQ => ExpressionBuilder.PropertyGreaterThanOrEqualExpression<TEntity>(propertyDef.Name,
+            FilterOperatorType.GreaterThanOrEqual => ExpressionBuilder.PropertyGreaterThanOrEqualExpression<TEntity>(propertyDef.Name,
                 propertyFilter.Arguments[0], parameter),
-            FilterType.CONTAINS => ExpressionBuilder.BuildContainsExpression<TEntity>(
+            FilterOperatorType.StringContains => ExpressionBuilder.BuildContainsExpression<TEntity>(
                 propertyDef.Name,
                 propertyFilter.Arguments[0],
                 parameter),
@@ -319,12 +319,12 @@ public static partial class QueryEngine
         
         if (block.IsComposite)
         {
-            var condition = block.Condition ?? BinaryOperator.And;
+            var condition = block.Condition ?? LogicalOperator.And;
                 
             block.Others.ToList().ForEach(item =>
             {
                 var other = ToBinaryExpression<TEntity>(item, parameter);
-                var combined = condition == BinaryOperator.And
+                var combined = condition == LogicalOperator.And
                     ? Expression.And(result, other)
                     : Expression.Or(result, other);
                 result = combined;

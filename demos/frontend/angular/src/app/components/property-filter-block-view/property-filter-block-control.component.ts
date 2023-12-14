@@ -6,10 +6,10 @@ import {
   Output
 } from '@angular/core';
 import {
-  BinaryOperator,
-  FilterType, PropertyFilter,
+  LogicalOperator,
+  FilterOperatorType, PropertyFilter,
   PropertyFilterBlock,
-  TypeDefinition
+  QueryableTypeDescriptor
 } from "../../model/query-engine.model";
 import {
   ControlValueAccessor,
@@ -39,8 +39,8 @@ import {Subject} from "rxjs";
 })
 export class PropertyFilterBlockControlComponent implements OnInit, ControlValueAccessor {
 
-  @Input() typeDefinition?: TypeDefinition;
-  @Input() parentCondition?: BinaryOperator;
+  @Input() typeDefinition?: QueryableTypeDescriptor;
+  @Input() parentCondition?: LogicalOperator;
   @Input() initialValue?: PropertyFilterBlock;
   @Input() index = 0;
   @Input() depth = 0;
@@ -77,8 +77,8 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     return this.formGroup ?? this.internalFormGroup;
   }
 
-  get condition(): BinaryOperator {
-    return this.conditionControl.value as BinaryOperator;
+  get condition(): LogicalOperator {
+    return this.conditionControl.value as LogicalOperator;
   }
 
   get isRootBlock(): boolean {
@@ -162,7 +162,7 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.onChange(this.safeFormGroupInstance.value);
   }
 
-  readonly binaryOpsChoices: BinaryOperator[] = [ 'And', 'Or'];
+  readonly binaryOpsChoices: LogicalOperator[] = [ 'And', 'Or'];
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -228,9 +228,9 @@ export class PropertyFilterBlockControlComponent implements OnInit, ControlValue
     this.onChange(this.safeFormGroupInstance.value);
   }
 
-  protected buildFormGroupFromState(condition: BinaryOperator): FormGroup {
-    const filterType: FilterType =
-      'IS_NOT_NULL';
+  protected buildFormGroupFromState(condition: LogicalOperator): FormGroup {
+    const filterType: FilterOperatorType =
+      'IsNotNull';
 
     const firstProperty =
       this.typeDefinition?.properties != null && this.typeDefinition.properties.length > 0

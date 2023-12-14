@@ -1,5 +1,9 @@
 namespace Saorsa.QueryEngine;
 
+
+/// <summary>
+/// Container for error codes in the Query Engine business domain.
+/// </summary>
 public static class ErrorCodes
 {
     /// <summary>

@@ -1,10 +1,11 @@
+using System.Diagnostics;
 using NUnit.Framework;
 using Saorsa.QueryEngine.Model;
 
 namespace Saorsa.QueryEngine.Tests.EFCore.Common;
 
 
-public class QueryDbUserTests : TestBase
+public class QueryDbUserTests : EFCoreTestBase
 {
     [Test]
     public void TestSimpleInsertDelete()
@@ -12,7 +13,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -59,7 +60,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -97,13 +98,13 @@ public class QueryDbUserTests : TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(User.Age),
-                FilterType = FilterType.LT,
+                FilterType = FilterOperatorType.LessThan,
                 Arguments = new object[] { 40 }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(User.DepartmentId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { category.Id }
             });
         
@@ -127,7 +128,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -165,12 +166,12 @@ public class QueryDbUserTests : TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
-                FilterType = FilterType.IS_NULL,
+                FilterType = FilterOperatorType.IsNull,
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(User.DepartmentId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { category.Id }
             });
         
@@ -194,7 +195,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -232,12 +233,12 @@ public class QueryDbUserTests : TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
-                FilterType = FilterType.IS_NOT_NULL,
+                FilterType = FilterOperatorType.IsNotNull,
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(User.DepartmentId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { category.Id }
             });
         
@@ -261,7 +262,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -299,13 +300,13 @@ public class QueryDbUserTests : TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { null! }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(User.DepartmentId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { category.Id }
             });
         
@@ -329,7 +330,7 @@ public class QueryDbUserTests : TestBase
         var key = Guid.NewGuid().ToString("N");
         var category = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var users = new User[]
         {
@@ -367,13 +368,13 @@ public class QueryDbUserTests : TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(User.ExternalId),
-                FilterType = FilterType.NOT_EQ,
+                FilterType = FilterOperatorType.NotEqualTo,
                 Arguments = new object[] { null! }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(User.DepartmentId),
-                FilterType = FilterType.EQ,
+                FilterType = FilterOperatorType.EqualTo,
                 Arguments = new object[] { category.Id }
             });
         
@@ -400,9 +401,9 @@ public class QueryDbUserTests : TestBase
         var properties = typeDef?.Properties;
 
         var key = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         var externalId = Guid.NewGuid().ToString("D");
         var users = new User[]
@@ -413,7 +414,7 @@ public class QueryDbUserTests : TestBase
                 PasswordHash = Guid.NewGuid().ToString("N"),
                 ExternalId = externalId,
                 Age = 30,
-                Department = category,
+                Department = department,
             },
             
             new()
@@ -421,14 +422,14 @@ public class QueryDbUserTests : TestBase
                 Username = $"user2-{key}",
                 PasswordHash = Guid.NewGuid().ToString("N"),
                 Age = 32,
-                Department = category,
+                Department = department,
             },
             
             new()
             {
                 Username = $"user3-{key}",
                 PasswordHash = Guid.NewGuid().ToString("N"),
-                Department = category,
+                Department = department,
             }
         };
 
@@ -443,8 +444,8 @@ public class QueryDbUserTests : TestBase
                 First = new PropertyFilter()
                 {
                     Name = nameof(User.DepartmentId),
-                    FilterType = FilterType.EQ,
-                    Arguments = new object[] { category.Id }
+                    FilterType = FilterOperatorType.EqualTo,
+                    Arguments = new object[] { department.Id }
                 },
                 Condition = LogicalOperator.And,
                 Others = new []
@@ -454,7 +455,7 @@ public class QueryDbUserTests : TestBase
                         First = new PropertyFilter
                         {
                             Name = nameof(User.ExternalId),
-                            FilterType = FilterType.EQ,
+                            FilterType = FilterOperatorType.EqualTo,
                             Arguments = new object[] { externalId }
                         },
                         Condition = LogicalOperator.Or,
@@ -465,7 +466,7 @@ public class QueryDbUserTests : TestBase
                                 First = new PropertyFilter
                                 {
                                     Name = nameof(User.Age),
-                                    FilterType = FilterType.GT_EQ,
+                                    FilterType = FilterOperatorType.GreaterThanOrEqual,
                                     Arguments = new object[] { 32 }
                                 }
                             }
@@ -480,8 +481,21 @@ public class QueryDbUserTests : TestBase
             queryResults.Count,
             Is.EqualTo(users.Count(u => u.ExternalId == externalId || u.Age >= 32)));
 
+        query = db.Users
+            .Where(new PropertyFilterBlock
+            {
+                First = new PropertyFilter()
+                {
+                    Name = $"{nameof(User.Department)}.{nameof(Department.Name)}",
+                    FilterType = FilterOperatorType.EqualTo,
+                    Arguments = new object[] { department.Name }
+                }
+            });
+
+        var r = query.ToList();
+        
         db.Users.RemoveRange(users);
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(users.Length + 1));
         db.Dispose();

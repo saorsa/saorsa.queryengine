@@ -2,15 +2,10 @@ namespace Saorsa.QueryEngine.Tests.EFCore;
 
 
 /// <summary>
-/// Base class for a tests.
+/// Base class for a tests with support for QueryDbContext.
 /// </summary>
-public class EFCoreTestBase
+public abstract class EFCoreTestBase : TestBase
 {
-    /// <summary>
-    /// Unique ID of the test run, generated once during bootstrap.
-    /// </summary>
-    protected string TestRun = $"{nameof(Bootstrapper)}-TestRun-{Guid.NewGuid():N}";
-
     /// <summary>
     /// Utility function, gets an instance of the underlying QueryDbContext.
     /// </summary>

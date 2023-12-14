@@ -2,8 +2,8 @@ import {
   Injectable
 } from '@angular/core';
 import {
-  FilterDefinition,
-  FilterType,
+  FilterDescriptor,
+  FilterOperatorType,
   PropertyType,
   PropertyTypeStringMap
 } from "../model/query-engine.model";
@@ -40,29 +40,29 @@ export class QueryEngineTypeSystemService {
     timeSpan: 'text'
   }
 
-  readonly SINGLE_ARGUMENT_FILTER_TYPES: FilterType[] = [
-    'EQ',
-    'NOT_EQ',
-    'LT',
-    'LT_EQ',
-    'GT',
-    'GT_EQ',
-    'CONTAINS',
+  readonly SINGLE_ARGUMENT_FILTER_TYPES: FilterOperatorType[] = [
+    'EqualTo',
+    'NotEqualTo',
+    'LessThan',
+    'LessThanOrEqual',
+    'GreaterThan',
+    'GreaterThanOrEqual',
+    'StringContains',
   ];
 
-  readonly TWO_ARGUMENT_FILTER_TYPES: FilterType[] = [
-    'RANGE',
+  readonly TWO_ARGUMENT_FILTER_TYPES: FilterOperatorType[] = [
+    'ValueInRange',
   ];
 
-  readonly DYNAMIC_ARGUMENT_FILTER_TYPES: FilterType[] = [
-    'SEQUENCE',
+  readonly DYNAMIC_ARGUMENT_FILTER_TYPES: FilterOperatorType[] = [
+    'ValueInSequence',
   ];
 
-  readonly NO_ARGUMENT_FILTER_TYPES: FilterType[] = [
-    'IS_NULL',
-    'IS_NOT_NULL',
-    'IS_EMPTY',
-    'IS_NOT_EMPTY'
+  readonly NO_ARGUMENT_FILTER_TYPES: FilterOperatorType[] = [
+    'IsNull',
+    'IsNotNull',
+    'CollectionIsEmpty',
+    'CollectionIsNotEmpty'
   ];
 
   constructor() { }
@@ -72,49 +72,53 @@ export class QueryEngineTypeSystemService {
     return result ?? 'unknown';
   }
 
-  public expectsDynamicArguments(filter: FilterDefinition | FilterType): boolean {
+  public expectsDynamicArguments(filter: FilterDescriptor | FilterOperatorType): boolean {
     const isFilterType = this.isFilterType(filter);
     if (isFilterType) {
-      return this.DYNAMIC_ARGUMENT_FILTER_TYPES.includes(filter as FilterType);
+      return this.DYNAMIC_ARGUMENT_FILTER_TYPES.includes(filter as FilterOperatorType);
     }
-    return this.expectsDynamicArguments((filter as FilterDefinition).filterType);
+    return this.expectsDynamicArguments((filter as FilterDescriptor).operatorType);
   }
 
-  public expectsTwoArguments(filter: FilterDefinition | FilterType): boolean {
+  public expectsTwoArguments(filter: FilterDescriptor | FilterOperatorType): boolean {
     const isFilterType = this.isFilterType(filter);
     if (isFilterType) {
-      return this.TWO_ARGUMENT_FILTER_TYPES.includes(filter as FilterType);
+      return this.TWO_ARGUMENT_FILTER_TYPES.includes(filter as FilterOperatorType);
     }
-    return this.expectsTwoArguments((filter as FilterDefinition).filterType);
+    return this.expectsTwoArguments((filter as FilterDescriptor).operatorType);
   }
 
-  public expectsSingleArgument(filter: FilterDefinition | FilterType): boolean {
+  public expectsSingleArgument(filter: FilterDescriptor | FilterOperatorType): boolean {
     const isFilterType = this.isFilterType(filter);
     if (isFilterType) {
-      return this.SINGLE_ARGUMENT_FILTER_TYPES.includes(filter as FilterType);
+      return this.SINGLE_ARGUMENT_FILTER_TYPES.includes(filter as FilterOperatorType);
     }
-    return this.expectsSingleArgument((filter as FilterDefinition).filterType);
+    return this.expectsSingleArgument((filter as FilterDescriptor).operatorType);
   }
 
-  public expectsNoArguments(filter: FilterDefinition | FilterType): boolean {
+  public expectsNoArguments(filter: FilterDescriptor | FilterOperatorType): boolean {
     const isFilterType = this.isFilterType(filter);
     if (isFilterType) {
-      return this.NO_ARGUMENT_FILTER_TYPES.includes(filter as FilterType);
+      return this.NO_ARGUMENT_FILTER_TYPES.includes(filter as FilterOperatorType);
     }
-    return this.expectsNoArguments((filter as FilterDefinition).filterType);
+    return this.expectsNoArguments((filter as FilterDescriptor).operatorType);
   }
 
-  public argumentsMinCount(filter: FilterDefinition | FilterType): number {
+  public argumentsMinCount(filter: FilterDescriptor | FilterOperatorType): number {
+    console.warn('------', filter)
     if (this.expectsTwoArguments(filter)) {
+      console.warn('ATANAS argumentsMinCount 2', filter)
       return 2;
     }
     if (this.expectsSingleArgument(filter)) {
+      console.warn('ATANAS argumentsMinCount 1', filter)
       return 1;
     }
+    console.warn('ATANAS argumentsMinCount 0', filter)
     return 0;
   }
 
-  public argumentsMaxCount(filter: FilterDefinition | FilterType): number | null {
+  public argumentsMaxCount(filter: FilterDescriptor | FilterOperatorType): number | null {
     if (this.expectsTwoArguments(filter)) {
       return 2;
     }
@@ -127,7 +131,7 @@ export class QueryEngineTypeSystemService {
     return null;
   }
 
-  public isFilterType(filter: FilterDefinition | FilterType): boolean {
-    return !filter.hasOwnProperty('filterType');
+  public isFilterType(filter: FilterDescriptor | FilterOperatorType): boolean {
+    return !filter.hasOwnProperty('operatorType');
   }
 }

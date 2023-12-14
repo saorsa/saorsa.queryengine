@@ -63,29 +63,29 @@ public static partial class QueryEngine
         { typeof(TimeOnly), AtomicTypeStringKeys.Time },
     };
     
-    public static readonly Dictionary<Type, FilterDefinition[]> AtomicTypesFiltersMap = new()
+    public static readonly Dictionary<Type, FilterDescriptor[]> AtomicTypesFiltersMap = new()
     {
-        { typeof(char), FilterDefinition.NumericFilters },
-        { typeof(string), FilterDefinition.TextFilters  },
-        { typeof(bool), FilterDefinition.NumericFilters  },
-        { typeof(byte), FilterDefinition.NumericFilters  },
-        { typeof(sbyte), FilterDefinition.NumericFilters  },
-        { typeof(short), FilterDefinition.NumericFilters  },
-        { typeof(int), FilterDefinition.NumericFilters  },
-        { typeof(long), FilterDefinition.NumericFilters  }, 
-        { typeof(ushort), FilterDefinition.NumericFilters  },
-        { typeof(uint), FilterDefinition.NumericFilters  },
-        { typeof(ulong), FilterDefinition.NumericFilters  },
-        { typeof(float), FilterDefinition.NumericFilters  },
-        { typeof(double), FilterDefinition.NumericFilters  },
+        { typeof(char), FilterDescriptor.NumericFilters },
+        { typeof(string), FilterDescriptor.TextFilters  },
+        { typeof(bool), FilterDescriptor.NumericFilters  },
+        { typeof(byte), FilterDescriptor.NumericFilters  },
+        { typeof(sbyte), FilterDescriptor.NumericFilters  },
+        { typeof(short), FilterDescriptor.NumericFilters  },
+        { typeof(int), FilterDescriptor.NumericFilters  },
+        { typeof(long), FilterDescriptor.NumericFilters  }, 
+        { typeof(ushort), FilterDescriptor.NumericFilters  },
+        { typeof(uint), FilterDescriptor.NumericFilters  },
+        { typeof(ulong), FilterDescriptor.NumericFilters  },
+        { typeof(float), FilterDescriptor.NumericFilters  },
+        { typeof(double), FilterDescriptor.NumericFilters  },
         
-        { typeof(decimal), FilterDefinition.NumericFilters  },
-        { typeof(Guid), FilterDefinition.NumericFilters  },
-        { typeof(DateOnly), FilterDefinition.NumericFilters  },
-        { typeof(DateTime), FilterDefinition.NumericFilters  },
-        { typeof(DateTimeOffset), FilterDefinition.NumericFilters  },
-        { typeof(TimeSpan), FilterDefinition.NumericFilters  },
-        { typeof(TimeOnly), FilterDefinition.NumericFilters  },
+        { typeof(decimal), FilterDescriptor.NumericFilters  },
+        { typeof(Guid), FilterDescriptor.NumericFilters  },
+        { typeof(DateOnly), FilterDescriptor.NumericFilters  },
+        { typeof(DateTime), FilterDescriptor.NumericFilters  },
+        { typeof(DateTimeOffset), FilterDescriptor.NumericFilters  },
+        { typeof(TimeSpan), FilterDescriptor.NumericFilters  },
+        { typeof(TimeOnly), FilterDescriptor.NumericFilters  },
     };
     
     public static readonly IEnumerable<Type> AtomicTypes = AtomicTypesStringMap.Keys;
@@ -112,7 +112,7 @@ public static partial class QueryEngine
             : SpecialTypeStringKeys.Object;
     }
 
-    public static FilterDefinition[] GetFilterDefinitions(Type type)
+    public static FilterDescriptor[] GetFilterDefinitions(Type type)
     {
         if (IsAtomicType(type))
         {
@@ -121,12 +121,12 @@ public static partial class QueryEngine
 
         if (type.IsEnum)
         {
-            return FilterDefinition.EnumFilters;
+            return FilterDescriptor.EnumFilters;
         }
 
         return type.IsSingleElementTypeEnumeration()
-            ? FilterDefinition.ArrayFilters
-            : FilterDefinition.ReferenceFilters;
+            ? FilterDescriptor.ArrayFilters
+            : FilterDescriptor.ReferenceFilters;
     }
     
     public static TAtom? ConvertToAtom<TAtom>(object? source)
@@ -166,7 +166,12 @@ public static partial class QueryEngine
         }
 
         var underlyingType = targetType.GetUnderlyingTypeIfNullable();
-        
+
+        if (underlyingType.IsEnum)
+        {
+            var sourceString = source as string ?? Convert.ToString(source);
+            return (int)Enum.Parse(underlyingType, sourceString!);
+        }
         if (underlyingType == typeof(char))
         {
             return source is char v ? v : Convert.ToChar(source);
@@ -250,7 +255,7 @@ public static partial class QueryEngine
         
         throw new QueryEngineException(
             ErrorCodes.TypeConversionError,
-            $"Value '{source.ToString()}' cannot be represented as '{targetType.Name}'");
+            $"Value '{source}' cannot be represented as '{targetType.Name}/{underlyingType.Name}'");
     }
 
     public static TAtom? ConvertToAtom<TAtom>(JsonElement jsonRef)

@@ -1,18 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>11</LangVersion>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.14" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\Saorsa.QueryEngine\Saorsa.QueryEngine.csproj" />
-      <ProjectReference Include="..\..\..\tests\Saorsa.QueryEngine.Tests.NpgSql\Saorsa.QueryEngine.Tests.NpgSql.csproj" />
+      <ProjectReference Include="..\..\..\tests\Saorsa.QueryEngine.Tests.EFCore.NpgSql\Saorsa.QueryEngine.Tests.EFCore.NpgSql.csproj" />
     </ItemGroup>
 
 </Project>

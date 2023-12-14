@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Saorsa.QueryEngine.Model;
 using Saorsa.QueryEngine.Tests.EFCore.Entities;
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
+using Saorsa.QueryEngine.Tests.EFCore.NpgSql;
 
 namespace Saorsa.QueryEngine.API.Controllers;
 
 [ApiController]
-[Route("database/categories")]
+[Route("database-hardcoded/categories")]
 public class DatabaseCategoriesQueryController: ControllerBase
 {
     public QueryNpgsqlDbContext Db { get; }
@@ -19,7 +19,7 @@ public class DatabaseCategoriesQueryController: ControllerBase
     [HttpPost("query")]
     public ActionResult<ResultUsers> Query([FromBody]QueryEnginePageRequest<int> pageRequest)
     {
-        var result = Db.Categories.DynamicSearch<QueryEnginePageRequest<int>, int, Category>(pageRequest);
+        var result = Db.Departments.DynamicSearch<QueryEnginePageRequest<int>, int, Department>(pageRequest);
 
         return Ok(result);
     }

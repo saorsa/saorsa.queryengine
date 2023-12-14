@@ -15,7 +15,7 @@ public class QueryEngineIgnoreSystemTests
             
             Assert.That(typeDef, Is.Null,
                 $"Type '{type}' is marked with '{nameof(QueryEngineIgnoreAttribute)}'. " +
-                $"Expected return from '{nameof(QueryEngine.BuildTypeDefinition)}' is null for" +
+                $"Expected return from '{nameof(QueryEngine.BuildTypeDefinition)}' is null for " +
                 "ignored types, unless 'overrideIgnores = true' is used.");
         });
     }
@@ -34,7 +34,7 @@ public class QueryEngineIgnoreSystemTests
             
                 Assert.That(typeDef, Is.Not.Null,
                     $"Type '{type}' is marked with '{nameof(QueryEngineIgnoreAttribute)}'. " +
-                    $"Expected return from '{nameof(QueryEngine.BuildTypeDefinition)}' is non-null for" +
+                    $"Expected return from '{nameof(QueryEngine.BuildTypeDefinition)}' is non-null for " +
                     $"ignored types when 'overrideIgnores: true' is used.");
             });
     }

@@ -8,8 +8,8 @@ import {
   SimpleChanges
 } from '@angular/core';
 import {
-  FilterDefinition,
-  TypeDefinition
+  FilterDescriptor,
+  QueryableTypeDescriptor
 } from "../../model/query-engine.model";
 import {
   AbstractControl,
@@ -37,9 +37,9 @@ import { FormsHelperService } from "../../services/forms-helper.service";
 })
 export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges, ControlValueAccessor {
 
-  @Input() type?: TypeDefinition | null;
-  @Input() property?: TypeDefinition | null;
-  @Input() filterDefinition?: FilterDefinition | null;
+  @Input() type?: QueryableTypeDescriptor | null;
+  @Input() property?: QueryableTypeDescriptor | null;
+  @Input() filterDefinition?: FilterDescriptor | null;
   @Input() formGroup?: FormGroup;
   @Output() onChanges = new EventEmitter<any>();
   @Output() onValueChange = new EventEmitter<any[]>();
@@ -132,10 +132,10 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
 
   getLabelText(index: number): string {
     let brief = 'Filter Value';
-    if (this.filterDefinition?.filterType === 'RANGE') {
+    if (this.filterDefinition?.operatorType === 'ValueInRange') {
       brief = index == 0 ? 'Min Value' : 'Max Value';
     }
-    if (this.filterDefinition?.filterType === 'SEQUENCE') {
+    if (this.filterDefinition?.operatorType === 'ValueInSequence') {
       brief = `Argument [${index}]`;
     }
     return `${brief} (${this.argumentPropertyType})`;
@@ -182,6 +182,7 @@ export class PropertyArgumentArrayControlComponent implements OnInit, OnChanges,
   }
 
   inputValueChange(_: any): void {
+    console.info('xxxxx ', this.argumentsFormArray.value)
     this.onChange(this.argumentsFormArray.value);
   }
 

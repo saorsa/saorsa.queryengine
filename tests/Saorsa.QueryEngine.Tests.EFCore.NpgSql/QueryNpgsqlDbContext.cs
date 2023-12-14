@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Saorsa.QueryEngine.Tests.EFCore;
 
-namespace Saorsa.QueryEngine.Tests.NpgSql;
+namespace Saorsa.QueryEngine.Tests.EFCore.NpgSql;
 
 
 /// <summary>
@@ -23,7 +22,7 @@ public class QueryNpgsqlDbContext : QueryDbContext
     /// Initializes a new instance of the DbContext class.
     /// </summary>
     /// <param name="logger">Logger instance for the context. Defaults to Serilog console logger if not set.</param>
-    public QueryNpgsqlDbContext(Microsoft.Extensions.Logging.ILogger? logger = null) : base(logger)
+    public QueryNpgsqlDbContext(ILogger? logger = null) : base(logger)
     {
     }
 

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { ApiService } from "./api.service";
 import { Observable } from "rxjs";
 import {
-  ApiTypeDefinitionSingleResult,
-  ApiTypeDefinitionsResult
+  ApiQueryableTypeSingleResult,
+  ApiQueryableTypeListResult
 } from "../model/api.model";
 
 
@@ -12,11 +12,11 @@ import {
 })
 export class MetaService extends ApiService {
 
-  public getCachedTypeDefinitions(): Observable<ApiTypeDefinitionsResult> {
-    return this.get<ApiTypeDefinitionsResult>('meta/cached');
+  public getCachedTypeDefinitions(): Observable<ApiQueryableTypeListResult> {
+    return this.get<ApiQueryableTypeListResult>('meta/cached');
   }
 
-  public getCachedTypeDefinition(typeName: string): Observable<ApiTypeDefinitionSingleResult> {
-    return this.get<ApiTypeDefinitionSingleResult>(`meta/cached/${typeName}`);
+  public getCachedTypeDefinition(typeName: string): Observable<ApiQueryableTypeSingleResult> {
+    return this.get<ApiQueryableTypeSingleResult>(`meta/cached/${typeName}`);
   }
 }

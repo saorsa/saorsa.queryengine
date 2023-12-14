@@ -1,3 +1,4 @@
+using System.Collections;
 using Saorsa.QueryEngine.Model;
 
 namespace Saorsa.QueryEngine;
@@ -24,7 +25,7 @@ public static class TypeExtensions
         return QueryEngine.GetStringRepresentation(type);
     }
 
-    public static FilterDefinition[] GetQueryEngineFilterDefinitions(this Type type)
+    public static FilterDescriptor[] GetQueryEngineFilterDefinitions(this Type type)
     {
         return QueryEngine.GetFilterDefinitions(type);
     }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Saorsa.QueryEngine.Tests.EFCore.Entities;
-using Saorsa.QueryEngine.Tests.NpgSql.Data;
+using Saorsa.QueryEngine.Tests.EFCore.NpgSql;
 
 namespace Saorsa.QueryEngine.API.Controllers;
 
@@ -111,35 +111,45 @@ public class DatabaseController : ControllerBase
                 {
                     Categories = new[]
                     {
-                        new { rootCategory.Name, rootCategory.Id, rootCategory.ParentCategoryId, 
+                        new { rootCategory.Name, rootCategory.Id,
+                            ParentCategoryId = rootCategory.ParentDepartmentId, 
                             FillType = CategoryStates[rootCategory.Id] },
-                        new { groupsRootCategory.Name, groupsRootCategory.Id, groupsRootCategory.ParentCategoryId,
+                        new { groupsRootCategory.Name, groupsRootCategory.Id,
+                            ParentCategoryId = groupsRootCategory.ParentDepartmentId,
                             FillType = CategoryStates[groupsRootCategory.Id] },
-                        new { devGroupCategory.Name, devGroupCategory.Id, devGroupCategory.ParentCategoryId,
+                        new { devGroupCategory.Name, devGroupCategory.Id,
+                            ParentCategoryId = devGroupCategory.ParentDepartmentId,
                             FillType = CategoryStates[devGroupCategory.Id] },
-                        new { qaGroupCategory.Name, qaGroupCategory.Id, qaGroupCategory.ParentCategoryId,
+                        new { qaGroupCategory.Name, qaGroupCategory.Id,
+                            ParentCategoryId = qaGroupCategory.ParentDepartmentId,
                             FillType = CategoryStates[qaGroupCategory.Id] },
-                        new { usersRootCategory.Name, usersRootCategory.Id, usersRootCategory.ParentCategoryId,
+                        new { usersRootCategory.Name, usersRootCategory.Id,
+                            ParentCategoryId = usersRootCategory.ParentDepartmentId,
                             FillType = CategoryStates[usersRootCategory.Id] },
-                        new { adminUsersCategory.Name, adminUsersCategory.Id, adminUsersCategory.ParentCategoryId,
+                        new { adminUsersCategory.Name, adminUsersCategory.Id,
+                            ParentCategoryId = adminUsersCategory.ParentDepartmentId,
                             FillType = CategoryStates[adminUsersCategory.Id] },
-                        new { guestUsersCategory.Name, guestUsersCategory.Id, guestUsersCategory.ParentCategoryId,
+                        new { guestUsersCategory.Name, guestUsersCategory.Id,
+                            ParentCategoryId = guestUsersCategory.ParentDepartmentId,
                             FillType = CategoryStates[guestUsersCategory.Id] },
                     },
                     Groups = new []
                     {
-                        new { organisationGroup.Id, organisationGroup.CategoryId,
+                        new { organisationGroup.Id,
+                            CategoryId = organisationGroup.OwnerDepartmentId,
                             FillType = GroupStates[organisationGroup.Id] },
-                        new { adminUsersGroup.Id, adminUsersGroup.CategoryId,
+                        new { adminUsersGroup.Id,
+                            CategoryId = adminUsersGroup.OwnerDepartmentId,
                             FillType = GroupStates[adminUsersGroup.Id] },
-                        new { guestUsersGroup.Id, guestUsersGroup.CategoryId,
+                        new { guestUsersGroup.Id,
+                            CategoryId = guestUsersGroup.OwnerDepartmentId,
                             FillType = GroupStates[guestUsersGroup.Id] }
                     },
                     Users = new []
                     {
-                        new { rootUser.Id, rootUser.Username, rootUser.Gender, rootUser.ExternalId, 
-                            rootUser.CategoryId, rootUser.LatestLogonType,
-                            Groups = rootUser.Groups.Select(g => g.Id),
+                        new { rootUser.Id, rootUser.Username, rootUser.Gender, rootUser.ExternalId,
+                            CategoryId = rootUser.DepartmentId, rootUser.LatestLogonType,
+                            Groups = rootUser.Tags.Select(g => g.Id),
                             FillType = UserStates[rootUser.Username]
                         }
                     }
@@ -158,38 +168,38 @@ public class DatabaseController : ControllerBase
         }
     }
 
-    protected Category EnsureCategory(string categoryName, int? parentCategoryId = null)
+    protected Department EnsureCategory(string categoryName, int? parentCategoryId = null)
     {
         if (parentCategoryId != null)
         {
-            var parent = Db.Categories.FirstOrDefault(c => c.Id == parentCategoryId.Value);
+            var parent = Db.Departments.FirstOrDefault(c => c.Id == parentCategoryId.Value);
             if (parent == null)
             {
                 throw new ArgumentException($"Category {parentCategoryId} could not be resolved.");
             }
         }
 
-        var existing = Db.Categories
+        var existing = Db.Departments
             .FirstOrDefault(c => c.Name.Equals(categoryName) && (
-                parentCategoryId.HasValue ? c.ParentCategoryId == parentCategoryId : c.ParentCategoryId == null
+                parentCategoryId.HasValue ? c.ParentDepartmentId == parentCategoryId : c.ParentDepartmentId == null
             ));
 
         if (existing == null)
         {
-            existing = new Category
+            existing = new Department
             {
                 Name = categoryName,
-                ParentCategoryId = parentCategoryId,
+                ParentDepartmentId = parentCategoryId,
             };
 
-            Db.Categories.Add(existing);
+            Db.Departments.Add(existing);
             Db.SaveChanges();
             CategoryStates.Add(existing.Id, DataFillType.Insert);
         }
-        else if (existing.ParentCategoryId != parentCategoryId)
+        else if (existing.ParentDepartmentId != parentCategoryId)
         {
-            existing.ParentCategoryId = parentCategoryId;
-            Db.Categories.Update(existing);
+            existing.ParentDepartmentId = parentCategoryId;
+            Db.Departments.Update(existing);
             Db.SaveChanges();
             CategoryStates.Add(existing.Id, DataFillType.Update);
         }
@@ -201,34 +211,34 @@ public class DatabaseController : ControllerBase
         return existing;
     }
 
-    protected Group EnsureGroup(string identifier, int? categoryId = null)
+    protected Tag EnsureGroup(string identifier, int? categoryId = null)
     {
         if (categoryId != null)
         {
-            var parent = Db.Categories.FirstOrDefault(c => c.Id == categoryId.Value);
+            var parent = Db.Departments.FirstOrDefault(c => c.Id == categoryId.Value);
             if (parent == null)
             {
                 throw new ArgumentException($"Category {categoryId} could not be resolved.");
             }
         }
 
-        var existingGroup = Db.Groups.FirstOrDefault(g => g.Id == identifier);
+        var existingGroup = Db.Tags.FirstOrDefault(g => g.Id == identifier);
 
         if (existingGroup == null)
         {
-            existingGroup = new Group()
+            existingGroup = new Tag()
             {
                 Id = identifier,
-                CategoryId = categoryId,
+                OwnerDepartmentId = categoryId,
             };
-            Db.Groups.Add(existingGroup);
+            Db.Tags.Add(existingGroup);
             Db.SaveChanges();
             GroupStates.Add(existingGroup.Id, DataFillType.Insert);
         }
-        else if (existingGroup.CategoryId != categoryId)
+        else if (existingGroup.OwnerDepartmentId != categoryId)
         {   
-            existingGroup.CategoryId = categoryId;
-            Db.Groups.Update(existingGroup);
+            existingGroup.OwnerDepartmentId = categoryId;
+            Db.Tags.Update(existingGroup);
             Db.SaveChanges();
             GroupStates.Add(existingGroup.Id, DataFillType.Update);
         }
@@ -244,19 +254,19 @@ public class DatabaseController : ControllerBase
     {
         if (categoryId != null)
         {
-            var parent = Db.Categories.FirstOrDefault(c => c.Id == categoryId.Value);
+            var parent = Db.Departments.FirstOrDefault(c => c.Id == categoryId.Value);
             if (parent == null)
             {
                 throw new ArgumentException($"Category {categoryId} could not be resolved.");
             }
         }
 
-        var parentGroups = new List<Group>();
+        var parentGroups = new List<Tag>();
         var parentGroupIds = new List<string>();
         
         if (groupIds != null)
         {
-            parentGroups = Db.Groups.Where(g => groupIds.Contains(g.Id)).ToList();
+            parentGroups = Db.Tags.Where(g => groupIds.Contains(g.Id)).ToList();
             parentGroupIds = parentGroups.Select(g => g.Id).ToList();
 
             if (parentGroupIds.Count != groupIds.Length)
@@ -269,7 +279,7 @@ public class DatabaseController : ControllerBase
         
 
         var existingUser = Db.Users
-            .Include(u => u.Groups)
+            .Include(u => u.Tags)
             .FirstOrDefault(u => u.Username == username);
 
         if (existingUser == null)
@@ -277,28 +287,28 @@ public class DatabaseController : ControllerBase
             existingUser = new User()
             {
                 Username = username,
-                CategoryId = categoryId,
+                DepartmentId = categoryId,
             };
             parentGroups.ForEach(g =>
             {
-                existingUser.Groups.Add(g);
+                existingUser.Tags.Add(g);
             });
             Db.Users.Add(existingUser);
             Db.SaveChanges();
             UserStates.Add(existingUser.Username, DataFillType.Insert);
         }
-        else if (existingUser.CategoryId != categoryId
-                 || !existingUser.Groups.All(g => parentGroupIds.Contains(g.Id))
-                 || !parentGroupIds.All(g => existingUser.Groups.Select(eug => eug.Id).Contains(g)))
+        else if (existingUser.DepartmentId != categoryId
+                 || !existingUser.Tags.All(g => parentGroupIds.Contains(g.Id))
+                 || !parentGroupIds.All(g => existingUser.Tags.Select(eug => eug.Id).Contains(g)))
         {   
-            existingUser.CategoryId = categoryId;
+            existingUser.DepartmentId = categoryId;
             
-            existingUser.Groups.Clear();
+            existingUser.Tags.Clear();
             parentGroups.ForEach(g =>
             {
-                if (existingUser.Groups.All(existingGroup => g.Id != existingGroup.Id))
+                if (existingUser.Tags.All(existingGroup => g.Id != existingGroup.Id))
                 {
-                    existingUser.Groups.Add(g);
+                    existingUser.Tags.Add(g);
                 }
             });
             

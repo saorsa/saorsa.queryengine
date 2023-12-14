@@ -4,23 +4,23 @@ using Saorsa.QueryEngine.Model;
 namespace Saorsa.QueryEngine.Tests.EFCore.Common;
 
 
-public class QueryDbDepartmentTests: TestBase
+public class QueryDbDepartmentTests: EFCoreTestBase
 {
     [Test]
     public void TestSimpleInsertDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -30,13 +30,13 @@ public class QueryDbDepartmentTests: TestBase
     public void TestSimpleInsertEqualsQueryDelete()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
@@ -44,8 +44,8 @@ public class QueryDbDepartmentTests: TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.Name),
-                FilterType = FilterType.EQ,
-                Arguments = new object[] { category.Name }
+                FilterType = FilterOperatorType.EqualTo,
+                Arguments = new object[] { department.Name }
             });
         
         var queryResults = query.ToList();
@@ -53,7 +53,7 @@ public class QueryDbDepartmentTests: TestBase
         Assert.That(queryResults, Is.Not.Empty);
         Assert.That(queryResults.Count, Is.EqualTo(1));
         
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -63,13 +63,13 @@ public class QueryDbDepartmentTests: TestBase
     public void TestQueryIsNullForReferenceColumn()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}"
+            Name = $"Department-{key}"
         };
         
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         
@@ -77,13 +77,13 @@ public class QueryDbDepartmentTests: TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.Name),
-                FilterType = FilterType.EQ,
-                Arguments = new object[] { category.Name }
+                FilterType = FilterOperatorType.EqualTo,
+                Arguments = new object[] { department.Name }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.ParentDepartment),
-                FilterType = FilterType.IS_NULL,
+                FilterType = FilterOperatorType.IsNull,
             });
         
         var queryResults = query.ToList();
@@ -91,7 +91,7 @@ public class QueryDbDepartmentTests: TestBase
         Assert.That(queryResults, Is.Not.Empty);
         Assert.That(queryResults.Count, Is.EqualTo(1));
         
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -101,14 +101,14 @@ public class QueryDbDepartmentTests: TestBase
     public void TestQueryIsNullForReferenceColumnNegative()
     {
         var key = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}",
+            Name = $"Department-{key}",
             ParentDepartment = new Department()
         };
 
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
@@ -116,20 +116,20 @@ public class QueryDbDepartmentTests: TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.Name),
-                FilterType = FilterType.EQ,
-                Arguments = new object[] { category.Name }
+                FilterType = FilterOperatorType.EqualTo,
+                Arguments = new object[] { department.Name }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.ParentDepartment),
-                FilterType = FilterType.IS_NULL,
+                FilterType = FilterOperatorType.IsNull,
             });
         
         var queryResults = query.ToList();
         
         Assert.That(queryResults, Is.Empty);
         
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -140,17 +140,17 @@ public class QueryDbDepartmentTests: TestBase
     {
         var key = Guid.NewGuid().ToString("N");
         var parentKey = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}",
+            Name = $"Department-{key}",
             ParentDepartment = new Department
             {
-                Name = $"Group-{parentKey}"
+                Name = $"Department-{parentKey}"
             }
         };
 
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
@@ -158,22 +158,22 @@ public class QueryDbDepartmentTests: TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.Name),
-                FilterType = FilterType.EQ,
-                Arguments = new object[] { category.Name }
+                FilterType = FilterOperatorType.EqualTo,
+                Arguments = new object[] { department.Name }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.ParentDepartment),
-                FilterType = FilterType.IS_NOT_NULL,
+                FilterType = FilterOperatorType.IsNotNull,
             });
         
         var queryResults = query.ToList();
         
         Assert.That(queryResults, Is.Not.Empty);
         Assert.That(queryResults.Count, Is.EqualTo(1));
-        Assert.That(queryResults.First().Name, Is.EqualTo(category.Name));
+        Assert.That(queryResults.First().Name, Is.EqualTo(department.Name));
 
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();
@@ -184,17 +184,17 @@ public class QueryDbDepartmentTests: TestBase
     {
         var key = Guid.NewGuid().ToString("N");
         var parentKey = Guid.NewGuid().ToString("N");
-        var category = new Department
+        var department = new Department
         {
-            Name = $"Group-{key}",
+            Name = $"Department-{key}",
             ParentDepartment = new Department
             {
-                Name = $"Group-{parentKey}"
+                Name = $"Department-{parentKey}"
             }
         };
 
         var db = GetQueryDbContext();
-        db.Departments.AddRange(category);
+        db.Departments.AddRange(department);
         var savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(2));
         
@@ -202,20 +202,20 @@ public class QueryDbDepartmentTests: TestBase
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.Name),
-                FilterType = FilterType.EQ,
-                Arguments = new object[] { category.Name }
+                FilterType = FilterOperatorType.EqualTo,
+                Arguments = new object[] { department.Name }
             })
             .Where(new PropertyFilter
             {
                 Name = nameof(Department.ParentDepartment),
-                FilterType = FilterType.IS_NULL,
+                FilterType = FilterOperatorType.IsNull,
             });
         
         var queryResults = query.ToList();
         
         Assert.That(queryResults, Is.Empty);
 
-        db.Departments.Remove(category);
+        db.Departments.Remove(department);
         savedCount = db.SaveChanges();
         Assert.That(savedCount, Is.EqualTo(1));
         db.Dispose();

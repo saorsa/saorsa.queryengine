@@ -1,13 +1,82 @@
-using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text.Json;
 
 namespace Saorsa.QueryEngine;
 
+
+/// <summary>
+/// Represents an utility / helper class for <see cref="Т:System.Linq.Expressions.Expression"/> and derived
+/// expression types creation.
+/// </summary>
 public static class ExpressionBuilder
 {
+    /// <summary>
+    /// The default expression matching a NULL constant.
+    /// </summary>
     public static readonly ConstantExpression NullObjectConstant = Expression.Constant(null);
+    
+    /// <summary>
+    /// Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> that represents accessing a property
+    /// of an object instance of the type specified by <typeparamref name="TParam"/>.
+    /// </summary>
+    /// <param name="propertyName">
+    /// The name of a property to be accessed.
+    /// </param>
+    /// <param name="existingParameter">
+    /// An <see cref="T:System.Linq.Expressions.Expression" /> whose
+    /// <see cref="P:System.Linq.Expressions.Expression.Type" /> contains a property named
+    /// <paramref name="propertyName" />. If not specified, this parameter will be automatically created.
+    /// </param>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// Thrown if <paramref name="propertyName" /> is <see langword="null" />.
+    /// </exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// Thrown if no property named <paramref name="propertyName" /> is defined in <typeparamref name="TParam" />.
+    /// type or its base types --or-- if the <paramref name="existingParameter" /> parameter is defined and matches
+    /// a different type than the <typeparamref name="TParam"/>.
+    /// </exception>
+    public static MemberExpression CreateParameterPropertyExpression<TParam>(
+        string propertyName,
+        ParameterExpression? existingParameter = null)
+    {
+        return CreateParameterPropertyExpression(typeof(TParam), propertyName, existingParameter);
+    }
+    
+    /// <summary>
+    /// Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> that represents accessing a property
+    /// of an object instance of the type specified by <paramdef name="parameterType"/>.
+    /// </summary>
+    /// <param name="parameterType">
+    /// The type of the source parameter.
+    /// </param>
+    /// <param name="propertyName">
+    /// The name of a property to be accessed.
+    /// </param>
+    /// <param name="existingParameter">
+    /// An <see cref="T:System.Linq.Expressions.Expression" /> whose
+    /// <see cref="P:System.Linq.Expressions.Expression.Type" /> contains a property named
+    /// <paramref name="propertyName" />. If not specified, this parameter will be automatically created.
+    /// </param>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// Thrown if <paramref name="propertyName" /> is <see langword="null" />.
+    /// </exception>
+    /// <exception cref="T:System.ArgumentException">
+    /// Thrown if no property named <paramref name="propertyName" /> is defined in <paramdef name="parameterType" />.
+    /// type or its base types --or-- if the <paramref name="existingParameter" /> parameter is defined and matches
+    /// a different type than the <paramref name="parameterType"/>.
+    /// </exception>
+    public static MemberExpression CreateParameterPropertyExpression(
+        Type parameterType,
+        string propertyName,
+        ParameterExpression? existingParameter = null)
+    {
+        ValidateParameterExpressionType(parameterType, existingParameter);
+
+        var parameter = existingParameter ?? Expression.Parameter(
+            parameterType, 
+            $"Param_CreateParameterPropertyExpression<{parameterType.Name}>");
+        return Expression.Property(parameter, propertyName);
+    }
 
     public static Expression<Func<TParam, bool>> PropertyEqualTo<TParam>(
         string propertyName,
@@ -337,5 +406,28 @@ public static class ExpressionBuilder
     public static bool StringContains(string source, string contained)
     {
         return source.Contains(contained, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    /// Checks if a given parameter expression has a type matching an expected type. Throws exception if
+    /// validation fails.
+    /// </summary>
+    /// <param name="parameterType"></param>
+    /// <param name="existingParameter"></param>
+    /// <exception cref="ArgumentException">
+    /// Thrown, if the type specified by <paramref name="parameterType"/> does not match the type of the parameter
+    /// expression defined in <paramref name="existingParameter"/>.
+    /// </exception>
+    public static void ValidateParameterExpressionType(
+        Type parameterType,
+        ParameterExpression? existingParameter)
+    {
+        if (existingParameter != null && existingParameter.Type != parameterType)
+        {
+            throw new ArgumentException(
+                $"The existingParameter argument has underlying type [{existingParameter.Type}] which is " +
+                $"different than the one specified by the parameterType argument [{parameterType}].",
+                nameof(existingParameter));
+        }
     }
 }

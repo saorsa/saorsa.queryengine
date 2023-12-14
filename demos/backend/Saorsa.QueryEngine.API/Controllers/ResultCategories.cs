@@ -4,6 +4,6 @@ using Saorsa.QueryEngine.Tests.EFCore.Entities;
 
 namespace Saorsa.QueryEngine.API.Controllers;
 
-public class ResultCategories : BusinessPageResult<QueryEnginePageRequest<int>, int, Category>
+public class ResultCategories : BusinessPageResult<QueryEnginePageRequest<int>, int, Department>
 {
 }

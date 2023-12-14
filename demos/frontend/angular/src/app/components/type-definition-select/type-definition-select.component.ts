@@ -6,10 +6,10 @@ import {
   catchError, Observable, of
 } from "rxjs";
 import {
-  ApiTypeDefinitionsResult
+  ApiQueryableTypeListResult
 } from "../../model/api.model";
 import {
-  TypeDefinition
+  QueryableTypeDescriptor
 } from "../../model/query-engine.model";
 import {
   ActivatedRoute, Router
@@ -24,7 +24,7 @@ import {
 export class TypeDefinitionSelectComponent implements OnInit {
 
   /** Stores the result with all type definitions, cached by the server. */
-  apiResult?: ApiTypeDefinitionsResult | null;
+  apiResult?: ApiQueryableTypeListResult | null;
 
   /** Stores the last known error when communicating with the server. */
   error?: any;
@@ -36,7 +36,7 @@ export class TypeDefinitionSelectComponent implements OnInit {
   typeNameFromRoute?: string;
 
   /** Stores the currently selected type definition. */
-  selectedTypDef?: TypeDefinition;
+  selectedTypDef?: QueryableTypeDescriptor;
 
   constructor(
     private api: MetaService,
@@ -51,14 +51,14 @@ export class TypeDefinitionSelectComponent implements OnInit {
   }
 
   onChangeSelectedType(event: any): void {
-    const val: TypeDefinition = event?.source?.value;
+    const val: QueryableTypeDescriptor = event?.source?.value;
     this.selectedTypDef = val;
     this.router
       .navigate([val?.name],{ relativeTo: this.activatedRoute })
       .finally(() =>{});
   }
 
-  protected loadTypeDefinitions(): Observable<ApiTypeDefinitionsResult> {
+  protected loadTypeDefinitions(): Observable<ApiQueryableTypeListResult> {
     this.loading = true;
     this.error = null;
     this.apiResult = null;

@@ -7,7 +7,7 @@ public static partial class QueryEngine
 {
     private static readonly object CompileLock = new();
     private static readonly object EnsureCompileLock = new();
-    private static readonly Dictionary<int, Dictionary<Type, TypeDefinition>> CompileMap = new();
+    private static readonly Dictionary<int, Dictionary<Type, QueryableTypeDescriptor>> CompileMap = new();
     
     public static Type[] ScanQueryEngineTypes()
     {
@@ -24,7 +24,7 @@ public static partial class QueryEngine
             .ToArray();
     }
 
-    public static TypeDefinition[] CompileTypeDefinitions(
+    public static QueryableTypeDescriptor[] CompileTypeDefinitions(
         int maxDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
@@ -33,12 +33,12 @@ public static partial class QueryEngine
             .ToArray();
     }
     
-    public static TypeDefinition[] CompileTypeDefinitions(
+    public static QueryableTypeDescriptor[] CompileTypeDefinitions(
         Assembly assembly,
         int maxDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
-        var compiled = new List<TypeDefinition>();
+        var compiled = new List<QueryableTypeDescriptor>();
         ScanQueryEngineTypes(assembly)
             .ToList()
             .ForEach(type =>
@@ -52,14 +52,14 @@ public static partial class QueryEngine
         return compiled.ToArray();
     }
 
-    public static TypeDefinition? CompileType<TEntity>(
+    public static QueryableTypeDescriptor? CompileType<TEntity>(
         int maxDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
     {
         return CompileType(typeof(TEntity), maxDepth, overrideIgnores);
     }
     
-    public static TypeDefinition? CompileType(
+    public static QueryableTypeDescriptor? CompileType(
         Type type,
         int maxDepth = DefaultTypeDefinitionDepth,
         bool overrideIgnores = false)
@@ -70,20 +70,20 @@ public static partial class QueryEngine
         {
             if (!CompileMap.ContainsKey(maxDepth))
             {
-                CompileMap.Add(maxDepth, new Dictionary<Type, TypeDefinition>());
+                CompileMap.Add(maxDepth, new Dictionary<Type, QueryableTypeDescriptor>());
             }
             CompileMap[maxDepth][type] = typeDef;
             return typeDef;
         }
     }
 
-    public static TypeDefinition? GetCompiled<TEntity>(
+    public static QueryableTypeDescriptor? GetCompiled<TEntity>(
         int maxDepth = DefaultTypeDefinitionDepth)
     {
         return GetCompiled(typeof(TEntity), maxDepth);
     }
     
-    public static TypeDefinition? GetCompiled(
+    public static QueryableTypeDescriptor? GetCompiled(
         Type type,
         int maxDepth = DefaultTypeDefinitionDepth)
     {
@@ -113,13 +113,13 @@ public static partial class QueryEngine
         return GetCompiled(type, maxDepth) != null;
     }
 
-    public static TypeDefinition? EnsureCompiled<TEntity>(
+    public static QueryableTypeDescriptor? EnsureCompiled<TEntity>(
         int maxDepth = DefaultTypeDefinitionDepth)
     {
         return EnsureCompiled(typeof(TEntity), maxDepth);
     }
     
-    public static TypeDefinition? EnsureCompiled(
+    public static QueryableTypeDescriptor? EnsureCompiled(
         Type type,
         int maxDepth = DefaultTypeDefinitionDepth)
     {

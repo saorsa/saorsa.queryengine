@@ -117,11 +117,11 @@ export class DataGeneratorComponent implements OnInit {
     this.queryCategoriesService.filterCategories({
       first: searchKey?.length ? {
         name: 'Name',
-        filterType: 'CONTAINS',
+        filterType: 'StringContains',
         arguments: [ searchKey ]
       } :  {
         name: 'Id',
-        filterType: 'IS_NOT_NULL',
+        filterType: 'IsNotNull',
         arguments: []
       }
     })

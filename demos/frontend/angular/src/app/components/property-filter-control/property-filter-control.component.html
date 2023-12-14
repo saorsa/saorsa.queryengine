@@ -25,8 +25,8 @@
       [formControl]="filterTypeControl"
       (selectionChange)="onFilterTypeSelect($event.value)"
       placeholder="Select a filter">
-      <mat-option *ngFor="let f of selectedProperty.allowedFilters" [value]="f.filterType">
-        {{f.filterType}}
+      <mat-option *ngFor="let f of selectedProperty.allowedFilters" [value]="f.operatorType">
+        {{f.operatorType}}
       </mat-option>
     </mat-select>
   </mat-form-field>

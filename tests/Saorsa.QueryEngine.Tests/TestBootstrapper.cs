@@ -61,7 +61,7 @@ public class TestBootstrapper
 
         Logger = GlobalScope.ServiceProvider.GetRequiredService<ILogger<TestBootstrapper>>();
         
-        Logger.LogInformation($"{GetType().Name} - {nameof(TestsSetupAsync)} - complete.");
+        Logger.LogInformation($"{GetType().Name} - {nameof(TestsSetupAsync)} - complete");
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class TestBootstrapper
     [OneTimeTearDown]
     public virtual Task TestsTearDownAsync()
     {
-        Logger.LogInformation($"{GetType().Name} - {nameof(TestsTearDownAsync)} - starting tear down.");
+        Logger.LogInformation($"{GetType().Name} - {nameof(TestsTearDownAsync)} - starting tear down");
 
         GlobalScope.Dispose();
         ServiceProvider.Dispose();
@@ -78,7 +78,7 @@ public class TestBootstrapper
         _TestFinishedAt = DateTimeOffset.Now;
 
         Logger.LogInformation($"{GetType().Name} - {nameof(TestsTearDownAsync)} - " +
-                              $"complete in {(_TestFinishedAt - _TestStartedAt)}.");
+                              $"complete in {(_TestFinishedAt - _TestStartedAt)}");
         return Task.CompletedTask;
     }
 
@@ -97,7 +97,7 @@ public class TestBootstrapper
         Services
             .AddLogging(lb => lb.AddSerilog(dispose: true));
         
-        Log.Logger.Debug($"{GetType().Name} - {nameof(SetupLoggingAsync)} - complete.");
+        Log.Logger.Debug($"{GetType().Name} - {nameof(SetupLoggingAsync)} - complete");
         return Task.CompletedTask;
     }
 }

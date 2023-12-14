@@ -20,6 +20,16 @@
                                (keyup)="inputValueChange($event)"
                                placeholder="{{argumentControlInputType}}">
                       </ng-container>
+                      <ng-container *ngSwitchCase="'enum'">
+                        <mat-select [formControl]="c"
+                          panelClass="panel-override"
+                          (selectionChange)="inputValueChange($event.value)"
+                          placeholder="Select a filter">
+                          <mat-option *ngFor="let f of property!.enumValues" [value]="f">
+                            {{f}}
+                          </mat-option>
+                        </mat-select>
+                      </ng-container>
                       <ng-container *ngSwitchDefault>
                         <input matInput
                                class="d-block w-100"

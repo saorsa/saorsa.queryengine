@@ -1,18 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <LangVersion>10</LangVersion>
+        <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\saorsa.corelib\src\Saorsa.CoreLib\Saorsa.CoreLib.csproj" />
-      <ProjectReference Include="..\..\..\saorsa.extensions\src\Saorsa.Extensions\Saorsa.Extensions.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="NJsonSchema" Version="10.7.2" />
+      <PackageReference Include="NJsonSchema" Version="10.9.0" />
+      <PackageReference Include="Saorsa.CoreLib" Version="1.1.0" />
+      <PackageReference Include="Saorsa.Extensions" Version="1.0.1" />
     </ItemGroup>
 
 </Project>

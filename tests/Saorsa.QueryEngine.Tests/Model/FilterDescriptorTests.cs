@@ -7,12 +7,12 @@ public class FilterDescriptorTests
     [Test]
     public void TestConstructorFilterTypes()
     {
-        Enum.GetValues<FilterType>().ToList().ForEach(filterType => {
+        Enum.GetValues<FilterOperatorType>().ToList().ForEach(filterType => {
             var filter = new FilterDescriptor(filterType);
             Assert.Multiple(() =>
             {
                 Assert.That(filter, Is.Not.Null);
-                Assert.That(filter.FilterType, Is.EqualTo(filterType));
+                Assert.That(filter.OperatorType, Is.EqualTo(filterType));
                 Assert.That(filter.Arg1, Is.Null);
                 Assert.That(filter.Arg1Required.HasValue, Is.False);
                 Assert.That(filter.Arg2, Is.Null);
@@ -25,7 +25,7 @@ public class FilterDescriptorTests
     public void TestToString()
     {
         var key1 = Guid.NewGuid().ToString("N");
-        var filter1 = new FilterDescriptor(FilterType.EQ, key1, true);
+        var filter1 = new FilterDescriptor(FilterOperatorType.EqualTo, key1, true);
         var toString1 = filter1.ToString();
         Assert.Multiple(() =>
         {
@@ -35,7 +35,7 @@ public class FilterDescriptorTests
         });
         
         var key2 = Guid.NewGuid().ToString("N");
-        var filter2 = new FilterDescriptor(FilterType.EQ, arg2: key2, arg2Required: false);
+        var filter2 = new FilterDescriptor(FilterOperatorType.EqualTo, arg2: key2, arg2Required: false);
         var toString2 = filter2.ToString();
         Assert.Multiple(() =>
         {
@@ -51,7 +51,7 @@ public class FilterDescriptorTests
     {
         var sampleIndices = Enumerable.Range(0, sampleSize - 1).ToList();
         var hashes = new Dictionary<int, FilterDescriptor>();
-        Enum.GetValues<FilterType>().ToList().ForEach(ft =>
+        Enum.GetValues<FilterOperatorType>().ToList().ForEach(ft =>
         {
             sampleIndices.ForEach(index =>
             {
@@ -75,19 +75,19 @@ public class FilterDescriptorTests
         var hashes = new Dictionary<int, FilterDescriptor>();
         new []
         {
-            FilterDescriptor.IS_NULL,
-            FilterDescriptor.IS_NOT_NULL,
-            FilterDescriptor.EQ,
-            FilterDescriptor.NOT_EQ,
-            FilterDescriptor.GT,
-            FilterDescriptor.GT_EQ,
-            FilterDescriptor.LT,
-            FilterDescriptor.LT_EQ,
-            FilterDescriptor.RANGE,
-            FilterDescriptor.SEQUENCE,
-            FilterDescriptor.CONTAINS,
-            FilterDescriptor.IS_EMPTY,
-            FilterDescriptor.IS_NOT_EMPTY,
+            FilterDescriptor.IsNull,
+            FilterDescriptor.IsNotNull,
+            FilterDescriptor.EqualTo,
+            FilterDescriptor.NotEqualTo,
+            FilterDescriptor.GreaterThan,
+            FilterDescriptor.GreaterThanOrEqual,
+            FilterDescriptor.LessThan,
+            FilterDescriptor.LessThanOrEqual,
+            FilterDescriptor.ValueInRange,
+            FilterDescriptor.ValueInSequence,
+            FilterDescriptor.StringContains,
+            FilterDescriptor.CollectionIsEmpty,
+            FilterDescriptor.CollectionIsNotEmpty,
         }.ToList().ForEach(f =>
         {
             var hash = f.GetHashCode();
@@ -102,9 +102,9 @@ public class FilterDescriptorTests
         "NUnit2009:The same value has been provided as both the actual and the expected argument")]
     public void TestEquality()
     {
-        var f1 = new FilterDescriptor(FilterType.EQ);
-        var f2 = new FilterDescriptor(FilterType.EQ);
-        var f3 = new FilterDescriptor(FilterType.NOT_EQ);
+        var f1 = new FilterDescriptor(FilterOperatorType.EqualTo);
+        var f2 = new FilterDescriptor(FilterOperatorType.EqualTo);
+        var f3 = new FilterDescriptor(FilterOperatorType.NotEqualTo);
         
         Assert.True(f1.Equals(f1));
         Assert.False(f1.Equals(null));
@@ -127,8 +127,8 @@ public class FilterDescriptorTests
         "NUnit2004:Consider using Assert.That(expr, Is.True) instead of Assert.True(expr)")]
     public void TestEqualityToObjects()
     {
-        var f1 = new FilterDescriptor(FilterType.EQ);
-        var f2 = new FilterDescriptor(FilterType.EQ);
+        var f1 = new FilterDescriptor(FilterOperatorType.EqualTo);
+        var f2 = new FilterDescriptor(FilterOperatorType.EqualTo);
         
         Assert.True(f1.Equals((object)f1));
         Assert.True(f1.Equals((object)f2));

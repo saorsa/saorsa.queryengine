@@ -9,8 +9,6 @@
         <LangVersion>11</LangVersion>
 
         <TargetFrameworks>net7.0;net6.0</TargetFrameworks>
-
-        <RootNamespace>Saorsa.QueryEngine.Tests.NpgSql</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

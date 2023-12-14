@@ -8,7 +8,7 @@ namespace Saorsa.QueryEngine.API.Controllers;
 public class MetaController : ControllerBase
 {
     [HttpGet("scan")]
-    public ActionResult<ResultRef<TypeDefinition[]>> GetScannedTypes()
+    public ActionResult<ResultRef<QueryableTypeDescriptor[]>> GetScannedTypes()
     {
         var types = QueryEngine.ScanQueryEngineTypes();
         var scanned = types
@@ -17,7 +17,7 @@ public class MetaController : ControllerBase
             .Select(t => t!)
             .ToArray();
         
-        return Ok(new ResultRef<TypeDefinition[]>
+        return Ok(new ResultRef<QueryableTypeDescriptor[]>
         {
             Status = ResultStatus.Ok,
             Result = scanned,
@@ -59,7 +59,7 @@ public class MetaController : ControllerBase
     }
     
     [HttpGet("cached")]
-    public ActionResult<ResultRef<TypeDefinition[]>> GetCachedTypeDefs()
+    public ActionResult<ResultRef<QueryableTypeDescriptor[]>> GetCachedTypeDefs()
     {
         var types = QueryEngine.ScanQueryEngineTypes();
         var cached = types
@@ -67,7 +67,7 @@ public class MetaController : ControllerBase
             .Select(t => QueryEngine.GetCompiled(t)!)
             .ToArray();
         
-        return Ok(new ResultRef<TypeDefinition[]>
+        return Ok(new ResultRef<QueryableTypeDescriptor[]>
         {
             Status = ResultStatus.Ok,
             Result = cached,
@@ -75,7 +75,7 @@ public class MetaController : ControllerBase
     }
     
     [HttpGet("cached/{typeName}")]
-    public ActionResult<ResultRef<TypeDefinition>> GetCachedTypeDef(string typeName)
+    public ActionResult<ResultRef<QueryableTypeDescriptor>> GetCachedTypeDef(string typeName)
     {
         var types = QueryEngine.ScanQueryEngineTypes();
         var cached = types
@@ -85,14 +85,14 @@ public class MetaController : ControllerBase
 
         if (cached != null)
         {
-            return Ok(new ResultRef<TypeDefinition>
+            return Ok(new ResultRef<QueryableTypeDescriptor>
             {
                 Status = ResultStatus.Ok,
                 Result = cached,
             });
         }
         
-        return NotFound(new ResultRef<TypeDefinition>
+        return NotFound(new ResultRef<QueryableTypeDescriptor>
         {
             Status = ResultStatus.Fatal,
             Message = $"Type '{typeName}' is not recognized by Query Engine."

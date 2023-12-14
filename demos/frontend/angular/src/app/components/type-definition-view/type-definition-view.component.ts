@@ -2,7 +2,7 @@ import {
   Component, OnInit
 } from '@angular/core';
 import {
-  PropertyFilterBlock, TypeDefinition
+  PropertyFilterBlock, QueryableTypeDescriptor
 } from "../../model/query-engine.model";
 import {
   ActivatedRoute, Router
@@ -11,7 +11,7 @@ import { MetaService } from "../../services/meta.service";
 import {
   catchError, Observable, of, Subject
 } from "rxjs";
-import { ApiTypeDefinitionSingleResult } from "../../model/api.model";
+import { ApiQueryableTypeSingleResult } from "../../model/api.model";
 import {QueryEngineUsersService} from "../../services/query-engine-users.service";
 
 
@@ -22,24 +22,30 @@ import {QueryEngineUsersService} from "../../services/query-engine-users.service
 })
 export class TypeDefinitionViewComponent implements OnInit {
 
-  protected typeDefinitionApiResult?: ApiTypeDefinitionSingleResult | null;
-  protected typeName?: string | null;
-  readonly expression$ = new Subject<PropertyFilterBlock>();
+  protected typeDefinitionApiResult?: ApiQueryableTypeSingleResult | null
+  protected typeName?: string | null
+  readonly expression$ = new Subject<PropertyFilterBlock>()
 
   /** The filter expression to be used upon the initialization of the component. Optional. */
-  initialFilterBlock?: PropertyFilterBlock;
+  initialFilterBlock?: PropertyFilterBlock
 
   /** The currently active filter block. Defaults to NULL, before one is constructed without errors. */
-  currentFilterBlock?: PropertyFilterBlock;
+  currentFilterBlock?: PropertyFilterBlock
 
-  /** Stores the last known error when communicating with the server. */
-  error?: any;
+  /** Stores the last known error when loading the queryable entity descriptor. */
+  error?: any
 
-  /** Stores indication, if the component is loading data from the server. */
-  loading = false;
+  /** Stores indication, if the component is loading the queryable entity descriptor. */
+  loading = false
 
-  /** Gets the loaded type definition. Returns null, if the definition cannot be loaded */
-  get typeDefinition(): TypeDefinition | null {
+  filterLoading = false
+
+  filterError?: any
+
+  filterResults?: any[]
+
+  /** Gets the loaded queryable descriptor. Returns null, if the definition cannot be loaded */
+  get queryableDescriptor(): QueryableTypeDescriptor | null {
     return this.typeDefinitionApiResult?.result || null;
   }
 
@@ -80,14 +86,24 @@ export class TypeDefinitionViewComponent implements OnInit {
     })
     .finally(() => {
       this.currentFilterBlock = expression;
-
-      console.warn('WE ARE LOADING FROM API');
-
-      this.queryEngineUsers.filterUsers(expression).subscribe((res) => {
-        console.warn('RESULTS FROM API:', res);
-      }, (err) => {
-        console.error('ERROR FROM API:', err);
-      });
+      this.filterResults = undefined
+      this.filterError = undefined
+      this.filterLoading = true
+      this.queryEngineUsers.filterEntities(
+        this.typeDefinitionApiResult!.result!,
+        expression).subscribe(
+        {
+          next: (res) => {
+            console.warn('RESULTS FROM API:', res);
+            this.filterResults = res
+            this.filterLoading = false
+          },
+          error: (err) => {
+            console.error('ERROR FROM API:', err);
+            this.filterError = err
+            this.filterLoading = false
+          }
+        });
     });
   }
 
@@ -123,7 +139,7 @@ export class TypeDefinitionViewComponent implements OnInit {
       });
   }
 
-  protected loadTypeDefinition(typeName: string): Observable<ApiTypeDefinitionSingleResult> {
+  protected loadTypeDefinition(typeName: string): Observable<ApiQueryableTypeSingleResult> {
     this.loading = true;
     this.error = null;
     this.typeDefinitionApiResult = null;

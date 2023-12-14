@@ -4,14 +4,23 @@
 <div *ngIf="error">
   <app-error-view [error]="error"></app-error-view>
 </div>
-<div *ngIf="typeDefinition">
+<div *ngIf="queryableDescriptor">
   <mat-card class="p-0 m-0">
     <mat-card-content class="p-0">
       <app-property-filter-control-block-control
         (onValueChange)="onExpressionValueChange($event)"
         [initialValue]="initialFilterBlock"
-        [typeDefinition]="typeDefinition">
+        [typeDefinition]="queryableDescriptor">
       </app-property-filter-control-block-control>
     </mat-card-content>
   </mat-card>
+</div>
+<div *ngIf="filterLoading" class="my-3 mx-3 text-center mat-display-1">
+  Loading...
+</div>
+<div *ngIf="filterError">
+  <app-error-view [error]="filterError"></app-error-view>
+</div>
+<div *ngIf="filterResults">
+  filterResults = {{filterResults | json}}
 </div>

@@ -2,18 +2,18 @@ using NUnit.Framework;
 
 namespace Saorsa.QueryEngine.Tests.EFCore;
 
+
 /// <summary>
 /// Gets a bootstrapper for all tests in the namespace.
 /// </summary>
 [SetUpFixture]
-public class EFCoreBootstrapper : EFCoreTestBase
+public class EFCoreBootstrapper : TestBootstrapper
 {
-    /// <summary>
-    /// Bootstrap one-time initializer.
-    /// </summary>
     [OneTimeSetUp]
-    public virtual async Task SetupTestsAsync()
+    public override async Task TestsSetupAsync()
     {
+        await base.TestsSetupAsync();
+        
         var dbContext = GetQueryDbContext();
 
         await InitializeDbAsync(dbContext);
@@ -28,7 +28,7 @@ public class EFCoreBootstrapper : EFCoreTestBase
     /// <summary>
     /// Bootstrap one-time tear down.
     /// </summary>
-    [OneTimeSetUp]
+    [OneTimeTearDown]
     public virtual async Task TearDownTestsAsync()
     {
         var dbContext = GetQueryDbContext();
@@ -38,6 +38,17 @@ public class EFCoreBootstrapper : EFCoreTestBase
         await QueryDbEnsureResetCountsAsync(dbContext);
         
         dbContext.Dispose();
+
+        await base.TestsTearDownAsync();
+    }
+
+
+    /// <summary>
+    /// Utility function, gets an instance of the underlying QueryDbContext.
+    /// </summary>
+    protected virtual QueryDbContext GetQueryDbContext()
+    {
+        return new QueryDbContext();
     }
 
     /// <summary>
@@ -58,9 +69,12 @@ public class EFCoreBootstrapper : EFCoreTestBase
     /// <param name="dbContext">Target db context.</param>
     protected virtual async Task QueryDbPurgeAsync(QueryDbContext dbContext)
     {
-        dbContext.Users.RemoveRange(dbContext.Users);
-        dbContext.Tags.RemoveRange(dbContext.Tags);
-        dbContext.Departments.RemoveRange(dbContext.Departments);
+        var allUsers = dbContext.Users.ToList();
+        dbContext.RemoveRange(allUsers);
+        var allTags = dbContext.Tags.ToList();
+        dbContext.RemoveRange(allTags);
+        var allDepartments = dbContext.Departments.ToList();
+        dbContext.RemoveRange(allDepartments);
         await dbContext.SaveChangesAsync();
     }
 

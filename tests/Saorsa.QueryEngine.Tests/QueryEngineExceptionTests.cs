@@ -10,7 +10,7 @@ public class QueryEngineExceptionTests
         
         Assert.Multiple(() =>
         {
-            Assert.That(exception.ErrorCode, Is.EqualTo(exception.Key));
+            Assert.That(exception.ErrorCode, Is.EqualTo(val));
             Assert.That(exception.ErrorCode, Is.EqualTo(val));
             Assert.That(exception.InnerException, Is.Null);
         });

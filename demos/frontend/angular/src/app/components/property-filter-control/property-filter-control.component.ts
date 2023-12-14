@@ -10,7 +10,7 @@ import {
   ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALUE_ACCESSOR, ValidationErrors, Validators
 } from "@angular/forms";
 import {
-  FilterDefinition, FilterType, PropertyFilter, TypeDefinition
+  FilterDescriptor, FilterOperatorType, PropertyFilter, QueryableTypeDescriptor
 } from "../../model/query-engine.model";
 import {FormsHelperService} from "../../services/forms-helper.service";
 
@@ -29,7 +29,7 @@ import {FormsHelperService} from "../../services/forms-helper.service";
 })
 export class PropertyFilterControlComponent implements OnInit, ControlValueAccessor {
 
-  @Input() typeDefinition?: TypeDefinition;
+  @Input() typeDefinition?: QueryableTypeDescriptor;
   @Input() propertyFilter?: PropertyFilter;
   @Input() formGroup?: FormGroup;
   @Output() onChanges = new EventEmitter<any>();
@@ -41,9 +41,9 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
   }
 
   protected internalFormGroup: FormGroup;
-  selectedProperty?: TypeDefinition;
-  selectedFilterDefinition?: FilterDefinition;
-  selectedFilterType?: FilterType;
+  selectedProperty?: QueryableTypeDescriptor;
+  selectedFilterDefinition?: FilterDescriptor;
+  selectedFilterType?: FilterOperatorType;
   isDisabled = false;
   touched = false;
 
@@ -141,7 +141,7 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
         p => p.name === this.nameControl.value
       );
       this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(
-        f => f.filterType === this.filterTypeControl.value
+        f => f.operatorType === this.filterTypeControl.value
       );
     }
   }
@@ -151,14 +151,15 @@ export class PropertyFilterControlComponent implements OnInit, ControlValueAcces
     this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.length ?
       this.selectedProperty.allowedFilters[0] :
       undefined;
-    this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
+    this.filterTypeControl.setValue(this.selectedFilterDefinition?.operatorType);
     this.onChange(this.safeFormGroupInstance.value);
   }
 
-  onFilterTypeSelect(filterType: FilterType): void {
+  onFilterTypeSelect(filterType: FilterOperatorType): void {
     this.selectedFilterType = filterType;
-    this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.filterType == filterType);
-    this.filterTypeControl.setValue(this.selectedFilterDefinition?.filterType);
+    this.selectedFilterDefinition = this.selectedProperty?.allowedFilters?.find(f => f.operatorType == filterType);
+    console.warn('XXXX', this.selectedFilterDefinition, filterType)
+    this.filterTypeControl.setValue(this.selectedFilterDefinition?.operatorType);
     this.onChange(this.safeFormGroupInstance.value);
   }
 

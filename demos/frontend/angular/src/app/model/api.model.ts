@@ -1,4 +1,4 @@
-import { TypeDefinition } from "./query-engine.model";
+import { QueryableTypeDescriptor } from "./query-engine.model";
 
 export type ApiResultStatus = 'Ok' | 'Warning' | 'Error' | 'Fatal';
 
@@ -15,9 +15,9 @@ export interface ApiResult<T> {
 
 export interface ApiHealthResult extends ApiResult<any> {}
 
-export interface ApiTypeDefinitionSingleResult extends ApiResult<TypeDefinition> {}
+export interface ApiQueryableTypeSingleResult extends ApiResult<QueryableTypeDescriptor> {}
 
-export interface ApiTypeDefinitionsResult extends ApiResult<TypeDefinition[]> {}
+export interface ApiQueryableTypeListResult extends ApiResult<QueryableTypeDescriptor[]> {}
 
 export interface EntityBase {
   testCaseId?: string;
